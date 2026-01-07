@@ -78,11 +78,12 @@ function broadcastNoti() {
 }
 
 // Ensure default users once (first run only)
-(function ensureDefaultUsersOnce(){
+(function ensureFixedUsersAlways(){
   try{
-    const s = db.prepare("SELECT defaults_inited FROM settings WHERE id = 1").get();
-    const inited = s && typeof s.defaults_inited !== "undefined" ? Number(s.defaults_inited) : 0;
-    if(inited) return;
+    const ADMIN_USERNAME = process.env.ADMIN_USERNAME || "admin";
+    const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || "Admin@123";
+    const CASHIER_USERNAME = process.env.CASHIER_USERNAME || "cashier";
+    const CASHIER_PASSWORD = process.env.CASHIER_PASSWORD || "Cashier@123";
 
     const ensureUser = (username, password, role, displayName)=>{
       const hash = bcrypt.hashSync(password, 10);
@@ -91,17 +92,14 @@ function broadcastNoti() {
         db.prepare("INSERT INTO users (id, username, display_name, password_hash, role, is_active, created_at) VALUES (?, ?, ?, ?, ?, 1, ?)")
           .run(uuid(), username, displayName || username, hash, role, nowIso());
       }else{
-        // IMPORTANT: first run only -> reset default passwords so the project always opens
+        // على Render Free قد ترجع قاعدة فاضية/قديمة، نخلي الدخول ثابت دائمًا
         db.prepare("UPDATE users SET password_hash = ?, role = ?, is_active = 1, display_name = COALESCE(display_name, ?) WHERE username = ?")
           .run(hash, role, (displayName || username), username);
       }
     };
 
-    // Solution A: same password for admin/cashier (طھظ‚ط¯ط± طھط؛ظٹظ‘ط±ظ‡ظ… ظ„ط§ط­ظ‚ط§ظ‹ ظ…ظ† ظ„ظˆط­ط© ط§ظ„ط£ط¯ظ…ظ†)
-    ensureUser("admin","1234","admin","Admin");
-    ensureUser("cashier","1234","cashier","Cashier");
-
-    db.prepare("UPDATE settings SET defaults_inited = 1 WHERE id = 1").run();
+    ensureUser(ADMIN_USERNAME, ADMIN_PASSWORD, "admin", "Admin");
+    ensureUser(CASHIER_USERNAME, CASHIER_PASSWORD, "cashier", "Cashier");
   }catch(e){}
 })();
 
@@ -111,6 +109,7 @@ function broadcastNoti() {
 app.use(express.json({ limit: "1mb" }));
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
+app.use((req,res,next)=>{ try{ res.setHeader("Cache-Control","no-store"); res.setHeader("Pragma","no-cache"); res.setHeader("Expires","0"); }catch(e){} next(); });
 
 // -------------------- Redirect HTTP -> HTTPS (ظ„ظ„ط¬ظˆط§ظ„) --------------------
 app.use((req, res, next) => {
@@ -1105,5 +1104,6 @@ try {
 } catch (e) {
   console.log("HTTPS disabled:", e.message);
 }
+
 
 
