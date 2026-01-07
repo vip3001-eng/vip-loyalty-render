@@ -1,4 +1,4 @@
-"use strict";
+﻿"use strict";
 
 const path = require("path");
 const fs = require("fs");
@@ -40,14 +40,14 @@ const HTTPS_PORT = Number(process.env.HTTPS_PORT || 3443);
 const JWT_SECRET =
   process.env.JWT_SECRET || "CHANGE_ME__VERY_LONG_RANDOM_SECRET";
 
-// تحويل HTTP -> HTTPS للجوال (الكاميرا)
-// افتراضيًا شغال، تقدر تطفيه بـ FORCE_HTTPS_REDIRECT=0
+// طھط­ظˆظٹظ„ HTTP -> HTTPS ظ„ظ„ط¬ظˆط§ظ„ (ط§ظ„ظƒط§ظ…ظٹط±ط§)
+// ط§ظپطھط±ط§ط¶ظٹظ‹ط§ ط´ط؛ط§ظ„طŒ طھظ‚ط¯ط± طھط·ظپظٹظ‡ ط¨ظ€ FORCE_HTTPS_REDIRECT=0
 const FORCE_HTTPS_REDIRECT =
   (process.env.FORCE_HTTPS_REDIRECT ?? "1") !== "0";
 
 initDb();
 
-// -------------------- DB migrations (منع الأعطال عند اختلاف نسخ قاعدة البيانات) --------------------
+// -------------------- DB migrations (ظ…ظ†ط¹ ط§ظ„ط£ط¹ط·ط§ظ„ ط¹ظ†ط¯ ط§ط®طھظ„ط§ظپ ظ†ط³ط® ظ‚ط§ط¹ط¯ط© ط§ظ„ط¨ظٹط§ظ†ط§طھ) --------------------
 function ensureColumn(table, colName, colDefSql) {
   try {
     const cols = db.prepare(`PRAGMA table_info(${table})`).all();
@@ -97,7 +97,7 @@ function broadcastNoti() {
       }
     };
 
-    // Solution A: same password for admin/cashier (تقدر تغيّرهم لاحقاً من لوحة الأدمن)
+    // Solution A: same password for admin/cashier (طھظ‚ط¯ط± طھط؛ظٹظ‘ط±ظ‡ظ… ظ„ط§ط­ظ‚ط§ظ‹ ظ…ظ† ظ„ظˆط­ط© ط§ظ„ط£ط¯ظ…ظ†)
     ensureUser("admin","1234","admin","Admin");
     ensureUser("cashier","1234","cashier","Cashier");
 
@@ -112,7 +112,7 @@ app.use(express.json({ limit: "1mb" }));
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
-// -------------------- Redirect HTTP -> HTTPS (للجوال) --------------------
+// -------------------- Redirect HTTP -> HTTPS (ظ„ظ„ط¬ظˆط§ظ„) --------------------
 app.use((req, res, next) => {
   try {
     if (!FORCE_HTTPS_REDIRECT) return next();
@@ -123,7 +123,7 @@ app.use((req, res, next) => {
     const proto = (req.headers["x-forwarded-proto"] || "").toString();
     const isHttps = req.secure || proto === "https";
 
-    // نحول GET فقط + لا نحول API (عشان ما نكسر Post/Fetch)
+    // ظ†ط­ظˆظ„ GET ظپظ‚ط· + ظ„ط§ ظ†ط­ظˆظ„ API (ط¹ط´ط§ظ† ظ…ط§ ظ†ظƒط³ط± Post/Fetch)
     if (!isHttps && !isLocal && req.method === "GET" && !req.path.startsWith("/api")) {
       return res.redirect(302, `https://${hostname}:${HTTPS_PORT}${req.originalUrl}`);
     }
@@ -132,8 +132,8 @@ app.use((req, res, next) => {
 });
 
 // -------------------- Ensure vendor assets exist (Chart.js + QR lib) --------------------
-// بعض البيئات/فك الضغط قد يحذف مجلد public/vendor أو يتغير مساره.
-// هذا الكود يضمن وجود الملفات المطلوبة للإحصائيات والماسح بدون تعطيل أي ميزة.
+// ط¨ط¹ط¶ ط§ظ„ط¨ظٹط¦ط§طھ/ظپظƒ ط§ظ„ط¶ط؛ط· ظ‚ط¯ ظٹط­ط°ظپ ظ…ط¬ظ„ط¯ public/vendor ط£ظˆ ظٹطھط؛ظٹط± ظ…ط³ط§ط±ظ‡.
+// ظ‡ط°ط§ ط§ظ„ظƒظˆط¯ ظٹط¶ظ…ظ† ظˆط¬ظˆط¯ ط§ظ„ظ…ظ„ظپط§طھ ط§ظ„ظ…ط·ظ„ظˆط¨ط© ظ„ظ„ط¥ط­طµط§ط¦ظٹط§طھ ظˆط§ظ„ظ…ط§ط³ط­ ط¨ط¯ظˆظ† طھط¹ط·ظٹظ„ ط£ظٹ ظ…ظٹط²ط©.
 function ensureVendorAssets() {
   try {
     const vendorDir = path.join(__dirname, "public", "vendor");
@@ -171,18 +171,18 @@ function ensureVendorAssets() {
 
 ensureVendorAssets();
 
-// -------------------- Static: Vendor + Public (حل A جذري) --------------------
-// ✅ Vendor: served ONLY from public/vendor (no node_modules)
+// -------------------- Static: Vendor + Public (ط­ظ„ A ط¬ط°ط±ظٹ) --------------------
+// âœ… Vendor: served ONLY from public/vendor (no node_modules)
 app.use(
   "/vendor",
   express.static(path.join(__dirname, "public", "vendor"), {
-    fallthrough: false, // إذا غير موجود -> 404 مباشرة
+    fallthrough: false, // ط¥ط°ط§ ط؛ظٹط± ظ…ظˆط¬ظˆط¯ -> 404 ظ…ط¨ط§ط´ط±ط©
     etag: true,
     maxAge: 0,
   })
 );
 
-// ✅ Public site
+// âœ… Public site
 app.use(
   express.static(path.join(__dirname, "public"), {
     extensions: ["html"],
@@ -210,7 +210,7 @@ function issueToken(req, res, user) {
   res.cookie("vip_token", token, {
     httpOnly: true,
     sameSite: "lax",
-    // ✅ Secure cookie فقط عند الدخول عبر HTTPS (يحمي الإنتاج + لا يكسر التشغيل المحلي على HTTP)
+    // âœ… Secure cookie ظپظ‚ط· ط¹ظ†ط¯ ط§ظ„ط¯ط®ظˆظ„ ط¹ط¨ط± HTTPS (ظٹط­ظ…ظٹ ط§ظ„ط¥ظ†طھط§ط¬ + ظ„ط§ ظٹظƒط³ط± ط§ظ„طھط´ط؛ظٹظ„ ط§ظ„ظ…ط­ظ„ظٹ ط¹ظ„ظ‰ HTTP)
     secure: isReqHttps(req),
     maxAge: 7 * 24 * 60 * 60 * 1000,
   });
@@ -219,10 +219,10 @@ function issueToken(req, res, user) {
 function requireAuth(roles = []) {
   return (req, res, next) => {
     try {
-      // ✅ مصادر التوكن (بالترتيب):
-      // 1) Cookie (الافتراضي للمتصفح)
-      // 2) Authorization: Bearer <token> (مفيد للاختبارات مثل PowerShell)
-      // 3) Query token/access_token (مفيد لـ SSE/EventSource عند الحاجة)
+      // âœ… ظ…طµط§ط¯ط± ط§ظ„طھظˆظƒظ† (ط¨ط§ظ„طھط±طھظٹط¨):
+      // 1) Cookie (ط§ظ„ط§ظپطھط±ط§ط¶ظٹ ظ„ظ„ظ…طھطµظپط­)
+      // 2) Authorization: Bearer <token> (ظ…ظپظٹط¯ ظ„ظ„ط§ط®طھط¨ط§ط±ط§طھ ظ…ط«ظ„ PowerShell)
+      // 3) Query token/access_token (ظ…ظپظٹط¯ ظ„ظ€ SSE/EventSource ط¹ظ†ط¯ ط§ظ„ط­ط§ط¬ط©)
       let token = (req.cookies && req.cookies.vip_token) || null;
 
       if (!token) {
@@ -261,8 +261,8 @@ function makeVisitToken() {
 }
 
 function maybeCreateNotification(customerId) {
-  // rule 1: تقييمين سيئين متتاليين (<=2)
-  // rule 2: تقييم عالي مرتين ثم تقييم سيء (>=4, >=4, <=2)
+  // rule 1: طھظ‚ظٹظٹظ…ظٹظ† ط³ظٹط¦ظٹظ† ظ…طھطھط§ظ„ظٹظٹظ† (<=2)
+  // rule 2: طھظ‚ظٹظٹظ… ط¹ط§ظ„ظٹ ظ…ط±طھظٹظ† ط«ظ… طھظ‚ظٹظٹظ… ط³ظٹط، (>=4, >=4, <=2)
   try {
     const last3 = db.prepare(`
       SELECT rating, created_at
@@ -282,7 +282,7 @@ function maybeCreateNotification(customerId) {
       db.prepare(`
         INSERT INTO notifications (customer_id, rule_type, message, is_read, created_at)
         VALUES (?, 'two_bad', ?, 0, ?)
-      `).run(customerId, "تنبيه: تقييمين سيئين متتاليين", nowIso());
+      `).run(customerId, "طھظ†ط¨ظٹظ‡: طھظ‚ظٹظٹظ…ظٹظ† ط³ظٹط¦ظٹظ† ظ…طھطھط§ظ„ظٹظٹظ†", nowIso());
       broadcastNoti();
       return;
     }
@@ -293,7 +293,7 @@ function maybeCreateNotification(customerId) {
         db.prepare(`
           INSERT INTO notifications (customer_id, rule_type, message, is_read, created_at)
           VALUES (?, 'high_high_bad', ?, 0, ?)
-        `).run(customerId, "تنبيه: تقييم عالي مرتين ثم تقييم سيء", nowIso());
+        `).run(customerId, "طھظ†ط¨ظٹظ‡: طھظ‚ظٹظٹظ… ط¹ط§ظ„ظٹ ظ…ط±طھظٹظ† ط«ظ… طھظ‚ظٹظٹظ… ط³ظٹط،", nowIso());
         broadcastNoti();
         return;
       }
@@ -361,13 +361,13 @@ app.get("/api/public/settings", (req, res) => {
 // -------------------- Public visit status --------------------
 app.get("/api/public/visit-status", (req, res) => {
   const visitId = (req.query.visitId || "").toString();
-  if (!visitId) return res.json({ ok: false, message: "visitId مطلوب" });
+  if (!visitId) return res.json({ ok: false, message: "visitId ظ…ط·ظ„ظˆط¨" });
 
   const visit = db
     .prepare("SELECT id, customer_id, is_approved, action_type FROM visits WHERE id = ?")
     .get(visitId);
 
-  if (!visit) return res.json({ ok: false, message: "زيارة غير موجودة" });
+  if (!visit) return res.json({ ok: false, message: "ط²ظٹط§ط±ط© ط؛ظٹط± ظ…ظˆط¬ظˆط¯ط©" });
 
   if (!visit.is_approved && visit.action_type !== "redeem")
     return res.json({ ok: true, approved: false });
@@ -405,7 +405,7 @@ app.post("/api/customer/loyal/submit", (req, res) => {
     return res.status(400).json({
       ok: false,
       error: "MISSING_REQUIRED_FIELDS",
-      message: "رجاءً عبّئ رقم الجوال/اللوحة واختر التقييم.",
+      message: "ط±ط¬ط§ط،ظ‹ ط¹ط¨ظ‘ط¦ ط±ظ‚ظ… ط§ظ„ط¬ظˆط§ظ„/ط§ظ„ظ„ظˆط­ط© ظˆط§ط®طھط± ط§ظ„طھظ‚ظٹظٹظ….",
     });
   }
 
@@ -416,7 +416,7 @@ app.post("/api/customer/loyal/submit", (req, res) => {
     return res.json({
       ok: false,
       error: "NOT_FOUND",
-      message: "يبدو أنك عميل جديد. اضغط للتوجيه لصفحة العميل الجديد.",
+      message: "ظٹط¨ط¯ظˆ ط£ظ†ظƒ ط¹ظ…ظٹظ„ ط¬ط¯ظٹط¯. ط§ط¶ط؛ط· ظ„ظ„طھظˆط¬ظٹظ‡ ظ„طµظپط­ط© ط§ظ„ط¹ظ…ظٹظ„ ط§ظ„ط¬ط¯ظٹط¯.",
     });
   }
 
@@ -426,7 +426,7 @@ app.post("/api/customer/loyal/submit", (req, res) => {
       ok: false,
       error: "VEHICLE_NOT_FOUND",
       message:
-        "هذه المركبة غير مسجلة لهذا العميل. اضغط للتوجيه لصفحة العميل الجديد لإضافة المركبة.",
+        "ظ‡ط°ظ‡ ط§ظ„ظ…ط±ظƒط¨ط© ط؛ظٹط± ظ…ط³ط¬ظ„ط© ظ„ظ‡ط°ط§ ط§ظ„ط¹ظ…ظٹظ„. ط§ط¶ط؛ط· ظ„ظ„طھظˆط¬ظٹظ‡ ظ„طµظپط­ط© ط§ظ„ط¹ظ…ظٹظ„ ط§ظ„ط¬ط¯ظٹط¯ ظ„ط¥ط¶ط§ظپط© ط§ظ„ظ…ط±ظƒط¨ط©.",
     });
   }
 
@@ -460,12 +460,12 @@ app.post("/api/customer/new/submit", (req, res) => {
   const plateLettersClean = (plate_letters_ar ?? "").toString().trim();
   const plateNumbersClean = (plate_numbers ?? "").toString().trim();
 
-  // حسب طلبك: جميع الحقول إلزامية في "عميل جديد" ما عدا الملاحظات
+  // ط­ط³ط¨ ط·ظ„ط¨ظƒ: ط¬ظ…ظٹط¹ ط§ظ„ط­ظ‚ظˆظ„ ط¥ظ„ط²ط§ظ…ظٹط© ظپظٹ "ط¹ظ…ظٹظ„ ط¬ط¯ظٹط¯" ظ…ط§ ط¹ط¯ط§ ط§ظ„ظ…ظ„ط§ط­ط¸ط§طھ
   if (!nameClean || !phoneClean || !carTypeClean || !carModelClean || !plateLettersClean || !plateNumbersClean || !rating) {
     return res.status(400).json({
       ok: false,
       error: "MISSING_REQUIRED_FIELDS",
-      message: "رجاءً عبّئ الحقول الإلزامية واختر التقييم.",
+      message: "ط±ط¬ط§ط،ظ‹ ط¹ط¨ظ‘ط¦ ط§ظ„ط­ظ‚ظˆظ„ ط§ظ„ط¥ظ„ط²ط§ظ…ظٹط© ظˆط§ط®طھط± ط§ظ„طھظ‚ظٹظٹظ….",
     });
   }
 
@@ -478,7 +478,7 @@ app.post("/api/customer/new/submit", (req, res) => {
       return res.json({
         ok: false,
         error: "ALREADY_EXISTS",
-        message: "يبدو أنك عميل وفي. اضغط للتوجيه لصفحة العميل الوفي.",
+        message: "ظٹط¨ط¯ظˆ ط£ظ†ظƒ ط¹ظ…ظٹظ„ ظˆظپظٹ. ط§ط¶ط؛ط· ظ„ظ„طھظˆط¬ظٹظ‡ ظ„طµظپط­ط© ط§ظ„ط¹ظ…ظٹظ„ ط§ظ„ظˆظپظٹ.",
       });
     }
 
@@ -511,7 +511,7 @@ app.post("/api/customer/new/submit", (req, res) => {
     const qrPayload = JSON.stringify({ visitId, t: token });
     return QRCode.toDataURL(qrPayload, { margin: 1, width: 190 }, (err, url) => {
       if (err) return res.status(500).json({ ok: false, error: "QR_FAIL" });
-      res.json({ ok: true, visitId, qrDataUrl: url, note: "تمت إضافة مركبة جديدة لنفس العميل." });
+      res.json({ ok: true, visitId, qrDataUrl: url, note: "طھظ…طھ ط¥ط¶ط§ظپط© ظ…ط±ظƒط¨ط© ط¬ط¯ظٹط¯ط© ظ„ظ†ظپط³ ط§ظ„ط¹ظ…ظٹظ„." });
     });
   }
 
@@ -717,7 +717,7 @@ app.get("/api/admin/notifications/unread-count", requireAuth(["admin"]), (req, r
   res.json({ ok: true, count: row.c || 0 });
 });
 
-// aliases (توافق/تسهيل اختبارات)
+// aliases (طھظˆط§ظپظ‚/طھط³ظ‡ظٹظ„ ط§ط®طھط¨ط§ط±ط§طھ)
 app.get("/api/admin/notifications/unreadCount", requireAuth(["admin"]), (req, res) => {
   const row = db.prepare("SELECT COUNT(*) as c FROM notifications WHERE is_read = 0").get();
   res.json({ ok: true, count: row.c || 0 });
@@ -795,7 +795,7 @@ app.get("/api/admin/notifications/detail", requireAuth(["admin"]), (req, res) =>
   res.json({ ok: true, notification, customer, visits });
 });
 
-// Rolling stats (آخر 30 يوم)
+// Rolling stats (ط¢ط®ط± 30 ظٹظˆظ…)
 app.get("/api/admin/stats/rolling", requireAuth(["admin"]), (req, res) => {
   const days = 30;
   const since = new Date(Date.now() - days * 24 * 60 * 60 * 1000);
@@ -960,12 +960,12 @@ app.get("/api/admin/export/excel", requireAuth(["admin"]), async (req, res) => {
   const wb = new ExcelJS.Workbook();
   const ws = wb.addWorksheet("Customers");
   ws.columns = [
-    { header: "الاسم", key: "name", width: 22 },
-    { header: "رقم الجوال", key: "phone", width: 16 },
-    { header: "تاريخ التسجيل", key: "created_at", width: 22 },
-    { header: "عدد الزيارات", key: "visits_count", width: 12 },
-    { header: "مرات الاستبدال", key: "redeem_count", width: 12 },
-    { header: "معدل التقييم", key: "avg_rating", width: 12 },
+    { header: "ط§ظ„ط§ط³ظ…", key: "name", width: 22 },
+    { header: "ط±ظ‚ظ… ط§ظ„ط¬ظˆط§ظ„", key: "phone", width: 16 },
+    { header: "طھط§ط±ظٹط® ط§ظ„طھط³ط¬ظٹظ„", key: "created_at", width: 22 },
+    { header: "ط¹ط¯ط¯ ط§ظ„ط²ظٹط§ط±ط§طھ", key: "visits_count", width: 12 },
+    { header: "ظ…ط±ط§طھ ط§ظ„ط§ط³طھط¨ط¯ط§ظ„", key: "redeem_count", width: 12 },
+    { header: "ظ…ط¹ط¯ظ„ ط§ظ„طھظ‚ظٹظٹظ…", key: "avg_rating", width: 12 },
   ];
 
   customers.forEach((c) => {
@@ -1003,7 +1003,7 @@ app.get("/api/admin/export/word", requireAuth(["admin"]), async (req, res) => {
 
   const rows = [
     new TableRow({
-      children: ["الاسم", "الجوال", "تاريخ التسجيل", "الزيارات", "الاستبدال", "معدل التقييم"].map(
+      children: ["ط§ظ„ط§ط³ظ…", "ط§ظ„ط¬ظˆط§ظ„", "طھط§ط±ظٹط® ط§ظ„طھط³ط¬ظٹظ„", "ط§ظ„ط²ظٹط§ط±ط§طھ", "ط§ظ„ط§ط³طھط¨ط¯ط§ظ„", "ظ…ط¹ط¯ظ„ ط§ظ„طھظ‚ظٹظٹظ…"].map(
         (t) =>
           new TableCell({
             children: [
@@ -1036,7 +1036,7 @@ app.get("/api/admin/export/word", requireAuth(["admin"]), async (req, res) => {
       {
         children: [
           new Paragraph({
-            children: [new TextRun({ text: "تقرير عملاء VIP (مختصر)", bold: true })],
+            children: [new TextRun({ text: "طھظ‚ط±ظٹط± ط¹ظ…ظ„ط§ط، VIP (ظ…ط®طھطµط±)", bold: true })],
           }),
           new Paragraph(""),
           new Table({ rows }),
@@ -1056,12 +1056,12 @@ app.get("/api/admin/export/word", requireAuth(["admin"]), async (req, res) => {
 
 // -------------------- API 404 + Error handler --------------------
 app.use("/api", (req, res) => {
-  res.status(404).json({ ok: false, error: "NOT_FOUND", message: "المسار غير موجود" });
+  res.status(404).json({ ok: false, error: "NOT_FOUND", message: "ط§ظ„ظ…ط³ط§ط± ط؛ظٹط± ظ…ظˆط¬ظˆط¯" });
 });
 
 app.use((err, req, res, next) => {
   console.error("SERVER_ERROR", err);
-  res.status(500).json({ ok: false, error: "SERVER_ERROR", message: "حدث خطأ بالخادم. أعد المحاولة." });
+  res.status(500).json({ ok: false, error: "SERVER_ERROR", message: "ط­ط¯ط« ط®ط·ط£ ط¨ط§ظ„ط®ط§ط¯ظ…. ط£ط¹ط¯ ط§ظ„ظ…ط­ط§ظˆظ„ط©." });
 });
 
 // catch-all for non-api
@@ -1100,8 +1100,9 @@ try {
       }
     }
     const ipHint = ips.length ? `https://${ips[0]}:${HTTPS_PORT}` : `https://localhost:${HTTPS_PORT}`;
-    console.log(`HTTPS (camera): ${ipHint}  (قد تظهر رسالة تحذير - اختر متابعة)`);
+    console.log(`HTTPS (camera): ${ipHint}  (ظ‚ط¯ طھط¸ظ‡ط± ط±ط³ط§ظ„ط© طھط­ط°ظٹط± - ط§ط®طھط± ظ…طھط§ط¨ط¹ط©)`);
   });
 } catch (e) {
   console.log("HTTPS disabled:", e.message);
 }
+
