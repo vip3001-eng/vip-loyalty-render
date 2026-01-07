@@ -400,3 +400,7 @@ a{color:inherit; text-decoration:none}
   box-shadow: 0 10px 28px rgba(212,175,55,.10), 0 10px 28px rgba(0,0,0,.40);
   transform: translateY(-1px);
 }
+body {
+  font-family: 'Cairo', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  direction: rtl;
+}

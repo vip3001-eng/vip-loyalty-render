@@ -1,29 +1,32 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="ar" dir="rtl">
-<head>
+<head>`n<meta charset="UTF-8">
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
-  <title>VIP — لوحة المحاسب</title>
+  <title>VIP â€” ظ„ظˆط­ط© ط§ظ„ظ…ط­ط§ط³ط¨</title>
   <link rel="stylesheet" href="/css/styles.css"/>
-  <!-- بدون مكتبات خارجية: المسح عبر BarcodeDetector داخل common.js -->
+  <!-- ط¨ط¯ظˆظ† ظ…ظƒطھط¨ط§طھ ط®ط§ط±ط¬ظٹط©: ط§ظ„ظ…ط³ط­ ط¹ط¨ط± BarcodeDetector ط¯ط§ط®ظ„ common.js -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
 <div class="container">
   <div class="card">
     <div class="topbar">
       <div class="lang">
-        <span class="pill">محاسب</span>
+        <span class="pill">ظ…ط­ط§ط³ط¨</span>
       </div>
       <div class="lang">
         <button class="pill" id="btnLang">EN</button>
-        <a class="pill" href="#" id="btnLogout">خروج</a>
+        <a class="pill" href="#" id="btnLogout">ط®ط±ظˆط¬</a>
       </div>
     </div>
 
     <div class="section">
       <div class="page-title" style="padding:0 0 10px">
-        <h2 id="t1">قارئ الباركود</h2>
-        <p id="t2">امسح QR أو استخدم الإدخال اليدوي (جوال + لوحة).</p>
+        <h2 id="t1">ظ‚ط§ط±ط¦ ط§ظ„ط¨ط§ط±ظƒظˆط¯</h2>
+        <p id="t2">ط§ظ…ط³ط­ QR ط£ظˆ ط§ط³طھط®ط¯ظ… ط§ظ„ط¥ط¯ط®ط§ظ„ ط§ظ„ظٹط¯ظˆظٹ (ط¬ظˆط§ظ„ + ظ„ظˆط­ط©).</p>
       </div>
 
       <div id="notice" class="notice" style="display:none"></div>
@@ -32,55 +35,55 @@
         <div class="kpi" style="padding:10px">
           <div id="reader" style="width:100%"></div>
           <div class="row2" style="margin-top:10px">
-            <button class="btn btn-primary" id="btnCam" type="button">تشغيل الكاميرا</button>
-            <button class="btn btn-ghost" id="btnStopCam" type="button" disabled>إيقاف</button>
-            <button class="btn btn-ghost" id="btnScanImage" type="button">التقاط/مسح صورة</button>
+            <button class="btn btn-primary" id="btnCam" type="button">طھط´ط؛ظٹظ„ ط§ظ„ظƒط§ظ…ظٹط±ط§</button>
+            <button class="btn btn-ghost" id="btnStopCam" type="button" disabled>ط¥ظٹظ‚ط§ظپ</button>
+            <button class="btn btn-ghost" id="btnScanImage" type="button">ط§ظ„طھظ‚ط§ط·/ظ…ط³ط­ طµظˆط±ط©</button>
             <input id="scanImageInput" type="file" accept="image/*" capture="environment" style="display:none" />
           </div>
-          <div class="small" style="margin-top:8px" id="t3">إذا لم تعمل الكاميرا، امنح إذن الكاميرا أو استخدم الإدخال اليدوي.</div>
+          <div class="small" style="margin-top:8px" id="t3">ط¥ط°ط§ ظ„ظ… طھط¹ظ…ظ„ ط§ظ„ظƒط§ظ…ظٹط±ط§طŒ ط§ظ…ظ†ط­ ط¥ط°ظ† ط§ظ„ظƒط§ظ…ظٹط±ط§ ط£ظˆ ط§ط³طھط®ط¯ظ… ط§ظ„ط¥ط¯ط®ط§ظ„ ط§ظ„ظٹط¯ظˆظٹ.</div>
         </div>
 
         <div class="kpi" style="padding:10px">
           <div class="field">
-            <label id="lPhone">رقم الجوال</label>
+            <label id="lPhone">ط±ظ‚ظ… ط§ظ„ط¬ظˆط§ظ„</label>
             <input id="mPhone" inputmode="tel" placeholder="05xxxxxxxx"/>
           </div>
           <div class="field" style="margin-top:8px">
-            <label id="lPlate">أرقام اللوحة</label>
+            <label id="lPlate">ط£ط±ظ‚ط§ظ… ط§ظ„ظ„ظˆط­ط©</label>
             <input id="mPlate" class="mono" placeholder="1234"/>
           </div>
-          <button class="btn btn-ghost" id="btnManual" style="margin-top:10px">بحث يدوي</button>
+          <button class="btn btn-ghost" id="btnManual" style="margin-top:10px">ط¨ط­ط« ظٹط¯ظˆظٹ</button>
         </div>
       </div>
     </div>
 
     <div class="section" id="resultBox" style="display:none">
       <div class="page-title" style="padding:0 0 10px">
-        <h2 id="tRes">نتيجة البحث</h2>
+        <h2 id="tRes">ظ†طھظٹط¬ط© ط§ظ„ط¨ط­ط«</h2>
       </div>
 
       <div class="kpi">
-        <div class="label" id="lCust">العميل</div>
-        <div class="value" id="custName" style="font-size:16px">—</div>
+        <div class="label" id="lCust">ط§ظ„ط¹ظ…ظٹظ„</div>
+        <div class="value" id="custName" style="font-size:16px">â€”</div>
         <div class="small" id="custMeta"></div>
-        <div class="small" style="margin-top:8px">التقييم: <span id="visitRatingStars" class="stars-inline">—</span></div>
+        <div class="small" style="margin-top:8px">ط§ظ„طھظ‚ظٹظٹظ…: <span id="visitRatingStars" class="stars-inline">â€”</span></div>
       </div>
 
       <div class="row2" style="margin-top:10px">
         <div class="kpi">
-          <div class="label" id="lVisits">عدد الزيارات (معتمدة)</div>
-          <div class="value" id="visitsCount">—</div>
+          <div class="label" id="lVisits">ط¹ط¯ط¯ ط§ظ„ط²ظٹط§ط±ط§طھ (ظ…ط¹طھظ…ط¯ط©)</div>
+          <div class="value" id="visitsCount">â€”</div>
         </div>
         <div class="kpi">
-          <div class="label" id="lPoints">النقاط الحالية</div>
-          <div class="value" id="pointsNow">—</div>
+          <div class="label" id="lPoints">ط§ظ„ظ†ظ‚ط§ط· ط§ظ„ط­ط§ظ„ظٹط©</div>
+          <div class="value" id="pointsNow">â€”</div>
           <div class="small" id="pointsMeta"></div>
         </div>
       </div>
 
       <div class="row2" style="margin-top:10px">
-        <button class="btn btn-primary" id="btnApprove">اعتماد زيارة</button>
-        <button class="btn btn-ghost" id="btnRedeem">استبدال النقاط</button>
+        <button class="btn btn-primary" id="btnApprove">ط§ط¹طھظ…ط§ط¯ ط²ظٹط§ط±ط©</button>
+        <button class="btn btn-ghost" id="btnRedeem">ط§ط³طھط¨ط¯ط§ظ„ ط§ظ„ظ†ظ‚ط§ط·</button>
       </div>
     </div>
 
@@ -103,26 +106,26 @@ function showActionStatus(msg, type=""){
 
   const dict = {
     ar: {
-      btnManual:"بحث يدوي",
-      approve:"اعتماد زيارة",
-      redeem:"استبدال النقاط",
-      logout:"خروج",
-      t1:"قارئ الباركود",
-      t2:"امسح QR أو استخدم الإدخال اليدوي (جوال + لوحة).",
-      t3:"إذا لم تعمل الكاميرا، استخدم الإدخال اليدوي.",
-      lPhone:"رقم الجوال",
-      lPlate:"أرقام اللوحة",
-      tRes:"نتيجة البحث",
-      lCust:"العميل",
-      lVisits:"عدد الزيارات (معتمدة)",
-      lPoints:"النقاط الحالية",
-      msgFound:"تم جلب بيانات الزيارة.",
-      msgBad:"QR غير صالح أو منتهي.",
-      msgNeed:"اكتب رقم الجوال وأرقام اللوحة.",
-      msgNF:"لم يتم العثور على بيانات.",
-      msgApp:"تم اعتماد الزيارة.",
-      msgRedeemOk:"تم استبدال النقاط.",
-      msgRedeemNo:(cur,need)=>`لا يمكن الاستبدال. نقاط العميل ${cur}/${need}`
+      btnManual:"ط¨ط­ط« ظٹط¯ظˆظٹ",
+      approve:"ط§ط¹طھظ…ط§ط¯ ط²ظٹط§ط±ط©",
+      redeem:"ط§ط³طھط¨ط¯ط§ظ„ ط§ظ„ظ†ظ‚ط§ط·",
+      logout:"ط®ط±ظˆط¬",
+      t1:"ظ‚ط§ط±ط¦ ط§ظ„ط¨ط§ط±ظƒظˆط¯",
+      t2:"ط§ظ…ط³ط­ QR ط£ظˆ ط§ط³طھط®ط¯ظ… ط§ظ„ط¥ط¯ط®ط§ظ„ ط§ظ„ظٹط¯ظˆظٹ (ط¬ظˆط§ظ„ + ظ„ظˆط­ط©).",
+      t3:"ط¥ط°ط§ ظ„ظ… طھط¹ظ…ظ„ ط§ظ„ظƒط§ظ…ظٹط±ط§طŒ ط§ط³طھط®ط¯ظ… ط§ظ„ط¥ط¯ط®ط§ظ„ ط§ظ„ظٹط¯ظˆظٹ.",
+      lPhone:"ط±ظ‚ظ… ط§ظ„ط¬ظˆط§ظ„",
+      lPlate:"ط£ط±ظ‚ط§ظ… ط§ظ„ظ„ظˆط­ط©",
+      tRes:"ظ†طھظٹط¬ط© ط§ظ„ط¨ط­ط«",
+      lCust:"ط§ظ„ط¹ظ…ظٹظ„",
+      lVisits:"ط¹ط¯ط¯ ط§ظ„ط²ظٹط§ط±ط§طھ (ظ…ط¹طھظ…ط¯ط©)",
+      lPoints:"ط§ظ„ظ†ظ‚ط§ط· ط§ظ„ط­ط§ظ„ظٹط©",
+      msgFound:"طھظ… ط¬ظ„ط¨ ط¨ظٹط§ظ†ط§طھ ط§ظ„ط²ظٹط§ط±ط©.",
+      msgBad:"QR ط؛ظٹط± طµط§ظ„ط­ ط£ظˆ ظ…ظ†طھظ‡ظٹ.",
+      msgNeed:"ط§ظƒطھط¨ ط±ظ‚ظ… ط§ظ„ط¬ظˆط§ظ„ ظˆط£ط±ظ‚ط§ظ… ط§ظ„ظ„ظˆط­ط©.",
+      msgNF:"ظ„ظ… ظٹطھظ… ط§ظ„ط¹ط«ظˆط± ط¹ظ„ظ‰ ط¨ظٹط§ظ†ط§طھ.",
+      msgApp:"طھظ… ط§ط¹طھظ…ط§ط¯ ط§ظ„ط²ظٹط§ط±ط©.",
+      msgRedeemOk:"طھظ… ط§ط³طھط¨ط¯ط§ظ„ ط§ظ„ظ†ظ‚ط§ط·.",
+      msgRedeemNo:(cur,need)=>`ظ„ط§ ظٹظ…ظƒظ† ط§ظ„ط§ط³طھط¨ط¯ط§ظ„. ظ†ظ‚ط§ط· ط§ظ„ط¹ظ…ظٹظ„ ${cur}/${need}`
     },
     en: {
       btnManual:"Manual lookup",
@@ -229,8 +232,8 @@ function showActionStatus(msg, type=""){
       else{ showNotice(t().msgBad,'bad'); }
     }catch(err){
       const msg = (err && err.message === 'NO_SUPPORT')
-        ? ((lang==='ar')?'هذا المتصفح لا يدعم مسح QR من صورة.':'Browser does not support scan-from-image.')
-        : ((lang==='ar')?'تعذر مسح الصورة.':'Failed to scan image.');
+        ? ((lang==='ar')?'ظ‡ط°ط§ ط§ظ„ظ…طھطµظپط­ ظ„ط§ ظٹط¯ط¹ظ… ظ…ط³ط­ QR ظ…ظ† طµظˆط±ط©.':'Browser does not support scan-from-image.')
+        : ((lang==='ar')?'طھط¹ط°ط± ظ…ط³ط­ ط§ظ„طµظˆط±ط©.':'Failed to scan image.');
       showNotice(msg,'bad');
     } finally {
       e.target.value = '';
@@ -240,11 +243,11 @@ function showActionStatus(msg, type=""){
   $("#btnApprove").addEventListener("click", async ()=>{
     if(!lastVisit) return;
     const r = await api("/api/visit/approve","POST",{ visitId: lastVisit.id });
-    showNotice(t().msgApp + ` — نقاطك الآن ${r.points.current_points}/50`, "good");
+    showNotice(t().msgApp + ` â€” ظ†ظ‚ط§ط·ظƒ ط§ظ„ط¢ظ† ${r.points.current_points}/50`, "good");
     $("#pointsNow").textContent = r.points.current_points;
-    $("#pointsMeta").textContent = `Earned: ${r.points.earned_points} — Redeemed: ${r.points.redeemed_points}`;
+    $("#pointsMeta").textContent = `Earned: ${r.points.earned_points} â€” Redeemed: ${r.points.redeemed_points}`;
     await refreshRedeemButton();
-    // بعد الاعتماد نخفي بيانات العميل وتظهر رسالة فقط
+    // ط¨ط¹ط¯ ط§ظ„ط§ط¹طھظ…ط§ط¯ ظ†ط®ظپظٹ ط¨ظٹط§ظ†ط§طھ ط§ظ„ط¹ظ…ظٹظ„ ظˆطھط¸ظ‡ط± ط±ط³ط§ظ„ط© ظپظ‚ط·
     $("#resultBox").style.display = "none";
     lastVisit = null;
   });
@@ -256,11 +259,11 @@ function showActionStatus(msg, type=""){
       showActionStatus(t().msgRedeemNo(r.current, r.need), "bad");
       return;
     }
-    showNotice(t().msgRedeemOk + ` — نقاطك الآن ${r.points.current_points}/50`, "good");
+    showNotice(t().msgRedeemOk + ` â€” ظ†ظ‚ط§ط·ظƒ ط§ظ„ط¢ظ† ${r.points.current_points}/50`, "good");
     $("#pointsNow").textContent = r.points.current_points;
-    $("#pointsMeta").textContent = `Earned: ${r.points.earned_points} — Redeemed: ${r.points.redeemed_points}`;
+    $("#pointsMeta").textContent = `Earned: ${r.points.earned_points} â€” Redeemed: ${r.points.redeemed_points}`;
     await refreshRedeemButton();
-    // بعد الاستبدال نخفي بيانات العميل وتظهر رسالة فقط
+    // ط¨ط¹ط¯ ط§ظ„ط§ط³طھط¨ط¯ط§ظ„ ظ†ط®ظپظٹ ط¨ظٹط§ظ†ط§طھ ط§ظ„ط¹ظ…ظٹظ„ ظˆطھط¸ظ‡ط± ط±ط³ط§ظ„ط© ظپظ‚ط·
     $("#resultBox").style.display = "none";
     lastVisit = null;
   });
@@ -279,15 +282,15 @@ function showActionStatus(msg, type=""){
     lastVisit = r.visit;
     $("#resultBox").style.display="block";
     $("#custName").textContent = r.visit.customer_name;
-    $("#custMeta").textContent = `Phone: ${r.visit.customer_phone} — Plate: ${r.visit.plate_letters_ar} ${r.visit.plate_numbers}`;
+    $("#custMeta").textContent = `Phone: ${r.visit.customer_phone} â€” Plate: ${r.visit.plate_letters_ar} ${r.visit.plate_numbers}`;
     // rating stars
     const rating = Number(r.visit.rating || 0);
-    const stars = Array.from({length:5}).map((_,i)=> i<rating ? "★" : "☆").join("");
+    const stars = Array.from({length:5}).map((_,i)=> i<rating ? "âک…" : "âک†").join("");
     const rsEl = document.querySelector("#visitRatingStars");
     if(rsEl) rsEl.textContent = stars;
     $("#visitsCount").textContent = r.visitsCount;
     $("#pointsNow").textContent = r.points.current_points;
-    $("#pointsMeta").textContent = `Earned: ${r.points.earned_points} — Redeemed: ${r.points.redeemed_points}`;
+    $("#pointsMeta").textContent = `Earned: ${r.points.earned_points} â€” Redeemed: ${r.points.redeemed_points}`;
     await refreshRedeemButton();
   }
 
@@ -317,7 +320,7 @@ function showActionStatus(msg, type=""){
       if(isNotSecure){
         if(httpsUrl){
           const msg = (lang==="ar")
-            ? `لم يتم تشغيل الكاميرا لأن الصفحة ليست آمنة (HTTP). سيتم تحويلك تلقائياً للنسخة الآمنة. إذا لم يحدث التحويل اضغط: <button class="pill" id="openHttpsBtn" type="button">فتح عبر HTTPS</button>`
+            ? `ظ„ظ… ظٹطھظ… طھط´ط؛ظٹظ„ ط§ظ„ظƒط§ظ…ظٹط±ط§ ظ„ط£ظ† ط§ظ„طµظپط­ط© ظ„ظٹط³طھ ط¢ظ…ظ†ط© (HTTP). ط³ظٹطھظ… طھط­ظˆظٹظ„ظƒ طھظ„ظ‚ط§ط¦ظٹط§ظ‹ ظ„ظ„ظ†ط³ط®ط© ط§ظ„ط¢ظ…ظ†ط©. ط¥ط°ط§ ظ„ظ… ظٹط­ط¯ط« ط§ظ„طھط­ظˆظٹظ„ ط§ط¶ط؛ط·: <button class="pill" id="openHttpsBtn" type="button">ظپطھط­ ط¹ط¨ط± HTTPS</button>`
             : `Camera requires HTTPS. Redirecting now. If not redirected, click: <button class="pill" id="openHttpsBtn" type="button">Open HTTPS</button>`;
           showNoticeHtml(msg, "bad");
           setTimeout(()=>{
@@ -326,28 +329,28 @@ function showActionStatus(msg, type=""){
           }, 0);
         }else{
           showNotice((lang==="ar")
-            ? `لم يتم تشغيل الكاميرا لأن الصفحة ليست آمنة. افتح عبر https على المنفذ 3443 (مثال: https://${location.hostname}:3443).`
+            ? `ظ„ظ… ظٹطھظ… طھط´ط؛ظٹظ„ ط§ظ„ظƒط§ظ…ظٹط±ط§ ظ„ط£ظ† ط§ظ„طµظپط­ط© ظ„ظٹط³طھ ط¢ظ…ظ†ط©. ط§ظپطھط­ ط¹ط¨ط± https ط¹ظ„ظ‰ ط§ظ„ظ…ظ†ظپط° 3443 (ظ…ط«ط§ظ„: https://${location.hostname}:3443).`
             : 'Camera requires HTTPS (port 3443).', "bad");
         }
         return;
       }
-      // إذا كان المتصفح لا يدعم مسح QR بالكاميرا
+      // ط¥ط°ط§ ظƒط§ظ† ط§ظ„ظ…طھطµظپط­ ظ„ط§ ظٹط¯ط¹ظ… ظ…ط³ط­ QR ط¨ط§ظ„ظƒط§ظ…ظٹط±ط§
       if(!(window.Html5Qrcode || ("BarcodeDetector" in window))){
         const m = (lang==="ar")
-          ? "هذا المتصفح لا يدعم مسح QR بالكاميرا. استخدم الإدخال اليدوي أو افتح الصفحة في Chrome/Edge حديث."
+          ? "ظ‡ط°ط§ ط§ظ„ظ…طھطµظپط­ ظ„ط§ ظٹط¯ط¹ظ… ظ…ط³ط­ QR ط¨ط§ظ„ظƒط§ظ…ظٹط±ط§. ط§ط³طھط®ط¯ظ… ط§ظ„ط¥ط¯ط®ط§ظ„ ط§ظ„ظٹط¯ظˆظٹ ط£ظˆ ط§ظپطھط­ ط§ظ„طµظپط­ط© ظپظٹ Chrome/Edge ط­ط¯ظٹط«."
           : "This browser does not support QR scanning. Use manual input or open in a recent Chrome/Edge.";
         showNotice(m, "bad");
         return;
       }
-      // أخطاء صلاحيات/استخدام الكاميرا
+      // ط£ط®ط·ط§ط، طµظ„ط§ط­ظٹط§طھ/ط§ط³طھط®ط¯ط§ظ… ط§ظ„ظƒط§ظ…ظٹط±ط§
       const n = (err && err.name) ? err.name : '';
       const msgAr = (n==='NotAllowedError' || n==='PermissionDeniedError')
-        ? 'تم رفض إذن الكاميرا. من إعدادات المتصفح: Site settings > Camera > Allow ثم حدّث الصفحة.'
+        ? 'طھظ… ط±ظپط¶ ط¥ط°ظ† ط§ظ„ظƒط§ظ…ظٹط±ط§. ظ…ظ† ط¥ط¹ط¯ط§ط¯ط§طھ ط§ظ„ظ…طھطµظپط­: Site settings > Camera > Allow ط«ظ… ط­ط¯ظ‘ط« ط§ظ„طµظپط­ط©.'
         : (n==='NotFoundError')
-          ? 'لا توجد كاميرا متاحة على هذا الجهاز.'
+          ? 'ظ„ط§ طھظˆط¬ط¯ ظƒط§ظ…ظٹط±ط§ ظ…طھط§ط­ط© ط¹ظ„ظ‰ ظ‡ط°ط§ ط§ظ„ط¬ظ‡ط§ط².'
           : (n==='NotReadableError')
-            ? 'الكاميرا مشغولة بتطبيق آخر. اغلق أي تطبيق يستخدم الكاميرا ثم جرّب.'
-            : 'تعذر تشغيل الكاميرا. جرّب فتح الصفحة في Chrome/Edge واسمح بإذن الكاميرا.';
+            ? 'ط§ظ„ظƒط§ظ…ظٹط±ط§ ظ…ط´ط؛ظˆظ„ط© ط¨طھط·ط¨ظٹظ‚ ط¢ط®ط±. ط§ط؛ظ„ظ‚ ط£ظٹ طھط·ط¨ظٹظ‚ ظٹط³طھط®ط¯ظ… ط§ظ„ظƒط§ظ…ظٹط±ط§ ط«ظ… ط¬ط±ظ‘ط¨.'
+            : 'طھط¹ط°ط± طھط´ط؛ظٹظ„ ط§ظ„ظƒط§ظ…ظٹط±ط§. ط¬ط±ظ‘ط¨ ظپطھط­ ط§ظ„طµظپط­ط© ظپظٹ Chrome/Edge ظˆط§ط³ظ…ط­ ط¨ط¥ط°ظ† ط§ظ„ظƒط§ظ…ظٹط±ط§.';
       const msgEn = (n==='NotAllowedError' || n==='PermissionDeniedError')
         ? 'Camera permission denied. Allow it in Site Settings then refresh.'
         : (n==='NotFoundError')
@@ -355,7 +358,7 @@ function showActionStatus(msg, type=""){
           : (n==='NotReadableError')
             ? 'Camera is in use by another app. Close it and retry.'
             : 'Failed to start camera. Try Chrome/Edge and allow permission.';
-      const html = ((lang==="ar") ? msgAr : msgEn) + ` — <button class="pill" id="useImageScanBtn" type="button">${(lang==="ar")?'مسح من صورة':'Scan from image'}</button>`;
+      const html = ((lang==="ar") ? msgAr : msgEn) + ` â€” <button class="pill" id="useImageScanBtn" type="button">${(lang==="ar")?'ظ…ط³ط­ ظ…ظ† طµظˆط±ط©':'Scan from image'}</button>`;
       showNoticeHtml(html, "bad");
       setTimeout(()=>{ const b=document.getElementById('useImageScanBtn'); if(b) b.addEventListener('click', ()=>{ const inp=document.getElementById('scanImageInput'); if(inp) inp.click(); }); },0);
     });
@@ -377,3 +380,4 @@ function showActionStatus(msg, type=""){
 </script>
 </body>
 </html>
+
