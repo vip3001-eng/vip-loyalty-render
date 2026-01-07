@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+  <title>VIP غسيل وتلميع — الرئيسية</title>
+  <link rel="stylesheet" href="/css/styles.css"/>
+</head>
+<body>
+  <div class="container">
+    <div class="card">
+      <div class="header">
+        <img id="logo" class="logo" src="/assets/logo-transparent.png" alt="VIP Logo"/>
+      </div>
+
+      <div class="hero">
+        <h1 id="homeText1">أهلاً بك في غسيل وتلميع VIP</h1>
+        <p id="homeText2">اختر نوع العميل وابدأ رحلتك معنا</p>
+      </div>
+
+      <div class="actions">
+        <a class="btn btn-primary" href="/loyal.html">عميل وفي</a>
+        <a class="btn btn-ghost" href="/new.html">عميل جديد</a>
+      </div>
+
+      <div class="social" aria-label="روابط التواصل">
+        <a class="icon" id="waLink" href="#" target="_blank" rel="noopener" aria-label="واتس أب"><span id="waI"></span></a>
+        <a class="icon" id="snapLink" href="#" target="_blank" rel="noopener" aria-label="سناب شات"><span id="snI"></span></a>
+        <a class="icon" id="tkLink" href="#" target="_blank" rel="noopener" aria-label="تيك توك"><span id="tkI"></span></a>
+        <a class="icon" id="mapsLink" href="#" target="_blank" rel="noopener" aria-label="قوقل ماب"><span id="mapI"></span></a>
+      </div>
+
+      <div class="home-footer">
+        <button class="link-btn" id="termsBtn" type="button">الشروط والأحكام</button>
+        <div class="rights">جميع الحقوق محفوظة لدى (غسيل وتلميع VIP)</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Terms Modal -->
+  <div class="modal-backdrop" id="termsBack" onclick="if(event.target.id==='termsBack') closeTerms()" style="display:none">
+    <div class="modal scroll">
+      <h3>الشروط والأحكام</h3>
+      <div class="small" id="termsText" style="white-space:pre-wrap; line-height:1.8; margin-top:8px"></div>
+      <button class="btn btn-ghost" style="margin-top:12px" onclick="closeTerms()">إغلاق</button>
+    </div>
+  </div>
+
+<script src="/js/common.js"></script>
+<script>
+  // دخول الأدمن/المحاسب مخفي داخل الشعار (اضغط 5 مرات بسرعة)
+  enableHiddenAdmin("#logo", "/admin-login.html", 5);
+  $("#waI").innerHTML = iconWhats();
+  $("#snI").innerHTML = iconSnap();
+  $("#tkI").innerHTML = iconTiktok();
+  $("#mapI").innerHTML = iconMaps();
+
+  (async ()=>{
+    const r = await api("/api/public/settings");
+    if(r.ok){
+      $("#homeText1").textContent = r.settings.home_text_1 || $("#homeText1").textContent;
+      $("#homeText2").textContent = r.settings.home_text_2 || $("#homeText2").textContent;
+      const terms = (r.settings.terms_text || "").trim();
+      if(terms){
+        $("#termsText").textContent = terms;
+        $("#termsBtn").style.display = "inline-flex";
+      }else{
+        $("#termsBtn").style.display = "none";
+      }
+      $("#waLink").href = r.settings.social_whatsapp || "#";
+      $("#snapLink").href = r.settings.social_snap || "#";
+      $("#tkLink").href = r.settings.social_tiktok || "#";
+      $("#mapsLink").href = r.settings.social_maps || "#";
+    }
+  })();
+
+  function openTerms(){
+    $("#termsBack").style.display = "grid";
+  }
+  function closeTerms(){
+    $("#termsBack").style.display = "none";
+  }
+  $("#termsBtn").addEventListener("click", openTerms);
+</script>
+</body>
+</html>

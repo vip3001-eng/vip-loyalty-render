@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+  <title>VIP — عميل وفي</title>
+  <link rel="stylesheet" href="/css/styles.css"/>
+</head>
+<body>
+  <div class="container">
+    <div class="card">
+    <div class="header">
+      <a class="back-btn" href="/">رجوع</a>
+      <!-- بدون شعار في صفحات العملاء -->
+      <div style="width:120px"></div>
+    </div>
+
+      <div class="page-title">
+        <h2>مرحباً بعميلنا الوفي</h2>
+        </div>
+
+      <div id="notice" class="notice" style="display:none"></div>
+
+      <form class="form" id="loyalForm">
+        <div class="field">
+          <label>الاسم</label>
+          <input name="name"/>
+        </div>
+
+        <div class="field">
+          <label>رقم الجوال *</label>
+          <input name="phone" inputmode="tel" required/>
+        </div>
+
+        <div class="row2">
+          <div class="field">
+            <label>حروف اللوحة (عربي) *</label>
+            <input name="plate_letters_ar" required/>
+          </div>
+          <div class="field">
+            <label>أرقام اللوحة (عربي/إنجليزي) *</label>
+            <input name="plate_numbers" class="mono" required/>
+          </div>
+        </div>
+
+        <div class="field">
+          <label>التقييم *</label>
+          <div class="stars" id="stars">
+            <button type="button" class="star" data-v="1">★</button>
+            <button type="button" class="star" data-v="2">★</button>
+            <button type="button" class="star" data-v="3">★</button>
+            <button type="button" class="star" data-v="4">★</button>
+            <button type="button" class="star" data-v="5">★</button>
+          </div>
+          <input type="hidden" name="rating" id="rating" required/>
+        </div>
+
+        <div class="field">
+          <label>ملاحظات</label>
+          <textarea name="notes"></textarea>
+        </div>
+
+        <button class="btn btn-primary" type="submit">تم</button>
+      </form>
+    </div>
+  </div>
+
+<div class="modal-backdrop" id="modalBack" data-go-home="1" onclick="if(event.target.id==='modalBack') closeModal()">
+  <div class="modal qr-modal">
+      <h3 id="modalTitle">وجّه الباركود للمحاسب للاعتماد</h3>
+      <div class="qr-wrap">
+        <img id="qrImg" class="qr-img" alt="QR"/>
+      </div>
+      <p class="small" id="modalHint">بعد اعتماد المحاسب ستظهر رسالة إضافة النقاط.</p>
+      <div id="carsBlock" style="display:none">
+        <div class="cars-progress" id="carsProgress" aria-label="شريط التقدّم"></div>
+      </div>
+      <div id="afterApprove" class="after-approve" style="display:none">
+        <p id="afterApproveText" class="small" style="margin:0 0 10px 0"></p>
+        <div class="social" style="justify-content:center">
+          <a class="icon" id="aaWa" href="#" target="_blank" rel="noopener" aria-label="واتس أب"><span id="aaWaI"></span></a>
+          <a class="icon" id="aaSn" href="#" target="_blank" rel="noopener" aria-label="سناب شات"><span id="aaSnI"></span></a>
+          <a class="icon" id="aaTk" href="#" target="_blank" rel="noopener" aria-label="تيك توك"><span id="aaTkI"></span></a>
+          <a class="icon" id="aaMap" href="#" target="_blank" rel="noopener" aria-label="قوقل ماب"><span id="aaMapI"></span></a>
+        </div>
+      </div>
+      <button class="btn btn-ghost" onclick="closeModal()">إغلاق</button>
+    </div>
+  </div>
+
+<script src="/js/common.js"></script>
+<script>
+  setStars("#stars", "#rating");
+
+  function carSvg(){
+    return `
+<svg viewBox="0 0 64 32" xmlns="http://www.w3.org/2000/svg" fill="none">
+  <!-- body -->
+  <path d="M10 19l4-9c.6-1.4 2-2.3 3.6-2.3h28.8c1.6 0 3 .9 3.6 2.3l4 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M6 19h52a4.5 4.5 0 0 1 4.5 4.5V26H1.5v-2.5A4.5 4.5 0 0 1 6 19Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+  <!-- windows -->
+  <path d="M19 10h10l-2 7H15l4-7Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round" opacity=".75"/>
+  <path d="M33 10h12l4 7H31l2-7Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round" opacity=".75"/>
+  <!-- lights -->
+  <path d="M3.5 23h5" stroke="currentColor" stroke-width="2" stroke-linecap="round" opacity=".7"/>
+  <path d="M55.5 23h5" stroke="currentColor" stroke-width="2" stroke-linecap="round" opacity=".7"/>
+  <!-- wheels -->
+  <circle cx="18" cy="26" r="3.2" fill="currentColor"/>
+  <circle cx="46" cy="26" r="3.2" fill="currentColor"/>
+</svg>
+`;
+  }
+
+  function renderCars(pointsNow, pointsLimit, pointsPerVisit){
+    const wrap = $("#carsProgress");
+    const block = $("#carsBlock");
+    if(!wrap || !block) return;
+
+    const per = Number(pointsPerVisit || 10) || 10;
+    const limit = Number(pointsLimit || 50) || 50;
+    const total = Math.max(1, Math.ceil(limit / per));
+    const filled = Math.max(0, Math.min(total, Math.floor((Number(pointsNow) || 0) / per)));
+
+    wrap.innerHTML = "";
+    for(let i=0;i<total;i++){
+      const el = document.createElement("span");
+      el.className = "car-chip" + (i < filled ? " on" : "");
+      el.innerHTML = carSvg();
+      wrap.appendChild(el);
+    }
+
+    block.style.display = "block";
+  }
+
+  // Setup icons in the post-approval block
+  document.addEventListener("DOMContentLoaded", ()=>{
+    if($("#aaWaI")) $("#aaWaI").innerHTML = iconWhats();
+    if($("#aaSnI")) $("#aaSnI").innerHTML = iconSnap();
+    if($("#aaTkI")) $("#aaTkI").innerHTML = iconTiktok();
+    if($("#aaMapI")) $("#aaMapI").innerHTML = iconMaps();
+  });
+
+  $("#loyalForm").addEventListener("submit", async (e)=>{
+    e.preventDefault();
+    hideNotice();
+    const fd = new FormData(e.target);
+    const body = Object.fromEntries(fd.entries());
+    if(!body.rating){
+      showNotice("اختر التقييم بالنجوم ثم اضغط تم.", "bad");
+      return;
+    }
+    try{
+      const r = await api("/api/customer/loyal/submit", "POST", body);
+      if(!r.ok){
+        if(r.error === "NOT_FOUND" || r.error==="VEHICLE_NOT_FOUND"){
+          showNotice("هذه البيانات غير مسجلة لدينا. اضغط الزر للانتقال لصفحة العميل الجديد.", "bad");
+          const btn = document.createElement("a");
+          btn.href = "/new.html";
+          btn.className = "btn btn-ghost";
+          btn.textContent = "الانتقال لصفحة العميل الجديد";
+          btn.style.marginTop = "12px";
+          btn.style.width = "100%";
+          btn.style.display = "flex";
+          btn.style.justifyContent = "center";
+          btn.style.alignItems = "center";
+          $("#notice").appendChild(btn);
+          return;
+        }
+        showNotice(r.message || "تحقق من الحقول المطلوبة.", "bad");
+        return;
+      }
+      $("#qrImg").src = r.qrDataUrl;
+      $("#modalTitle").textContent = "وجّه الباركود للمحاسب للاعتماد";
+      $("#afterApprove").style.display = "none";
+      if($("#carsBlock")) $("#carsBlock").style.display = "none";
+      const qrWrap = document.querySelector(".qr-wrap");
+      if(qrWrap) qrWrap.style.display = "grid";
+      $("#modalHint").style.display = "block";
+      document.querySelector("#modalBack").dataset.goHome = "1";
+      openModal();
+
+      // Poll approval status
+      pollApproved(r.visitId);
+    }catch(err){
+      showNotice("حدث خطأ غير متوقع. أعد المحاولة.", "bad");
+    }
+  });
+
+  async function pollApproved(visitId){
+  try{
+    const maxMs = 5 * 60 * 1000; // 5 minutes
+    const started = Date.now();
+    const timer = setInterval(async ()=>{
+      try{
+        const res = await fetch(`/api/public/visit-status?visitId=${encodeURIComponent(visitId)}`);
+        const data = await res.json();
+        if(data && data.ok && data.approved){
+          clearInterval(timer);
+          // Update modal text after approval/redeem
+          $("#modalTitle").textContent = `نقاطك الآن ${data.pointsNow}/${data.pointsLimit}`;
+          const qrWrap2 = document.querySelector('.qr-wrap');
+          if(qrWrap2) qrWrap2.style.display = 'none';
+          renderCars(data.pointsNow, data.pointsLimit, data.pointsPerVisit);
+          // Show post-approval block (admin-configurable)
+          $("#modalHint").style.display = "none";
+          const t = data.after_approve_text || "";
+          $("#afterApproveText").textContent = t;
+          if(data.social){
+            $("#aaWa").href = data.social.whatsapp || "#";
+            $("#aaSn").href = data.social.snap || "#";
+            $("#aaTk").href = data.social.tiktok || "#";
+            $("#aaMap").href = data.social.maps || "#";
+          }
+          $("#afterApprove").style.display = "block";
+        }else{
+          // keep waiting
+          if(Date.now() - started > maxMs){
+            clearInterval(timer);
+            $("#modalHint").textContent = "إذا لم يتم الاعتماد، تواصل مع المحاسب.";
+          }
+        }
+      }catch(e){}
+    }, 1500);
+  }catch(err){}
+}
+</script>
+</body>
+</html>

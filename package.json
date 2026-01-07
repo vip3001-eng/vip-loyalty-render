@@ -1,0 +1,24 @@
+{
+  "name": "vip-loyalty-site",
+  "version": "1.0.0",
+  "description": "VIP غسيل وتلميع - نظام نقاط ولاء (موبايل فقط) مع أدمن/محاسب وباركود",
+  "main": "server.js",
+  "scripts": {
+    "dev": "node server.js",
+    "start": "node server.js",
+    "seed": "node seed.js"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "better-sqlite3": "^11.6.0",
+    "chart.js": "^4.4.1",
+    "cookie-parser": "^1.4.6",
+    "docx": "^9.0.0",
+    "exceljs": "^4.4.0",
+    "express": "^4.19.2",
+    "html5-qrcode": "^2.3.8",
+    "jsonwebtoken": "^9.0.2",
+    "qrcode": "^1.5.3",
+    "selfsigned": "^2.4.1"
+  }
+}
