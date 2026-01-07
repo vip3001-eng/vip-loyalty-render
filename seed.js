@@ -41,3 +41,5 @@ db.prepare(`
 
 console.log("Seed done. Default users ensured (admin/cashier) + passwords reset.");
 
+
+
