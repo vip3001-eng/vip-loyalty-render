@@ -23,13 +23,13 @@ function playScanBeep(){
 }
 
 function ensureSecureContext(){
-  // �������� ����� ���� ���: HTTPS �� localhost.
-  // ������ ����: ��������� ����� http://localhost ������ ����� � ���� �� ���� �������.
+  // الكاميرا تحتاج سياق آمن: HTTPS أو localhost.
+  // ملاحظة مهمة: المتصفحات تعتبر http://localhost سياقًا آمنًا — لذلك لا نجبر التحويل.
   const isLocal = location.hostname === 'localhost' || location.hostname === '127.0.0.1';
   if(isLocal) return true;
   if(location.protocol !== 'https:'){
-    // �������� �������: ����� ������� �������� ������ ������ ��� ���� ��������.
-    // ��� ���� ������� ��� ������ ����� ����� ����� ����� �������� ������.
+    // للمستخدم النهائي: نفضّل التحويل التلقائي للنسخة الآمنة حتى تعمل الكاميرا.
+    // إذا كانت الشهادة غير موثوقة سيظهر تحذير متصفح ويمكن للمستخدم متابعة.
     const httpsUrl = suggestedHttpsUrl();
     if(httpsUrl){
       try{ location.replace(httpsUrl); }catch(e){}
@@ -39,8 +39,8 @@ function ensureSecureContext(){
   return true;
 }
 
-// ���� ������ ������ (������� ��� ������ ��� IP)
-// ������: ������� ����� HTTPS ������ ��� 3443 (���� server.js)
+// رابط النسخة الآمنة (للتجربة على الجوال عبر IP)
+// ملاحظة: السيرفر يشغّل HTTPS محليًا على 3443 (انظر server.js)
 function suggestedHttpsUrl(){
   try{
     if(location.protocol === 'https:') return null;
@@ -65,7 +65,7 @@ function showNotice(msg, type=""){
   box.style.display = "block";
 }
 
-// ��� showNotice ��� ���� HTML (�� ������� �� ������ ��������)
+// نفس showNotice لكن يدعم HTML (لا تستخدمه مع مدخلات المستخدم)
 function showNoticeHtml(html, type=""){
   const box = $("#notice");
   if(!box) return;
@@ -86,7 +86,7 @@ function openModal(){
 function closeModal(){
   $("#modalBack").style.display = "none";
 
-  // ����� �������: ��� ����� ����� �������� ���� �������� ��������
+  // صفحات العملاء: عند إغلاق نافذة الباركود يرجع تلقائياً للرئيسية
   const mb = document.querySelector("#modalBack");
   if(mb && mb.dataset && mb.dataset.goHome === "1"){
     window.location.href = "/";
@@ -94,9 +94,9 @@ function closeModal(){
 }
 
 
-// ���� QR / ������
-// ������: Html5Qrcode (���� ���� ���������) � ������ �� /vendor/html5-qrcode.min.js
-// ����: BarcodeDetector (��� ��� �������)
+// ماسح QR / باركود
+// الأفضل: Html5Qrcode (يدعم أغلب المتصفحات) — نحمّله من /vendor/html5-qrcode.min.js
+// بديل: BarcodeDetector (إذا كان مدعومًا)
 function createQrScanner(mountEl, onDecode, onError){
   let running = false;
 
@@ -134,7 +134,7 @@ function createQrScanner(mountEl, onDecode, onError){
 
     running = true;
 
-    // 1) Html5Qrcode (���� ���)
+    // 1) Html5Qrcode (أفضل دعم)
     if(window.Html5Qrcode){
       try{
         if(!mountEl) throw new Error('NO_MOUNT');
@@ -154,12 +154,12 @@ function createQrScanner(mountEl, onDecode, onError){
               }
             }catch(e){}
           },
-          (_errMsg)=>{ /* ����� ����� ������� �������� */ }
+          (_errMsg)=>{ /* تجاهل أخطاء القراءة المتكررة */ }
         );
 
         return;
       }catch(e){
-        // ��� ��� Html5Qrcode ��� ��ȡ ���� ������ BarcodeDetector (��� �����)
+        // إذا فشل Html5Qrcode لأي سبب، نجرب البديل BarcodeDetector (إذا متوفر)
         try{
           if(h5){
             try{ await h5.stop(); }catch(_e){}
@@ -168,11 +168,11 @@ function createQrScanner(mountEl, onDecode, onError){
         }catch(_e){}
         h5 = null;
         if(mountEl) mountEl.innerHTML = '';
-        // �� ���� ��� ������ � ���� ������
+        // لا نرمي هنا مباشرة — نكمل للبديل
       }
     }
 
-    // 2) ���� BarcodeDetector
+    // 2) بديل BarcodeDetector
     if(!('BarcodeDetector' in window)){
       running = false;
       const err = new Error('NO_SCANNER_SUPPORT');
@@ -285,7 +285,7 @@ async function api(path, method="GET", body=null){
   const res = await fetch(path, opts);
   // Always return JSON and never throw here.
   // Many pages rely on reading {ok:false, error, message} to show the right UX.
-  const data = await res.json().catch(()=>({ ok:false, error:"BAD_JSON", message:"������� ��� ����� �� ������" }));
+  const data = await res.json().catch(()=>({ ok:false, error:"BAD_JSON", message:"استجابة غير صالحة من الخادم" }));
   if(typeof data.ok === "undefined") data.ok = res.ok;
   if(!res.ok && !data.ok) data.status = res.status;
   return data;
@@ -330,7 +330,7 @@ function iconMaps(){
   </svg>`;
 }
 
-// ���� ������ ���� ���� ������: ���� ��� ���� �����
+// دخول الأدمن مخفي داخل الشعار: اضغط عدة مرات بسرعة
 function enableHiddenAdmin(logoSelector, url="/admin-login.html", taps=7, windowMs=1800){
   const el = document.querySelector(logoSelector);
   if(!el) return;
@@ -348,7 +348,7 @@ function enableHiddenAdmin(logoSelector, url="/admin-login.html", taps=7, window
   });
 }
 
-// ��� ���� (��� ���� �������) ��� ����� QR
+// صوت بسيط (مثل جهاز الكاشير) عند قراءة QR
 function playBeep(){
   try{
     const AudioCtx = window.AudioContext || window.webkitAudioContext;
@@ -371,7 +371,7 @@ function playBeep(){
   }catch(_){ }
 }
 
-// ������� (SVG) ���� �� ������ ������
+// أيقونات (SVG) بدون أي مكتبات خارجية
 function iconSettings(){
   return `<svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 15.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Z" stroke="white" stroke-width="2"/><path d="M19.4 15a7.9 7.9 0 0 0 .1-2l2-1.3-2-3.4-2.3.7a7.8 7.8 0 0 0-1.7-1l-.3-2.4H9.8L9.5 8a7.8 7.8 0 0 0-1.7 1L5.5 8.3 3.5 11.7l2 1.3a7.9 7.9 0 0 0 .1 2l-2 1.3 2 3.4 2.3-.7a7.8 7.8 0 0 0 1.7 1l.3 2.4h4.4l.3-2.4a7.8 7.8 0 0 0 1.7-1l2.3.7 2-3.4-2-1.3Z" stroke="white" stroke-width="1.8" stroke-linejoin="round"/></svg>`;
 }

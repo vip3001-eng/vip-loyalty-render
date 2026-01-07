@@ -1,10 +1,10 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
 
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
-  <title>VIP — تسجيل الدخول</title>
+  <title>VIP â€” طھط³ط¬ظٹظ„ ط§ظ„ط¯ط®ظˆظ„</title>
   <link rel="stylesheet" href="/css/styles.css?v=202601072341"/>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -14,30 +14,30 @@
 <div class="container">
   <div class="card">
     <div class="header">
-      <a class="back-btn" href="/">رجوع</a>
+      <a class="back-btn" href="/">ط±ط¬ظˆط¹</a>
       <img class="logo" src="/assets/logo-transparent.png" alt="VIP Logo"/>
     </div>
 
     <div class="page-title">
-      <h2>تسجيل الدخول</h2>
-      <p>الدخول مخصص للأدمن والمحاسبين.</p>
+      <h2>طھط³ط¬ظٹظ„ ط§ظ„ط¯ط®ظˆظ„</h2>
+      <p>ط§ظ„ط¯ط®ظˆظ„ ظ…ط®طµطµ ظ„ظ„ط£ط¯ظ…ظ† ظˆط§ظ„ظ…ط­ط§ط³ط¨ظٹظ†.</p>
     </div>
 
     <div id="notice" class="notice" style="display:none"></div>
 
     <form class="form" id="loginForm">
       <div class="field">
-        <label>اسم المستخدم</label>
+        <label>ط§ط³ظ… ط§ظ„ظ…ط³طھط®ط¯ظ…</label>
         <input name="username" autocomplete="off" required/>
       </div>
       <div class="field">
-        <label>كلمة السر</label>
+        <label>ظƒظ„ظ…ط© ط§ظ„ط³ط±</label>
         <input name="password" type="password" autocomplete="off" required/>
       </div>
-      <button class="btn btn-primary" type="submit">دخول</button>
+      <button class="btn btn-primary" type="submit">ط¯ط®ظˆظ„</button>
     </form>
 
-    <!-- تم حذف التلميحات كما طلبت -->
+    <!-- طھظ… ط­ط°ظپ ط§ظ„طھظ„ظ…ظٹط­ط§طھ ظƒظ…ط§ ط·ظ„ط¨طھ -->
   </div>
 </div>
 
@@ -53,11 +53,11 @@
       if(r.ok){
         location.href = (r.role === "admin") ? "/admin.html" : "/cashier.html";
       }else{
-        // api() لا يرمي خطأ عادةً، لذلك نظهر رسالة واضحة هنا
-        showNotice(r.message || "بيانات الدخول غير صحيحة.", "bad");
+        // api() ظ„ط§ ظٹط±ظ…ظٹ ط®ط·ط£ ط¹ط§ط¯ط©ظ‹طŒ ظ„ط°ظ„ظƒ ظ†ط¸ظ‡ط± ط±ط³ط§ظ„ط© ظˆط§ط¶ط­ط© ظ‡ظ†ط§
+        showNotice(r.message || "ط¨ظٹط§ظ†ط§طھ ط§ظ„ط¯ط®ظˆظ„ ط؛ظٹط± طµط­ظٹط­ط©.", "bad");
       }
     }catch(err){
-      showNotice("بيانات الدخول غير صحيحة.", "bad");
+      showNotice("ط¨ظٹط§ظ†ط§طھ ط§ظ„ط¯ط®ظˆظ„ ط؛ظٹط± طµط­ظٹط­ط©.", "bad");
     }
   });
 </script>

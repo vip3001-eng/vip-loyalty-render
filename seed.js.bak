@@ -1,13 +1,13 @@
-const bcrypt = require("bcryptjs");
+﻿const bcrypt = require("bcryptjs");
 const { db, initDb, nowIso, uuid } = require("./src/db");
 
 initDb();
 
 /**
  * ensureUser:
- * - إذا المستخدم غير موجود: ينشئه
- * - إذا موجود: يحدث كلمة المرور والدور ويعيد تفعيل الحساب
- *   (مفيد للتجارب المحلية حتى ما تعلق بسبب كلمات مرور قديمة)
+ * - ط¥ط°ط§ ط§ظ„ظ…ط³طھط®ط¯ظ… ط؛ظٹط± ظ…ظˆط¬ظˆط¯: ظٹظ†ط´ط¦ظ‡
+ * - ط¥ط°ط§ ظ…ظˆط¬ظˆط¯: ظٹط­ط¯ط« ظƒظ„ظ…ط© ط§ظ„ظ…ط±ظˆط± ظˆط§ظ„ط¯ظˆط± ظˆظٹط¹ظٹط¯ طھظپط¹ظٹظ„ ط§ظ„ط­ط³ط§ط¨
+ *   (ظ…ظپظٹط¯ ظ„ظ„طھط¬ط§ط±ط¨ ط§ظ„ظ…ط­ظ„ظٹط© ط­طھظ‰ ظ…ط§ طھط¹ظ„ظ‚ ط¨ط³ط¨ط¨ ظƒظ„ظ…ط§طھ ظ…ط±ظˆط± ظ‚ط¯ظٹظ…ط©)
  */
 function ensureUser(username, password, role) {
   const hash = bcrypt.hashSync(password, 10);
@@ -35,7 +35,7 @@ db.prepare(`
     social_snap = COALESCE(social_snap, 'https://www.snapchat.com/'),
     social_tiktok = COALESCE(social_tiktok, 'https://www.tiktok.com/'),
     social_maps = COALESCE(social_maps, 'https://maps.google.com/'),
-    terms_text = COALESCE(terms_text, 'الشروط والأحكام: ...')
+    terms_text = COALESCE(terms_text, 'ط§ظ„ط´ط±ظˆط· ظˆط§ظ„ط£ط­ظƒط§ظ…: ...')
   WHERE id = 1
 `).run();
 

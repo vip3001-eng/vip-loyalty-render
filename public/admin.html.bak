@@ -1,12 +1,12 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">`n<meta charset="UTF-8">
 
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
-  <title>VIP — لوحة الأدمن</title>
+  <title>VIP â€” ظ„ظˆط­ط© ط§ظ„ط£ط¯ظ…ظ†</title>
   <link rel="stylesheet" href="/css/styles.css?v=202601072341"/>
-  <!-- بدون مكتبات خارجية: المسح عبر BarcodeDetector داخل common.js -->
+  <!-- ط¨ط¯ظˆظ† ظ…ظƒطھط¨ط§طھ ط®ط§ط±ط¬ظٹط©: ط§ظ„ظ…ط³ط­ ط¹ط¨ط± BarcodeDetector ط¯ط§ط®ظ„ common.js -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
@@ -16,28 +16,28 @@
   <div class="card">
     <div class="topbar iconbar">
       <div class="icon-group">
-        <button class="icon-btn" id="btnMe" type="button" title="أدمن"></button>
+        <button class="icon-btn" id="btnMe" type="button" title="ط£ط¯ظ…ظ†"></button>
       </div>
       <div class="icon-group">
-        <button class="icon-btn" id="btnSettings" type="button" title="الإعدادات"></button>
-        <button class="icon-btn" id="btnNoti" type="button" title="الإشعارات"><span class="badge" id="notiBadge">0</span></button>
-        <button class="icon-btn" id="btnExportX" type="button" title="تصدير Excel"></button>
-        <button class="icon-btn" id="btnExportW" type="button" title="تصدير Word"></button>
-        <button class="icon-btn" id="btnLogout" type="button" title="خروج"></button>
+        <button class="icon-btn" id="btnSettings" type="button" title="ط§ظ„ط¥ط¹ط¯ط§ط¯ط§طھ"></button>
+        <button class="icon-btn" id="btnNoti" type="button" title="ط§ظ„ط¥ط´ط¹ط§ط±ط§طھ"><span class="badge" id="notiBadge">0</span></button>
+        <button class="icon-btn" id="btnExportX" type="button" title="طھطµط¯ظٹط± Excel"></button>
+        <button class="icon-btn" id="btnExportW" type="button" title="طھطµط¯ظٹط± Word"></button>
+        <button class="icon-btn" id="btnLogout" type="button" title="ط®ط±ظˆط¬"></button>
       </div>
     </div>
 
     <div class="section grid2">
       <div class="kpi">
-        <div class="label">معدل تقييم العملاء</div>
-        <div class="value" id="avgRating">—</div>
+        <div class="label">ظ…ط¹ط¯ظ„ طھظ‚ظٹظٹظ… ط§ظ„ط¹ظ…ظ„ط§ط،</div>
+        <div class="value" id="avgRating">â€”</div>
       </div>
     </div>
 
     <div class="section">
       <div class="page-title" style="padding:0 0 10px">
-        <h2>قارئ الباركود</h2>
-        <p>امسح QR أو استخدم الإدخال اليدوي (جوال + لوحة).</p>
+        <h2>ظ‚ط§ط±ط¦ ط§ظ„ط¨ط§ط±ظƒظˆط¯</h2>
+        <p>ط§ظ…ط³ط­ QR ط£ظˆ ط§ط³طھط®ط¯ظ… ط§ظ„ط¥ط¯ط®ط§ظ„ ط§ظ„ظٹط¯ظˆظٹ (ط¬ظˆط§ظ„ + ظ„ظˆط­ط©).</p>
       </div>
 
       <div id="notice" class="notice" style="display:none"></div>
@@ -46,64 +46,64 @@
         <div class="kpi" style="padding:10px">
           <div id="reader" style="width:100%"></div>
           <div class="row2" style="margin-top:10px">
-            <button class="btn btn-primary" id="btnCam" type="button">تشغيل الكاميرا</button>
-            <button class="btn btn-ghost" id="btnStopCam" type="button" disabled>إيقاف</button>
-            <button class="btn btn-ghost" id="btnScanImage" type="button">التقاط/مسح صورة</button>
+            <button class="btn btn-primary" id="btnCam" type="button">طھط´ط؛ظٹظ„ ط§ظ„ظƒط§ظ…ظٹط±ط§</button>
+            <button class="btn btn-ghost" id="btnStopCam" type="button" disabled>ط¥ظٹظ‚ط§ظپ</button>
+            <button class="btn btn-ghost" id="btnScanImage" type="button">ط§ظ„طھظ‚ط§ط·/ظ…ط³ط­ طµظˆط±ط©</button>
             <input id="scanImageInput" type="file" accept="image/*" capture="environment" style="display:none" />
           </div>
-          <div class="small" style="margin-top:8px">إذا لم تعمل الكاميرا، استخدم الإدخال اليدوي.</div>
+          <div class="small" style="margin-top:8px">ط¥ط°ط§ ظ„ظ… طھط¹ظ…ظ„ ط§ظ„ظƒط§ظ…ظٹط±ط§طŒ ط§ط³طھط®ط¯ظ… ط§ظ„ط¥ط¯ط®ط§ظ„ ط§ظ„ظٹط¯ظˆظٹ.</div>
         </div>
 
         <div class="kpi" style="padding:10px">
           <div class="field">
-            <label>رقم الجوال</label>
+            <label>ط±ظ‚ظ… ط§ظ„ط¬ظˆط§ظ„</label>
             <input id="mPhone" inputmode="tel" placeholder="05xxxxxxxx"/>
           </div>
           <div class="field" style="margin-top:8px">
-            <label>أرقام اللوحة</label>
+            <label>ط£ط±ظ‚ط§ظ… ط§ظ„ظ„ظˆط­ط©</label>
             <input id="mPlate" class="mono" placeholder="1234"/>
           </div>
-          <button class="btn btn-ghost" id="btnManual" style="margin-top:10px">بحث يدوي</button>
+          <button class="btn btn-ghost" id="btnManual" style="margin-top:10px">ط¨ط­ط« ظٹط¯ظˆظٹ</button>
         </div>
       </div>
     </div>
 
     <div class="section" id="resultBox" style="display:none">
       <div class="page-title" style="padding:0 0 10px">
-        <h2>نتيجة البحث</h2>
+        <h2>ظ†طھظٹط¬ط© ط§ظ„ط¨ط­ط«</h2>
       </div>
 
       <div class="kpi">
-        <div class="label">العميل</div>
-        <div class="value" id="custName" style="font-size:16px">—</div>
+        <div class="label">ط§ظ„ط¹ظ…ظٹظ„</div>
+        <div class="value" id="custName" style="font-size:16px">â€”</div>
         <div class="small" id="custMeta"></div>
-        <div class="small" style="margin-top:8px">التقييم: <span id="visitRatingStars" class="stars-inline">—</span></div>
+        <div class="small" style="margin-top:8px">ط§ظ„طھظ‚ظٹظٹظ…: <span id="visitRatingStars" class="stars-inline">â€”</span></div>
       </div>
 
       <div class="row2" style="margin-top:10px">
         <div class="kpi">
-          <div class="label">عدد الزيارات (معتمدة)</div>
-          <div class="value" id="visitsCount">—</div>
+          <div class="label">ط¹ط¯ط¯ ط§ظ„ط²ظٹط§ط±ط§طھ (ظ…ط¹طھظ…ط¯ط©)</div>
+          <div class="value" id="visitsCount">â€”</div>
         </div>
         <div class="kpi">
-          <div class="label">النقاط الحالية</div>
-          <div class="value" id="pointsNow">—</div>
+          <div class="label">ط§ظ„ظ†ظ‚ط§ط· ط§ظ„ط­ط§ظ„ظٹط©</div>
+          <div class="value" id="pointsNow">â€”</div>
           <div class="small" id="pointsMeta"></div>
         </div>
       </div>
 
       <div class="row2" style="margin-top:10px">
-        <button class="btn btn-primary" id="btnApprove">اعتماد زيارة</button>
-        <button class="btn btn-ghost" id="btnRedeem">استبدال النقاط</button>
+        <button class="btn btn-primary" id="btnApprove">ط§ط¹طھظ…ط§ط¯ ط²ظٹط§ط±ط©</button>
+        <button class="btn btn-ghost" id="btnRedeem">ط§ط³طھط¨ط¯ط§ظ„ ط§ظ„ظ†ظ‚ط§ط·</button>
       </div>
     </div>
 
     <div class="section">
       <div class="page-title" style="padding:0 0 10px">
-        <h2>غسلات لكل محاسب</h2>
+        <h2>ط؛ط³ظ„ط§طھ ظ„ظƒظ„ ظ…ط­ط§ط³ط¨</h2>
       </div>
       <table class="table" id="cashierTable">
-        <thead><tr><th>المحاسب</th><th>عدد الغسلات</th><th>تقييمه</th></tr></thead>
+        <thead><tr><th>ط§ظ„ظ…ط­ط§ط³ط¨</th><th>ط¹ط¯ط¯ ط§ظ„ط؛ط³ظ„ط§طھ</th><th>طھظ‚ظٹظٹظ…ظ‡</th></tr></thead>
         <tbody></tbody>
       </table>
     </div>
@@ -111,22 +111,22 @@
     <!-- Stats: placed at the end as requested -->
     <div class="section" id="statsSection" style="margin-top:6px">
       <div class="page-title" style="padding:0 0 10px">
-        <h2 id="statsLabel">إحصائيات آخر 30 يوم</h2>
-        <p>مجموعة في مربع واحد — اضغط أي بطاقة للتفاصيل.</p>
+        <h2 id="statsLabel">ط¥ط­طµط§ط¦ظٹط§طھ ط¢ط®ط± 30 ظٹظˆظ…</h2>
+        <p>ظ…ط¬ظ…ظˆط¹ط© ظپظٹ ظ…ط±ط¨ط¹ ظˆط§ط­ط¯ â€” ط§ط¶ط؛ط· ط£ظٹ ط¨ط·ط§ظ‚ط© ظ„ظ„طھظپط§طµظٹظ„.</p>
       </div>
 
       <div class="stats-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px">
         <button class="kpi stat-tile" id="openStatsCashiers" type="button" style="text-align:right">
-          <div class="label">مساهمة المحاسبين</div>
-          <div class="small">نِسَب الغسلات + التقييم</div>
+          <div class="label">ظ…ط³ط§ظ‡ظ…ط© ط§ظ„ظ…ط­ط§ط³ط¨ظٹظ†</div>
+          <div class="small">ظ†ظگط³ظژط¨ ط§ظ„ط؛ط³ظ„ط§طھ + ط§ظ„طھظ‚ظٹظٹظ…</div>
         </button>
         <button class="kpi stat-tile" id="openStatsVisits" type="button" style="text-align:right">
-          <div class="label">الزيارات / الاستبدال</div>
-          <div class="small">مقارنة إضافة مقابل استبدال</div>
+          <div class="label">ط§ظ„ط²ظٹط§ط±ط§طھ / ط§ظ„ط§ط³طھط¨ط¯ط§ظ„</div>
+          <div class="small">ظ…ظ‚ط§ط±ظ†ط© ط¥ط¶ط§ظپط© ظ…ظ‚ط§ط¨ظ„ ط§ط³طھط¨ط¯ط§ظ„</div>
         </button>
         <button class="kpi stat-tile" id="openStatsRatings" type="button" style="text-align:right">
-          <div class="label">توزيع التقييمات</div>
-          <div class="small">1★ إلى 5★</div>
+          <div class="label">طھظˆط²ظٹط¹ ط§ظ„طھظ‚ظٹظٹظ…ط§طھ</div>
+          <div class="small">1âک… ط¥ظ„ظ‰ 5âک…</div>
         </button>
       </div>
     </div>
@@ -137,17 +137,17 @@
 <!-- Stats Modal -->
 <div class="modal-backdrop" id="statsBack" onclick="if(event.target.id==='statsBack') closeStats()" style="display:none">
   <div class="modal">
-    <h3 id="statsModalTitle">الإحصائيات</h3>
-    <div class="small" id="statsModalSub" style="margin-top:-6px">—</div>
+    <h3 id="statsModalTitle">ط§ظ„ط¥ط­طµط§ط¦ظٹط§طھ</h3>
+    <div class="small" id="statsModalSub" style="margin-top:-6px">â€”</div>
     <div class="kpi" style="margin-top:10px">
       <canvas id="statsChart" height="220"></canvas>
     </div>
     <div class="kpi" style="margin-top:10px">
-      <div class="label">تفاصيل</div>
+      <div class="label">طھظپط§طµظٹظ„</div>
       <div id="statsDetails" class="small" style="white-space:pre-line"></div>
     </div>
     <div class="row2" style="margin-top:12px">
-      <button class="btn btn-ghost" type="button" onclick="closeStats()">إغلاق</button>
+      <button class="btn btn-ghost" type="button" onclick="closeStats()">ط¥ط؛ظ„ط§ظ‚</button>
     </div>
   </div>
 </div>
@@ -155,99 +155,99 @@
 <!-- Settings Modal -->
 <div class="modal-backdrop" id="settingsBack" onclick="if(event.target.id==='settingsBack') closeSettings()">
   <div class="modal">
-    <h3>الإعدادات</h3>
+    <h3>ط§ظ„ط¥ط¹ط¯ط§ط¯ط§طھ</h3>
     <div id="settingsNotice" class="notice" style="display:none"></div>
     <form class="form" id="settingsForm" style="padding:0">
       <div class="field">
-        <label>نص الصفحة الرئيسية 1</label>
+        <label>ظ†طµ ط§ظ„طµظپط­ط© ط§ظ„ط±ط¦ظٹط³ظٹط© 1</label>
         <input name="home_text_1"/>
       </div>
       <div class="field">
-        <label>نص الصفحة الرئيسية 2</label>
+        <label>ظ†طµ ط§ظ„طµظپط­ط© ط§ظ„ط±ط¦ظٹط³ظٹط© 2</label>
         <input name="home_text_2"/>
       </div>
 
       <div class="field">
-        <label>الشروط والأحكام (تظهر للعميل في الرئيسية)</label>
-        <textarea name="terms_text" placeholder="اكتب الشروط هنا..."></textarea>
+        <label>ط§ظ„ط´ط±ظˆط· ظˆط§ظ„ط£ط­ظƒط§ظ… (طھط¸ظ‡ط± ظ„ظ„ط¹ظ…ظٹظ„ ظپظٹ ط§ظ„ط±ط¦ظٹط³ظٹط©)</label>
+        <textarea name="terms_text" placeholder="ط§ظƒطھط¨ ط§ظ„ط´ط±ظˆط· ظ‡ظ†ط§..."></textarea>
       </div>
       <div class="row2">
         <div class="field">
-          <label>حد إضافة النقاط (للإظهار)</label>
+          <label>ط­ط¯ ط¥ط¶ط§ظپط© ط§ظ„ظ†ظ‚ط§ط· (ظ„ظ„ط¥ط¸ظ‡ط§ط±)</label>
           <input name="points_add_limit" inputmode="numeric"/>
         </div>
         <div class="field">
-          <label>حد استبدال النقاط</label>
+          <label>ط­ط¯ ط§ط³طھط¨ط¯ط§ظ„ ط§ظ„ظ†ظ‚ط§ط·</label>
           <input name="points_redeem_limit" inputmode="numeric"/>
         </div>
       </div>
       <div class="field">
-        <label>نقاط لكل زيارة (اعتماد)</label>
+        <label>ظ†ظ‚ط§ط· ظ„ظƒظ„ ط²ظٹط§ط±ط© (ط§ط¹طھظ…ط§ط¯)</label>
         <input name="points_per_visit" inputmode="numeric"/>
       </div>
       <div class="row2">
         <div class="field">
-          <label>رابط واتساب</label>
+          <label>ط±ط§ط¨ط· ظˆط§طھط³ط§ط¨</label>
           <input name="social_whatsapp"/>
         </div>
         <div class="field">
-          <label>رابط سناب</label>
+          <label>ط±ط§ط¨ط· ط³ظ†ط§ط¨</label>
           <input name="social_snap"/>
         </div>
       </div>
       <div class="field">
-        <label>رابط تيك توك</label>
+        <label>ط±ط§ط¨ط· طھظٹظƒ طھظˆظƒ</label>
         <input name="social_tiktok"/>
       </div>
       <div class="field">
-        <label>رابط قوقل ماب</label>
+        <label>ط±ط§ط¨ط· ظ‚ظˆظ‚ظ„ ظ…ط§ط¨</label>
         <input name="social_maps" placeholder="https://maps.google.com/..."/>
       </div>
 
       <div class="field">
-        <label>نص نافذة ما بعد الاعتماد (يظهر بعد اعتماد المحاسب)</label>
-        <input name="after_approve_text" placeholder="مثل: تابعنا..."/>
+        <label>ظ†طµ ظ†ط§ظپط°ط© ظ…ط§ ط¨ط¹ط¯ ط§ظ„ط§ط¹طھظ…ط§ط¯ (ظٹط¸ظ‡ط± ط¨ط¹ط¯ ط§ط¹طھظ…ط§ط¯ ط§ظ„ظ…ط­ط§ط³ط¨)</label>
+        <input name="after_approve_text" placeholder="ظ…ط«ظ„: طھط§ط¨ط¹ظ†ط§..."/>
       </div>
-      <button class="btn btn-primary" type="submit">حفظ</button>
-      <button class="btn btn-ghost" type="button" onclick="closeSettings()">إغلاق</button>
+      <button class="btn btn-primary" type="submit">ط­ظپط¸</button>
+      <button class="btn btn-ghost" type="button" onclick="closeSettings()">ط¥ط؛ظ„ط§ظ‚</button>
     </form>
 
     <hr style="border-color:rgba(255,255,255,.12);margin:14px 0"/>
 
-    <h3>إدارة المستخدمين</h3>
-    <div class="small">إضافة/تعديل/حذف (أدمن/محاسب)</div>
+    <h3>ط¥ط¯ط§ط±ط© ط§ظ„ظ…ط³طھط®ط¯ظ…ظٹظ†</h3>
+    <div class="small">ط¥ط¶ط§ظپط©/طھط¹ط¯ظٹظ„/ط­ط°ظپ (ط£ط¯ظ…ظ†/ظ…ط­ط§ط³ط¨)</div>
     <div class="notice" id="usersNotice" style="display:none"></div>
 
     <form class="form" id="addUserForm" style="padding:0;margin-top:10px">
       <div class="row2">
         <div class="field">
-          <label>اسم المستخدم (للدخول)</label>
+          <label>ط§ط³ظ… ط§ظ„ظ…ط³طھط®ط¯ظ… (ظ„ظ„ط¯ط®ظˆظ„)</label>
           <input name="username" required/>
         </div>
         <div class="field">
-          <label>اسم المحاسب (يظهر بالتقييمات)</label>
+          <label>ط§ط³ظ… ط§ظ„ظ…ط­ط§ط³ط¨ (ظٹط¸ظ‡ط± ط¨ط§ظ„طھظ‚ظٹظٹظ…ط§طھ)</label>
           <input name="display_name" required/>
         </div>
       </div>
       <div class="row2">
         <div class="field">
-          <label>كلمة السر</label>
+          <label>ظƒظ„ظ…ط© ط§ظ„ط³ط±</label>
           <input name="password" type="password" required autocomplete="new-password"/>
         </div>
         <div class="field">
-          <label>الصلاحية</label>
+          <label>ط§ظ„طµظ„ط§ط­ظٹط©</label>
           <select name="role" required>
-            <option value="cashier">محاسب</option>
-            <option value="admin">أدمن</option>
+            <option value="cashier">ظ…ط­ط§ط³ط¨</option>
+            <option value="admin">ط£ط¯ظ…ظ†</option>
           </select>
         </div>
       </div>
-      <button class="btn btn-ghost" type="submit">إضافة مستخدم</button>
+      <button class="btn btn-ghost" type="submit">ط¥ط¶ط§ظپط© ظ…ط³طھط®ط¯ظ…</button>
     </form>
 
     <div class="section" style="padding:0;margin-top:10px">
       <table class="table" id="usersTable">
-        <thead><tr><th>المستخدم</th><th>الدور</th><th>نشط</th><th>إجراء</th></tr></thead>
+        <thead><tr><th>ط§ظ„ظ…ط³طھط®ط¯ظ…</th><th>ط§ظ„ط¯ظˆط±</th><th>ظ†ط´ط·</th><th>ط¥ط¬ط±ط§ط،</th></tr></thead>
         <tbody></tbody>
       </table>
     </div>
@@ -258,24 +258,24 @@
 <!-- Notifications Modal -->
 <div class="modal-backdrop" id="notiBack" onclick="if(event.target.id==='notiBack') closeNoti()">
   <div class="modal">
-    <h3>الإشعارات</h3>
-    <div class="small">آخر 50 إشعار</div>
+    <h3>ط§ظ„ط¥ط´ط¹ط§ط±ط§طھ</h3>
+    <div class="small">ط¢ط®ط± 50 ط¥ط´ط¹ط§ط±</div>
     <div class="kpi" id="notiDetail" style="display:none;margin-top:10px">
-      <div class="label">تفاصيل الإشعار</div>
-      <div class="value" id="notiCust" style="font-size:16px">—</div>
+      <div class="label">طھظپط§طµظٹظ„ ط§ظ„ط¥ط´ط¹ط§ط±</div>
+      <div class="value" id="notiCust" style="font-size:16px">â€”</div>
       <div class="small" id="notiMeta"></div>
-      <div class="small" style="margin-top:10px">الزيارات:</div>
+      <div class="small" style="margin-top:10px">ط§ظ„ط²ظٹط§ط±ط§طھ:</div>
       <div class="small mono" id="notiVisits" style="white-space:pre-wrap; line-height:1.7"></div>
     </div>
     <div class="section" style="padding:0;margin-top:10px">
       <table class="table" id="notiTable">
-        <thead><tr><th>العميل</th><th>الرسالة</th><th>الوقت</th><th>مقروء</th></tr></thead>
+        <thead><tr><th>ط§ظ„ط¹ظ…ظٹظ„</th><th>ط§ظ„ط±ط³ط§ظ„ط©</th><th>ط§ظ„ظˆظ‚طھ</th><th>ظ…ظ‚ط±ظˆط،</th></tr></thead>
         <tbody></tbody>
       </table>
     </div>
     <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:10px">
-      <button class="btn btn-ghost" type="button" id="clearNotiBtn">مسح الإشعارات</button>
-      <button class="btn btn-ghost" type="button" onclick="closeNoti()">إغلاق</button>
+      <button class="btn btn-ghost" type="button" id="clearNotiBtn">ظ…ط³ط­ ط§ظ„ط¥ط´ط¹ط§ط±ط§طھ</button>
+      <button class="btn btn-ghost" type="button" onclick="closeNoti()">ط¥ط؛ظ„ط§ظ‚</button>
     </div>
   </div>
 </div>
@@ -308,7 +308,7 @@
     alert(msg);
   }
 
-  // أيقونات الشريط العلوي
+  // ط£ظٹظ‚ظˆظ†ط§طھ ط§ظ„ط´ط±ظٹط· ط§ظ„ط¹ظ„ظˆظٹ
   $("#btnMe").innerHTML = iconAdmin();
   $("#btnSettings").innerHTML = iconSettings();
   $("#btnNoti").innerHTML = iconBell() + '<span class="badge" id="notiBadge">0</span>';
@@ -331,8 +331,8 @@
   $("#btnApprove").addEventListener("click", async ()=>{
     if(!lastVisit) return;
     const r = await api("/api/visit/approve","POST",{ visitId: lastVisit.id });
-    showNotice(`تم إضافة النقاط. نقاط العميل الآن ${r.points.current_points}/${(await api("/api/admin/settings")).settings.points_add_limit}`, "good");
-    // بعد الاعتماد نخفي بيانات العميل حسب المطلوب
+    showNotice(`طھظ… ط¥ط¶ط§ظپط© ط§ظ„ظ†ظ‚ط§ط·. ظ†ظ‚ط§ط· ط§ظ„ط¹ظ…ظٹظ„ ط§ظ„ط¢ظ† ${r.points.current_points}/${(await api("/api/admin/settings")).settings.points_add_limit}`, "good");
+    // ط¨ط¹ط¯ ط§ظ„ط§ط¹طھظ…ط§ط¯ ظ†ط®ظپظٹ ط¨ظٹط§ظ†ط§طھ ط§ظ„ط¹ظ…ظٹظ„ ط­ط³ط¨ ط§ظ„ظ…ط·ظ„ظˆط¨
     $("#resultBox").style.display = "none";
     lastVisit = null;
   });
@@ -341,10 +341,10 @@
     if(!lastVisit) return;
     const r = await api("/api/visit/redeem","POST",{ customerId: lastVisit.customer_id, visitId: lastVisit.id }).catch(err=>err.data);
     if(!r.ok){
-      showNotice(`لا يمكن الاستبدال. نقاط العميل ${r.current}/${r.need}`, "bad");
+      showNotice(`ظ„ط§ ظٹظ…ظƒظ† ط§ظ„ط§ط³طھط¨ط¯ط§ظ„. ظ†ظ‚ط§ط· ط§ظ„ط¹ظ…ظٹظ„ ${r.current}/${r.need}`, "bad");
       return;
     }
-    showNotice(`تم استبدال النقاط. النقاط الآن ${r.points.current_points}`, "good");
+    showNotice(`طھظ… ط§ط³طھط¨ط¯ط§ظ„ ط§ظ„ظ†ظ‚ط§ط·. ط§ظ„ظ†ظ‚ط§ط· ط§ظ„ط¢ظ† ${r.points.current_points}`, "good");
     $("#resultBox").style.display = "none";
     lastVisit = null;
   });
@@ -355,7 +355,7 @@
     const r = await api("/api/admin/settings","POST",body);
     $("#settingsNotice").style.display="block";
     $("#settingsNotice").className="notice good";
-    $("#settingsNotice").textContent="تم حفظ الإعدادات.";
+    $("#settingsNotice").textContent="طھظ… ط­ظپط¸ ط§ظ„ط¥ط¹ط¯ط§ط¯ط§طھ.";
   });
 
   $("#addUserForm").addEventListener("submit", async (e)=>{
@@ -365,7 +365,7 @@
     if(!r.ok){
       $("#usersNotice").style.display="block";
       $("#usersNotice").className="notice bad";
-      $("#usersNotice").textContent="تعذر الإضافة (قد يكون اسم المستخدم موجود).";
+      $("#usersNotice").textContent="طھط¹ط°ط± ط§ظ„ط¥ط¶ط§ظپط© (ظ‚ط¯ ظٹظƒظˆظ† ط§ط³ظ… ط§ظ„ظ…ط³طھط®ط¯ظ… ظ…ظˆط¬ظˆط¯).";
       return;
     }
     e.target.reset();
@@ -397,12 +397,12 @@
       const tr = document.createElement("tr");
       tr.innerHTML = `
         <td>${u.username}</td>
-        <td>${u.role === "admin" ? "أدمن" : "محاسب"}</td>
-        <td>${u.is_active ? "نعم" : "لا"}</td>
+        <td>${u.role === "admin" ? "ط£ط¯ظ…ظ†" : "ظ…ط­ط§ط³ط¨"}</td>
+        <td>${u.is_active ? "ظ†ط¹ظ…" : "ظ„ط§"}</td>
         <td>
-          <button class="pill" data-act="toggle" data-id="${u.id}" data-active="${u.is_active}">${u.is_active ? "تعطيل" : "تفعيل"}</button>
-          <button class="pill" data-act="reset" data-id="${u.id}">تغيير كلمة</button>
-          <button class="pill" data-act="del" data-id="${u.id}">حذف</button>
+          <button class="pill" data-act="toggle" data-id="${u.id}" data-active="${u.is_active}">${u.is_active ? "طھط¹ط·ظٹظ„" : "طھظپط¹ظٹظ„"}</button>
+          <button class="pill" data-act="reset" data-id="${u.id}">طھط؛ظٹظٹط± ظƒظ„ظ…ط©</button>
+          <button class="pill" data-act="del" data-id="${u.id}">ط­ط°ظپ</button>
         </td>`;
       tbody.appendChild(tr);
     });
@@ -415,12 +415,12 @@
           await api("/api/admin/users/update","POST",{ id, is_active: b.dataset.active !== "1" });
           await loadUsers();
         }else if(act==="reset"){
-          const p = prompt("اكتب كلمة السر الجديدة:");
+          const p = prompt("ط§ظƒطھط¨ ظƒظ„ظ…ط© ط§ظ„ط³ط± ط§ظ„ط¬ط¯ظٹط¯ط©:");
           if(!p) return;
           await api("/api/admin/users/update","POST",{ id, password: p });
-          alert("تم تغيير كلمة السر.");
+          alert("طھظ… طھط؛ظٹظٹط± ظƒظ„ظ…ط© ط§ظ„ط³ط±.");
         }else if(act==="del"){
-          if(!confirm("حذف المستخدم؟")) return;
+          if(!confirm("ط­ط°ظپ ط§ظ„ظ…ط³طھط®ط¯ظ…طں")) return;
           await api("/api/admin/users/delete","POST",{ id });
           await loadUsers();
         }
@@ -438,13 +438,13 @@
     const list = (r && r.ok && Array.isArray(r.notifications)) ? r.notifications : [];
 
     if(!r || !r.ok){
-      // لا نكسر الواجهة إذا فشل الجلب
-      showNotice("تعذر تحميل الإشعارات. تأكد أنك مسجل دخول كأدمن.", "bad");
+      // ظ„ط§ ظ†ظƒط³ط± ط§ظ„ظˆط§ط¬ظ‡ط© ط¥ط°ط§ ظپط´ظ„ ط§ظ„ط¬ظ„ط¨
+      showNotice("طھط¹ط°ط± طھط­ظ…ظٹظ„ ط§ظ„ط¥ط´ط¹ط§ط±ط§طھ. طھط£ظƒط¯ ط£ظ†ظƒ ظ…ط³ط¬ظ„ ط¯ط®ظˆظ„ ظƒط£ط¯ظ…ظ†.", "bad");
     }
 
     if(list.length === 0){
       const tr = document.createElement("tr");
-      tr.innerHTML = `<td colspan="4" style="text-align:center;opacity:.7">لا توجد إشعارات</td>`;
+      tr.innerHTML = `<td colspan="4" style="text-align:center;opacity:.7">ظ„ط§ طھظˆط¬ط¯ ط¥ط´ط¹ط§ط±ط§طھ</td>`;
       tbody.appendChild(tr);
       await updateNotiBadge().catch(()=>{});
       return;
@@ -453,10 +453,10 @@
     list.forEach(n=>{
       const tr = document.createElement("tr");
       tr.innerHTML = `
-        <td><button class='pill' data-act='show' data-id='${n.id}'>${n.customer_name} — ${n.customer_phone}</button></td>
+        <td><button class='pill' data-act='show' data-id='${n.id}'>${n.customer_name} â€” ${n.customer_phone}</button></td>
         <td>${n.message}</td>
         <td class="mono">${(n.created_at||'').slice(0,19).replace("T"," ")}</td>
-        <td>${n.is_read ? "نعم" : "<button class='pill' data-id='"+n.id+"'>تمييز كمقروء</button>"}</td>
+        <td>${n.is_read ? "ظ†ط¹ظ…" : "<button class='pill' data-id='"+n.id+"'>طھظ…ظٹظٹط² ظƒظ…ظ‚ط±ظˆط،</button>"}</td>
       `;
       tbody.appendChild(tr);
     });
@@ -470,7 +470,7 @@
         }
         const rr = await api("/api/admin/notifications/mark-read","POST",{ id: btn.dataset.id }).catch(()=>({ok:false}));
         if(!rr.ok){
-          showNotice("تعذر تحديث الإشعار.", "bad");
+          showNotice("طھط¹ط°ط± طھط­ط¯ظٹط« ط§ظ„ط¥ط´ط¹ط§ط±.", "bad");
           return;
         }
         await updateNotiBadge().catch(()=>{});
@@ -496,27 +496,27 @@
   async function showNotiDetail(id){
     const r = await api("/api/admin/notifications/detail?id=" + encodeURIComponent(id)).catch(err=>err.data);
     if(!r || !r.ok) {
-      showNotice("تعذر جلب التفاصيل.", "bad");
+      showNotice("طھط¹ط°ط± ط¬ظ„ط¨ ط§ظ„طھظپط§طµظٹظ„.", "bad");
       return;
     }
     $("#notiDetail").style.display = "block";
-    $("#notiCust").textContent = `${r.customer.name} — ${r.customer.phone}`;
+    $("#notiCust").textContent = `${r.customer.name} â€” ${r.customer.phone}`;
     $("#notiMeta").textContent = r.notification.message;
 
     const rows = (r.visits||[]).map(v=>{
       const dt = (v.created_at||"").slice(0,19).replace("T"," ");
-      const cashier = v.cashier_name || v.cashier_username || "—";
+      const cashier = v.cashier_name || v.cashier_username || "â€”";
       const plate = `${v.plate_letters_ar} ${v.plate_numbers}`.trim();
-      const stars = Array.from({length:5}).map((_,i)=> i < Number(v.rating||0) ? "★" : "☆").join("");
+      const stars = Array.from({length:5}).map((_,i)=> i < Number(v.rating||0) ? "âک…" : "âک†").join("");
       return `<tr><td class="mono">${dt}</td><td>${plate}</td><td style="font-size:14px">${stars}</td><td>${cashier}</td></tr>`;
     }).join("");
 
     const table = `
       <table class="tmini">
         <thead>
-          <tr><th>التاريخ</th><th>اللوحة</th><th>التقييم</th><th>المحاسب</th></tr>
+          <tr><th>ط§ظ„طھط§ط±ظٹط®</th><th>ط§ظ„ظ„ظˆط­ط©</th><th>ط§ظ„طھظ‚ظٹظٹظ…</th><th>ط§ظ„ظ…ط­ط§ط³ط¨</th></tr>
         </thead>
-        <tbody>${rows || `<tr><td colspan="4" style="text-align:center;opacity:.7">لا توجد زيارات</td></tr>`}</tbody>
+        <tbody>${rows || `<tr><td colspan="4" style="text-align:center;opacity:.7">ظ„ط§ طھظˆط¬ط¯ ط²ظٹط§ط±ط§طھ</td></tr>`}</tbody>
       </table>
     `;
     const box = $("#notiVisits");
@@ -527,9 +527,9 @@
     hideNotice();
     const phone = $("#mPhone").value.trim();
     const plate_numbers = $("#mPlate").value.trim();
-    if(!phone || !plate_numbers) return showNotice("اكتب رقم الجوال وأرقام اللوحة.", "bad");
+    if(!phone || !plate_numbers) return showNotice("ط§ظƒطھط¨ ط±ظ‚ظ… ط§ظ„ط¬ظˆط§ظ„ ظˆط£ط±ظ‚ط§ظ… ط§ظ„ظ„ظˆط­ط©.", "bad");
     const r = await api("/api/visit/lookup","POST",{ phone, plate_numbers }).catch(err=>err.data);
-    if(!r.ok) return showNotice("لم يتم العثور على بيانات.", "bad");
+    if(!r.ok) return showNotice("ظ„ظ… ظٹطھظ… ط§ظ„ط¹ط«ظˆط± ط¹ظ„ظ‰ ط¨ظٹط§ظ†ط§طھ.", "bad");
     applyLookup(r);
   }
 
@@ -537,15 +537,15 @@
     lastVisit = r.visit;
     $("#resultBox").style.display="block";
     $("#custName").textContent = r.visit.customer_name;
-    $("#custMeta").textContent = `جوال: ${r.visit.customer_phone} — لوحة: ${r.visit.plate_letters_ar} ${r.visit.plate_numbers}`;
+    $("#custMeta").textContent = `ط¬ظˆط§ظ„: ${r.visit.customer_phone} â€” ظ„ظˆط­ط©: ${r.visit.plate_letters_ar} ${r.visit.plate_numbers}`;
     // rating stars
     const rating = Number(r.visit.rating || 0);
-    const stars = Array.from({length:5}).map((_,i)=> i<rating ? "★" : "☆").join("");
+    const stars = Array.from({length:5}).map((_,i)=> i<rating ? "âک…" : "âک†").join("");
     const rsEl = document.querySelector("#visitRatingStars");
     if(rsEl) rsEl.textContent = stars;
     $("#visitsCount").textContent = r.visitsCount;
     $("#pointsNow").textContent = r.points.current_points;
-    $("#pointsMeta").textContent = `مكتسبة: ${r.points.earned_points} — مستبدلة: ${r.points.redeemed_points}`;
+    $("#pointsMeta").textContent = `ظ…ظƒطھط³ط¨ط©: ${r.points.earned_points} â€” ظ…ط³طھط¨ط¯ظ„ط©: ${r.points.redeemed_points}`;
     await refreshRedeemButton();
   }
 
@@ -563,7 +563,7 @@
     tbody.innerHTML="";
     r.cashiers.forEach(c=>{
       const tr = document.createElement("tr");
-      tr.innerHTML = `<td>${c.cashier || "—"}</td><td>${c.washes}</td><td>${(Number(c.avgRating||0)).toFixed(2)}</td>`;
+      tr.innerHTML = `<td>${c.cashier || "â€”"}</td><td>${c.washes}</td><td>${(Number(c.avgRating||0)).toFixed(2)}</td>`;
       tbody.appendChild(tr);
     });
   }
@@ -575,15 +575,15 @@
       const r = await api("/api/visit/lookup","POST",{ qrText: decodedText }).catch(err=>err.data);
       if(r.ok){
         applyLookup(r);
-        showNotice("تم جلب بيانات الزيارة.", "good");
+        showNotice("طھظ… ط¬ظ„ط¨ ط¨ظٹط§ظ†ط§طھ ط§ظ„ط²ظٹط§ط±ط©.", "good");
       }else{
-        showNotice("QR غير صالح أو منتهي.", "bad");
+        showNotice("QR ط؛ظٹط± طµط§ظ„ط­ ط£ظˆ ظ…ظ†طھظ‡ظٹ.", "bad");
       }
     }, (err)=>{
-      // إذا لم تُحمّل مكتبة المسح (أو لم يدعم المتصفح)، وضّح السبب
+      // ط¥ط°ط§ ظ„ظ… طھظڈط­ظ…ظ‘ظ„ ظ…ظƒطھط¨ط© ط§ظ„ظ…ط³ط­ (ط£ظˆ ظ„ظ… ظٹط¯ط¹ظ… ط§ظ„ظ…طھطµظپط­)طŒ ظˆط¶ظ‘ط­ ط§ظ„ط³ط¨ط¨
       if(!(window.Html5Qrcode || ("BarcodeDetector" in window))){
-        const m = 'هذا المتصفح لا يدعم مسح QR بالكاميرا. استخدم الإدخال اليدوي أو افتح الصفحة في Chrome/Edge حديث.';
-        const html = m + ` — <button class="pill" id="useImageScanBtn" type="button">مسح من صورة</button>`;
+        const m = 'ظ‡ط°ط§ ط§ظ„ظ…طھطµظپط­ ظ„ط§ ظٹط¯ط¹ظ… ظ…ط³ط­ QR ط¨ط§ظ„ظƒط§ظ…ظٹط±ط§. ط§ط³طھط®ط¯ظ… ط§ظ„ط¥ط¯ط®ط§ظ„ ط§ظ„ظٹط¯ظˆظٹ ط£ظˆ ط§ظپطھط­ ط§ظ„طµظپط­ط© ظپظٹ Chrome/Edge ط­ط¯ظٹط«.';
+        const html = m + ` â€” <button class="pill" id="useImageScanBtn" type="button">ظ…ط³ط­ ظ…ظ† طµظˆط±ط©</button>`;
         showNoticeHtml(html, 'bad');
         setTimeout(()=>{ const b=document.getElementById('useImageScanBtn'); if(b) b.addEventListener('click', ()=>{ const inp=document.getElementById('scanImageInput'); if(inp) inp.click(); }); },0);
         return;
@@ -595,28 +595,28 @@
 
       if(isNotSecure){
         if(httpsUrl){
-          const html = `لم يتم تشغيل الكاميرا لأن الصفحة ليست آمنة (HTTP). سيتم تحويلك تلقائياً للنسخة الآمنة. إذا لم يحدث التحويل اضغط: <button class="pill" id="openHttpsBtn" type="button">فتح عبر HTTPS</button>`;
+          const html = `ظ„ظ… ظٹطھظ… طھط´ط؛ظٹظ„ ط§ظ„ظƒط§ظ…ظٹط±ط§ ظ„ط£ظ† ط§ظ„طµظپط­ط© ظ„ظٹط³طھ ط¢ظ…ظ†ط© (HTTP). ط³ظٹطھظ… طھط­ظˆظٹظ„ظƒ طھظ„ظ‚ط§ط¦ظٹط§ظ‹ ظ„ظ„ظ†ط³ط®ط© ط§ظ„ط¢ظ…ظ†ط©. ط¥ط°ط§ ظ„ظ… ظٹط­ط¯ط« ط§ظ„طھط­ظˆظٹظ„ ط§ط¶ط؛ط·: <button class="pill" id="openHttpsBtn" type="button">ظپطھط­ ط¹ط¨ط± HTTPS</button>`;
           showNoticeHtml(html + (name?(' <span class="muted">('+name+')</span>'):''), 'bad');
           setTimeout(()=>{
             const b = document.getElementById('openHttpsBtn');
             if(b) b.addEventListener('click', ()=>{ location.href = httpsUrl; });
           }, 0);
         }else{
-          showNotice(`لم يتم تشغيل الكاميرا لأن الصفحة ليست آمنة. افتح عبر https على المنفذ 3443 (مثال: https://${location.hostname}:3443).`, 'bad');
+          showNotice(`ظ„ظ… ظٹطھظ… طھط´ط؛ظٹظ„ ط§ظ„ظƒط§ظ…ظٹط±ط§ ظ„ط£ظ† ط§ظ„طµظپط­ط© ظ„ظٹط³طھ ط¢ظ…ظ†ط©. ط§ظپطھط­ ط¹ط¨ط± https ط¹ظ„ظ‰ ط§ظ„ظ…ظ†ظپط° 3443 (ظ…ط«ط§ظ„: https://${location.hostname}:3443).`, 'bad');
         }
         return;
       }
 
-      // أخطاء صلاحيات/استخدام الكاميرا
+      // ط£ط®ط·ط§ط، طµظ„ط§ط­ظٹط§طھ/ط§ط³طھط®ط¯ط§ظ… ط§ظ„ظƒط§ظ…ظٹط±ط§
       const n = (err && err.name) ? err.name : '';
       const msgAr = (n==='NotAllowedError' || n==='PermissionDeniedError')
-        ? 'تم رفض إذن الكاميرا. من إعدادات المتصفح: Site settings > Camera > Allow ثم حدّث الصفحة.'
+        ? 'طھظ… ط±ظپط¶ ط¥ط°ظ† ط§ظ„ظƒط§ظ…ظٹط±ط§. ظ…ظ† ط¥ط¹ط¯ط§ط¯ط§طھ ط§ظ„ظ…طھطµظپط­: Site settings > Camera > Allow ط«ظ… ط­ط¯ظ‘ط« ط§ظ„طµظپط­ط©.'
         : (n==='NotFoundError')
-          ? 'لا توجد كاميرا متاحة على هذا الجهاز.'
+          ? 'ظ„ط§ طھظˆط¬ط¯ ظƒط§ظ…ظٹط±ط§ ظ…طھط§ط­ط© ط¹ظ„ظ‰ ظ‡ط°ط§ ط§ظ„ط¬ظ‡ط§ط².'
           : (n==='NotReadableError')
-            ? 'الكاميرا مشغولة بتطبيق آخر. اغلق أي تطبيق يستخدم الكاميرا ثم جرّب.'
-            : 'تعذر تشغيل الكاميرا. جرّب فتح الصفحة في Chrome/Edge واسمح بإذن الكاميرا.';
-      const html = `${msgAr}${name ? ' ('+name+')' : ''} — <button class="pill" id="useImageScanBtn" type="button">مسح من صورة</button>`;
+            ? 'ط§ظ„ظƒط§ظ…ظٹط±ط§ ظ…ط´ط؛ظˆظ„ط© ط¨طھط·ط¨ظٹظ‚ ط¢ط®ط±. ط§ط؛ظ„ظ‚ ط£ظٹ طھط·ط¨ظٹظ‚ ظٹط³طھط®ط¯ظ… ط§ظ„ظƒط§ظ…ظٹط±ط§ ط«ظ… ط¬ط±ظ‘ط¨.'
+            : 'طھط¹ط°ط± طھط´ط؛ظٹظ„ ط§ظ„ظƒط§ظ…ظٹط±ط§. ط¬ط±ظ‘ط¨ ظپطھط­ ط§ظ„طµظپط­ط© ظپظٹ Chrome/Edge ظˆط§ط³ظ…ط­ ط¨ط¥ط°ظ† ط§ظ„ظƒط§ظ…ظٹط±ط§.';
+      const html = `${msgAr}${name ? ' ('+name+')' : ''} â€” <button class="pill" id="useImageScanBtn" type="button">ظ…ط³ط­ ظ…ظ† طµظˆط±ط©</button>`;
       showNoticeHtml(html, 'bad');
       setTimeout(()=>{ const b=document.getElementById('useImageScanBtn'); if(b) b.addEventListener('click', ()=>{ const inp=document.getElementById('scanImageInput'); if(inp) inp.click(); }); },0);
     });
@@ -644,14 +644,14 @@
   async function showStats(kind){
     // kind: cashiers | visits | ratings
     const r = await api('/api/admin/stats/rolling').catch(err=>err.data);
-    if(!r || !r.ok){ showNotice('تعذر تحميل الإحصائيات.', 'bad'); return; }
+    if(!r || !r.ok){ showNotice('طھط¹ط°ط± طھط­ظ…ظٹظ„ ط§ظ„ط¥ط­طµط§ط¦ظٹط§طھ.', 'bad'); return; }
     const since = r.since;
     const days = r.windowDays;
-    const title = (kind==='cashiers') ? 'مساهمة المحاسبين'
-      : (kind==='visits') ? 'الزيارات / الاستبدال'
-      : 'توزيع التقييمات';
+    const title = (kind==='cashiers') ? 'ظ…ط³ط§ظ‡ظ…ط© ط§ظ„ظ…ط­ط§ط³ط¨ظٹظ†'
+      : (kind==='visits') ? 'ط§ظ„ط²ظٹط§ط±ط§طھ / ط§ظ„ط§ط³طھط¨ط¯ط§ظ„'
+      : 'طھظˆط²ظٹط¹ ط§ظ„طھظ‚ظٹظٹظ…ط§طھ';
     $("#statsModalTitle").textContent = title;
-    $("#statsModalSub").textContent = `آخر ${days} يوم (من ${since})`;
+    $("#statsModalSub").textContent = `ط¢ط®ط± ${days} ظٹظˆظ… (ظ…ظ† ${since})`;
 
     // Prepare chart data
     const ctx = document.getElementById('statsChart').getContext('2d');
@@ -661,42 +661,42 @@
     let details = '';
 
     if(kind==='cashiers'){
-      const rows = (r.cashierRows||[]).map(x=>({ name: x.cashier||'—', washes: Number(x.washes||0), avg: Number(x.avgRating||0) }));
+      const rows = (r.cashierRows||[]).map(x=>({ name: x.cashier||'â€”', washes: Number(x.washes||0), avg: Number(x.avgRating||0) }));
       const labels = rows.map(x=>x.name);
       const washes = rows.map(x=>x.washes);
       config = {
         type: 'bar',
-        data: { labels, datasets: [{ label: 'عدد الغسلات', data: washes }] },
+        data: { labels, datasets: [{ label: 'ط¹ط¯ط¯ ط§ظ„ط؛ط³ظ„ط§طھ', data: washes }] },
         options: { responsive: true, plugins:{ legend:{ display:true } }, scales:{ y:{ beginAtZero:true } } }
       };
-      details = rows.map(x=>`${x.name}: ${x.washes} غسلة — تقييم ${x.avg.toFixed(2)}`).join('\n') || 'لا توجد بيانات.';
+      details = rows.map(x=>`${x.name}: ${x.washes} ط؛ط³ظ„ط© â€” طھظ‚ظٹظٹظ… ${x.avg.toFixed(2)}`).join('\n') || 'ظ„ط§ طھظˆط¬ط¯ ط¨ظٹط§ظ†ط§طھ.';
     } else if(kind==='visits'){
       const earned = Number(r.earnedCount||0);
       const redeemed = Number(r.redeemedCount||0);
       config = {
         type: 'doughnut',
-        data: { labels: ['إضافة نقاط', 'استبدال'], datasets: [{ label:'', data:[earned, redeemed] }] },
+        data: { labels: ['ط¥ط¶ط§ظپط© ظ†ظ‚ط§ط·', 'ط§ط³طھط¨ط¯ط§ظ„'], datasets: [{ label:'', data:[earned, redeemed] }] },
         options: { responsive: true }
       };
-      details = `إضافة نقاط: ${earned}
-استبدال: ${redeemed}`;
+      details = `ط¥ط¶ط§ظپط© ظ†ظ‚ط§ط·: ${earned}
+ط§ط³طھط¨ط¯ط§ظ„: ${redeemed}`;
     } else {
       const dist = new Map((r.ratingDist||[]).map(x=>[String(x.rating), Number(x.c||0)]));
       const labels = ['1','2','3','4','5'];
       const data = labels.map(k=>dist.get(k)||0);
       config = {
         type: 'bar',
-        data: { labels: labels.map(x=>x+'★'), datasets: [{ label:'عدد التقييمات', data }] },
+        data: { labels: labels.map(x=>x+'âک…'), datasets: [{ label:'ط¹ط¯ط¯ ط§ظ„طھظ‚ظٹظٹظ…ط§طھ', data }] },
         options: { responsive:true, plugins:{ legend:{ display:true } }, scales:{ y:{ beginAtZero:true } } }
       };
-      details = labels.map(k=>`${k}★: ${dist.get(k)||0}`).join('\n');
+      details = labels.map(k=>`${k}âک…: ${dist.get(k)||0}`).join('\n');
     }
 
     // Render chart only if Chart.js is available
     if(window.Chart && config){
       statsChartInstance = new Chart(ctx, config);
     } else {
-      showNotice('مكتبة الإحصائيات لم تُحمّل (Chart.js). تأكد أن /vendor/chart.umd.js يعمل.', 'bad');
+      showNotice('ظ…ظƒطھط¨ط© ط§ظ„ط¥ط­طµط§ط¦ظٹط§طھ ظ„ظ… طھظڈط­ظ…ظ‘ظ„ (Chart.js). طھط£ظƒط¯ ط£ظ† /vendor/chart.umd.js ظٹط¹ظ…ظ„.', 'bad');
     }
 
     $("#statsDetails").textContent = details;
@@ -704,7 +704,7 @@
   }
 
   (function bindUi(){
-    // تشغيل الكاميرا يتطلب ضغط زر في بعض المتصفحات
+    // طھط´ط؛ظٹظ„ ط§ظ„ظƒط§ظ…ظٹط±ط§ ظٹطھط·ظ„ط¨ ط¶ط؛ط· ط²ط± ظپظٹ ط¨ط¹ط¶ ط§ظ„ظ…طھطµظپط­ط§طھ
     const btnCam = document.querySelector("#btnCam");
     const btnStop = document.querySelector("#btnStopCam");
     if(btnCam) btnCam.addEventListener("click", async ()=>{
@@ -752,12 +752,12 @@
           if(!decoded) throw new Error('NO_CODE');
           playScanBeep();
           const r = await api('/api/visit/lookup','POST',{ qrText: decoded }).catch(err=>err.data);
-          if(r.ok){ applyLookup(r); showNotice('تم جلب بيانات الزيارة.', 'good'); }
-          else{ showNotice('QR غير صالح أو منتهي.', 'bad'); }
+          if(r.ok){ applyLookup(r); showNotice('طھظ… ط¬ظ„ط¨ ط¨ظٹط§ظ†ط§طھ ط§ظ„ط²ظٹط§ط±ط©.', 'good'); }
+          else{ showNotice('QR ط؛ظٹط± طµط§ظ„ط­ ط£ظˆ ظ…ظ†طھظ‡ظٹ.', 'bad'); }
         }catch(err){
           const msg = (err && err.message === 'NO_SUPPORT')
-            ? 'هذا المتصفح لا يدعم مسح QR من صورة. افتح الصفحة في Chrome/Edge حديث.'
-            : 'تعذر مسح الصورة.';
+            ? 'ظ‡ط°ط§ ط§ظ„ظ…طھطµظپط­ ظ„ط§ ظٹط¯ط¹ظ… ظ…ط³ط­ QR ظ…ظ† طµظˆط±ط©. ط§ظپطھط­ ط§ظ„طµظپط­ط© ظپظٹ Chrome/Edge ط­ط¯ظٹط«.'
+            : 'طھط¹ط°ط± ظ…ط³ط­ ط§ظ„طµظˆط±ط©.';
           showNotice(msg, 'bad');
         } finally { e.target.value=''; }
       });
@@ -772,31 +772,31 @@
     if(bCash) bCash.addEventListener('click', ()=>showStats('cashiers'));
     if(bVisits) bVisits.addEventListener('click', ()=>showStats('visits'));
     if(bRates) bRates.addEventListener('click', ()=>showStats('ratings'));
-    // Clear notifications (الكل)
+    // Clear notifications (ط§ظ„ظƒظ„)
     const clearBtn = document.getElementById("clearNotiBtn");
     if(clearBtn){
       clearBtn.addEventListener("click", async ()=>{
         const r = await api("/api/admin/notifications/clear", "POST", {});
-        if(r.ok){ showNotice("تم حذف الإشعارات.", "good"); await updateNotiBadge(); }
+        if(r.ok){ showNotice("طھظ… ط­ط°ظپ ط§ظ„ط¥ط´ط¹ط§ط±ط§طھ.", "good"); await updateNotiBadge(); }
       });
     }
   })();
 
   (async ()=>{
-    // أي خطأ في الجلب لا يجب أن يعطّل الأزرار/الكاميرا
+    // ط£ظٹ ط®ط·ط£ ظپظٹ ط§ظ„ط¬ظ„ط¨ ظ„ط§ ظٹط¬ط¨ ط£ظ† ظٹط¹ط·ظ‘ظ„ ط§ظ„ط£ط²ط±ط§ط±/ط§ظ„ظƒط§ظ…ظٹط±ط§
     try{
       await guard();
     }catch(e){
-      showNotice("الرجاء تسجيل الدخول مرة أخرى.", "bad");
+      showNotice("ط§ظ„ط±ط¬ط§ط، طھط³ط¬ظٹظ„ ط§ظ„ط¯ط®ظˆظ„ ظ…ط±ط© ط£ط®ط±ظ‰.", "bad");
       location.href="/admin-login.html";
       return;
     }
 
-    try{ await loadDashboard(); }catch(e){ showNotice("تعذر تحميل لوحة التحكم.", "bad"); }
+    try{ await loadDashboard(); }catch(e){ showNotice("طھط¹ط°ط± طھط­ظ…ظٹظ„ ظ„ظˆط­ط© ط§ظ„طھط­ظƒظ….", "bad"); }
     try{ await updateNotiBadge(); }catch(e){}
     setInterval(()=>{ updateNotiBadge().catch(()=>{}); }, 1000);
 
-    // تحديث فوري للبادج عبر SSE (اختياري)
+    // طھط­ط¯ظٹط« ظپظˆط±ظٹ ظ„ظ„ط¨ط§ط¯ط¬ ط¹ط¨ط± SSE (ط§ط®طھظٹط§ط±ظٹ)
     try{
       const es = new EventSource('/api/admin/notifications/stream');
       let fail = 0;
@@ -811,7 +811,7 @@
         }catch(e){}
       });
 
-      // إذا فشل SSE (401/شبكة/شهادة) لا نتركه يعيد المحاولة للأبد
+      // ط¥ط°ط§ ظپط´ظ„ SSE (401/ط´ط¨ظƒط©/ط´ظ‡ط§ط¯ط©) ظ„ط§ ظ†طھط±ظƒظ‡ ظٹط¹ظٹط¯ ط§ظ„ظ…ط­ط§ظˆظ„ط© ظ„ظ„ط£ط¨ط¯
       es.onerror = ()=>{
         fail += 1;
         if(fail >= 3){
