@@ -65,6 +65,10 @@ try {
   ensureColumn("settings", "notify_two_bad", "INTEGER DEFAULT 1");
   ensureColumn("settings", "notify_high_high_bad", "INTEGER DEFAULT 1");
   
+
+  ensureColumn("settings", "notify_two_bad", "INTEGER DEFAULT 1");
+  ensureColumn("settings", "notify_high_high_bad", "INTEGER DEFAULT 1");
+  
   ensureColumn("users", "display_name", "TEXT");
   ensureColumn("visits", "action_by", "TEXT");
   ensureColumn("points_ledger", "performed_by", "TEXT");

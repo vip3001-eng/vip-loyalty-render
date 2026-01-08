@@ -191,3 +191,10 @@ module.exports = {
 function canRateVisit(visit){
   return visit && visit.is_approved===1;
 }
+function getCustomerStatus(lastVisitIso){
+  if(!lastVisitIso) return 'inactive';
+  const days=Math.floor((Date.now()-new Date(lastVisitIso))/86400000);
+  if(days<=30) return 'active';
+  if(days<=60) return 'semi_inactive';
+  return 'inactive';
+}
