@@ -185,3 +185,9 @@ module.exports = {
 };
 
 
+
+
+/* BLOCK_UNAPPROVED_RATING */
+function canRateVisit(visit){
+  return visit && visit.is_approved===1;
+}

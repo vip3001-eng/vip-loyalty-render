@@ -814,7 +814,10 @@ app.get("/api/admin/dashboard/cashiers", requireAuth(["admin"]), (req, res) => {
 
 
 app.get("/api/admin/dashboard", requireAuth(["admin"]), (req, res) => {
-  const avgRating =
+  
+/* WEIGHT_LAST_5_RATINGS */
+const avgRating =
+
     db.prepare("SELECT AVG(rating) as avgRating FROM visits WHERE is_approved = 1").get().avgRating || 0;
 
   const cashiers = db.prepare(
