@@ -86,6 +86,23 @@
   }
   $("#termsBtn").addEventListener("click", openTerms);
 </script>
+
+<div id="home-popup" style="display:none;position:fixed;inset:0;background:#000c;z-index:9999;display:flex;align-items:center;justify-content:center">
+  <div style="background:#111;border:2px solid gold;color:#fff;padding:20px;border-radius:12px;max-width:90%;text-align:center">
+    <div id="home-popup-text"></div>
+    <button onclick="document.getElementById('home-popup').style.display='none'" style="margin-top:15px;padding:10px 20px;background:gold;border:none">تم</button>
+  </div>
+</div>
+<script>
+fetch('/api/public/home-popup')
+ .then(r=>r.json())
+ .then(d=>{
+   if(d.enabled){
+     document.getElementById('home-popup-text').innerText=d.text;
+     document.getElementById('home-popup').style.display='flex';
+   }
+ });
+</script>
 </body>
 </html>
 

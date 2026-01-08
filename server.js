@@ -347,6 +347,12 @@ app.get("/api/auth/me", (req, res) => {
 });
 
 // -------------------- Public settings --------------------
+
+app.get("/api/public/home-popup",(req,res)=>{
+  const row=db.prepare("SELECT home_popup_enabled,home_popup_text FROM settings WHERE id=1").get();
+  res.json({ok:true,enabled:!!row?.home_popup_enabled,text:row?.home_popup_text||""});
+});
+
 app.get("/api/public/settings", (req, res) => {
   const s = getSettings();
   res.json({
