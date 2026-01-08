@@ -1073,6 +1073,31 @@ app.post("/api/admin/users/delete", requireAuth(["admin"]), (req, res) => {
 });
 
 // -------------------- Export --------------------
+
+/* ===== Group2: Enhanced Excel Export ===== */
+function buildExportRows() {
+  return db.prepare(`
+    SELECT
+      c.id,
+      c.name,
+      c.phone,
+      ve.car_type,
+      ve.car_model,
+      ve.plate_numbers,
+      COUNT(v.id) as visits_count,
+      SUM(CASE WHEN p.entry_type='redeem' THEN 1 ELSE 0 END) as redeem_count,
+      MAX(v.created_at) as last_visit,
+      MAX(COALESCE(v.action_by, p.performed_by)) as last_actor
+    FROM customers c
+    LEFT JOIN vehicles ve ON ve.customer_id = c.id
+    LEFT JOIN visits v ON v.customer_id = c.id AND v.is_approved = 1
+    LEFT JOIN points_ledger p ON p.customer_id = c.id
+    GROUP BY c.id
+    ORDER BY last_visit DESC
+  `).all();
+}
+
+
 app.get("/api/admin/export/excel", requireAuth(["admin"]), async (req, res) => {
   const customers = db.prepare(
     `
@@ -1115,6 +1140,13 @@ app.get("/api/admin/export/excel", requireAuth(["admin"]), async (req, res) => {
   await wb.xlsx.write(res);
   res.end();
 });
+
+
+/* ===== Group2: Enhanced Word Export ===== */
+function buildWordRows() {
+  return buildExportRows();
+}
+
 
 app.get("/api/admin/export/word", requireAuth(["admin"]), async (req, res) => {
   const customers = db.prepare(
@@ -1237,3 +1269,18 @@ try {
 
 
 
+
+/* ===== Group2: Export Statistics ===== */
+function buildExportStats() {
+  const totalCustomers = db.prepare("SELECT COUNT(*) c FROM customers").get().c;
+  const avgRating = db.prepare("SELECT AVG(rating) a FROM visits WHERE is_approved=1").get().a || 0;
+  const redeemed = db.prepare("SELECT COUNT(DISTINCT customer_id) c FROM points_ledger WHERE entry_type='redeem'").get().c;
+  const visits = db.prepare("SELECT COUNT(*) c FROM visits").get().c;
+
+  return {
+    totalCustomers,
+    avgRating: Number(avgRating).toFixed(2),
+    redeemed,
+    visits
+  };
+}
