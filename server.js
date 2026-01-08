@@ -61,6 +61,10 @@ function ensureColumn(table, colName, colDefSql) {
 // Add missing columns safely
 try {
   ensureColumn("settings", "defaults_inited", "INTEGER NOT NULL DEFAULT 0");
+
+  ensureColumn("settings", "notify_two_bad", "INTEGER DEFAULT 1");
+  ensureColumn("settings", "notify_high_high_bad", "INTEGER DEFAULT 1");
+  
   ensureColumn("users", "display_name", "TEXT");
   ensureColumn("visits", "action_by", "TEXT");
   ensureColumn("points_ledger", "performed_by", "TEXT");
@@ -753,6 +757,56 @@ app.get("/api/admin/customers/status-counts", requireAuth(["admin"]), (req, res)
 });
 
 
+
+/* ===== Group3: Best Customers Dashboard ===== */
+app.get("/api/admin/dashboard/best-customers", requireAuth(["admin"]), (req, res) => {
+  try {
+    const rows = db.prepare(`
+      SELECT
+        c.id,
+        c.name,
+        c.phone,
+        COUNT(v.id) as visits,
+        AVG(v.rating) as avg_rating,
+        SUM(CASE WHEN p.entry_type='redeem' THEN 1 ELSE 0 END) as redeems
+      FROM customers c
+      LEFT JOIN visits v ON v.customer_id = c.id AND v.is_approved = 1
+      LEFT JOIN points_ledger p ON p.customer_id = c.id
+      GROUP BY c.id
+      ORDER BY visits DESC, avg_rating DESC
+      LIMIT 20
+    `).all();
+
+    res.json({ ok:true, customers: rows });
+  } catch(e) {
+    res.json({ ok:false, error:"FAILED", message:e.message });
+  }
+});
+
+
+
+/* ===== Group3: Cashier Performance ===== */
+app.get("/api/admin/dashboard/cashiers", requireAuth(["admin"]), (req, res) => {
+  try {
+    const rows = db.prepare(`
+      SELECT
+        approved_by as cashier,
+        COUNT(*) as washes,
+        AVG(rating) as avg_rating
+      FROM visits
+      WHERE is_approved = 1
+        AND approved_by IS NOT NULL
+      GROUP BY approved_by
+      ORDER BY washes DESC, avg_rating DESC
+    `).all();
+
+    res.json({ ok:true, cashiers: rows });
+  } catch(e) {
+    res.json({ ok:false, error:"FAILED", message:e.message });
+  }
+});
+
+
 app.get("/api/admin/dashboard", requireAuth(["admin"]), (req, res) => {
   const avgRating =
     db.prepare("SELECT AVG(rating) as avgRating FROM visits WHERE is_approved = 1").get().avgRating || 0;
@@ -773,6 +827,37 @@ app.get("/api/admin/dashboard", requireAuth(["admin"]), (req, res) => {
 
 
 // -------------------- Admin Notifications --------------------
+
+/* ===== Group3: Notification controls ===== */
+
+// Toggle notification types
+app.post("/api/admin/notifications/settings", requireAuth(["admin"]), (req, res) => {
+  const { two_bad, high_high_bad } = req.body || {};
+  db.prepare(`
+    UPDATE settings SET
+      notify_two_bad = COALESCE(?, notify_two_bad),
+      notify_high_high_bad = COALESCE(?, notify_high_high_bad)
+    WHERE id = 1
+  `).run(
+    typeof two_bad === "boolean" ? (two_bad ? 1 : 0) : null,
+    typeof high_high_bad === "boolean" ? (high_high_bad ? 1 : 0) : null
+  );
+  res.json({ ok: true });
+});
+
+// Bulk delete notifications
+app.post("/api/admin/notifications/clear-bulk", requireAuth(["admin"]), (req, res) => {
+  const { ids } = req.body || {};
+  if (!Array.isArray(ids) || !ids.length)
+    return res.status(400).json({ ok:false, error:"NO_IDS" });
+
+  const q = ids.map(()=>"?").join(",");
+  db.prepare(`DELETE FROM notifications WHERE id IN (${q})`).run(...ids);
+  broadcastNoti();
+  res.json({ ok:true, deleted: ids.length });
+});
+
+
 app.get("/api/admin/notifications", requireAuth(["admin"]), (req, res) => {
   const showAll = (req.query.all === "1");
   let sql = `
