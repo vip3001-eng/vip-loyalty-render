@@ -51,93 +51,6 @@
   </div>
 
 <script src="/js/common.js?v=202601072341"></script>
-<script>
-  // دخول الأدمن/المحاسب مخفي داخل الشعار (اضغط 5 مرات بسرعة)
-  enableHiddenAdmin("#logo", "/admin-login.html", 5);
-  $("#waI").innerHTML = iconWhats();
-  $("#snI").innerHTML = iconSnap();
-  $("#tkI").innerHTML = iconTiktok();
-  $("#mapI").innerHTML = iconMaps();
-
-  (async ()=>{
-    const r = await api("/api/public/settings");
-    if(r.ok){
-      $("#homeText1").textContent = r.settings.home_text_1 || $("#homeText1").textContent;
-      $("#homeText2").textContent = r.settings.home_text_2 || $("#homeText2").textContent;
-      const terms = (r.settings.terms_text || "").trim();
-      if(terms){
-        $("#termsText").textContent = terms;
-        $("#termsBtn").style.display = "inline-flex";
-      }else{
-        $("#termsBtn").style.display = "none";
-      }
-      $("#waLink").href = r.settings.social_whatsapp || "#";
-      $("#snapLink").href = r.settings.social_snap || "#";
-      $("#tkLink").href = r.settings.social_tiktok || "#";
-      $("#mapsLink").href = r.settings.social_maps || "#";
-    }
-  })();
-
-  function openTerms(){
-    $("#termsBack").style.display = "grid";
-  }
-  function closeTerms(){
-    $("#termsBack").style.display = "none";
-  }
-  $("#termsBtn").addEventListener("click", openTerms);
-</script>
-
-<div id="home-popup" style="display:none;position:fixed;inset:0;background:#000c;z-index:9999;display:flex;align-items:center;justify-content:center">
-  <div style="background:#111;border:2px solid gold;color:#fff;padding:20px;border-radius:12px;max-width:90%;text-align:center">
-    <div id="home-popup-text"></div>
-    <button onclick="document.getElementById('home-popup').style.display='none'" style="margin-top:15px;padding:10px 20px;background:gold;border:none">تم</button>
-  </div>
-</div>
-<script>
-fetch('/api/public/home-popup')
- .then(r=>r.json())
- .then(d=>{
-   if(d.enabled){
-     document.getElementById('home-popup-text').innerText=d.text;
-     document.getElementById('home-popup').style.display='flex';
-   }
- });
-</script>
-
-<!-- GroupB FIX: Home popup overlay -->
-<div id="home-popup-overlay" style="display:none;position:fixed;inset:0;background:#000c;z-index:9999;align-items:center;justify-content:center;">
-  <div style="background:#111;border:2px solid gold;color:#fff;padding:20px;border-radius:12px;max-width:90%;text-align:center;">
-    <div id="home-popup-text" style="white-space:pre-wrap;line-height:1.8;"></div>
-    <button id="home-popup-close" style="margin-top:15px;padding:10px 22px;background:gold;border:none;border-radius:10px;font-weight:900;">تم</button>
-  </div>
-</div>
-
-
-<!-- GroupB FIX: Home popup once -->
-<script>
-(function(){
-  fetch('/api/public/home-popup',{cache:'no-store'}).then(function(r){return r.json();}).then(function(d){
-    if(!d || !d.ok || !d.enabled) return;
-
-    // ✅ مرة واحدة فقط لكل جهاز
-    var onceKey = 'vip_home_popup_seen_once';
-    try{ if(localStorage.getItem(onceKey)==='1') return; }catch(e){}
-
-    var overlay = document.getElementById('home-popup-overlay');
-    var textEl  = document.getElementById('home-popup-text');
-    var closeBtn= document.getElementById('home-popup-close');
-    if(!overlay || !textEl || !closeBtn) return;
-
-    textEl.textContent = d.text || '';
-    overlay.style.display = 'flex';
-    closeBtn.onclick = function(){
-      try{ localStorage.setItem(onceKey,'1'); }catch(e){}
-      overlay.style.display = 'none';
-    };
-  }).catch(function(){});
-})();
-</script>
-
 <!-- VIP HOME POPUP START -->
 <div id="vip-home-popup" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:9999;align-items:center;justify-content:center">
   <div style="background:#111;border:2px solid #d4af37;color:#fff;padding:18px;border-radius:14px;max-width:92%;text-align:center">
@@ -145,34 +58,6 @@ fetch('/api/public/home-popup')
     <button id="vip-home-popup-ok" style="margin-top:14px;padding:10px 22px;background:#d4af37;border:none;border-radius:10px;font-weight:700">تم</button>
   </div>
 </div>
-<script>
-(function(){
-  function showPopup(text){
-    var box=document.getElementById("vip-home-popup");
-    var t=document.getElementById("vip-home-popup-text");
-    var ok=document.getElementById("vip-home-popup-ok");
-    if(!box||!t||!ok) return;
-    t.textContent = text || "";
-    box.style.display="flex";
-    ok.onclick=function(){ box.style.display="none"; };
-  }
-
-  fetch("/api/public/home-popup",{cache:"no-store"})
-    .then(function(r){ return r.json(); })
-    .then(function(d){
-      if(!d || !d.enabled) return;
-      var ver = String(d.text||"") + "|" + (d.enabled?1:0) + "|" + (d.once?1:0);
-      var key = "vip_home_popup_seen_v1";
-      if(d.once){
-        var seen = localStorage.getItem(key);
-        if(seen === ver) return;
-        localStorage.setItem(key, ver);
-      }
-      showPopup(d.text||"");
-    })
-    .catch(function(){});
-})();
-</script>
 <!-- VIP HOME POPUP END -->
 </body>
 </html>

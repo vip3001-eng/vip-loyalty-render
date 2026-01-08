@@ -358,22 +358,7 @@ app.get("/api/auth/me", (req, res) => {
 
 // -------------------- Public settings --------------------
 
-app.get("/api/public/home-popup",(req,res)=>{
-  const row=db.prepare("SELECT home_popup_enabled,home_popup_text FROM settings WHERE id=1").get();
-  res.json({ok:true,enabled:!!row?.home_popup_enabled,text:row?.home_popup_text||""});
-});
-
-
 /* -------------------- GroupB FIX: Home popup (public endpoint) -------------------- */
-app.get("/api/public/home-popup",(req,res)=>{
-  try{
-    const row=db.prepare("SELECT home_popup_enabled,home_popup_text,home_popup_version FROM settings WHERE id=1").get();
-    res.json({ok:true,enabled:!!(row&&row.home_popup_enabled),text:String((row&&row.home_popup_text)||""),version:Number((row&&row.home_popup_version)||1)});
-  }catch(e){
-    res.json({ok:true,enabled:false,text:"",version:1});
-  }
-});
-
 app.get("/api/public/settings", (req, res) => {
   const s = getSettings();
   res.json({
@@ -665,10 +650,9 @@ app.post("/api/visit/approve", requireAuth(["admin", "cashier"]), (req, res) => 
 
     db.prepare(
       `
-      INSERT INTO points_ledger (id, customer_id, visit_id, entry_type, points, created_at)
-      VALUES (?, ?, ?, 'earn', ?, ?)
+      INSERT INTO points_ledger (id, customer_id, visit_id, entry_type, points, performed_by, created_at) VALUES (?, ?, ?, 'earn', ?, ?, ?)
     `
-    ).run(uuid(), visit.customer_id, visitId, pointsPerVisit, nowIso());
+    ).run(uuid(), visit.customer_id, visitId, pointsPerVisit, req.user.username, nowIso());
 
     // notifications rules
     try { maybeCreateNotification(visit.customer_id); } catch(e) {}
@@ -696,10 +680,9 @@ app.post("/api/visit/redeem", requireAuth(["admin", "cashier"]), (req, res) => {
   const t = nowIso();
   db.prepare(
     `
-    INSERT INTO points_ledger (id, customer_id, visit_id, entry_type, points, created_at)
-    VALUES (?, ?, NULL, 'redeem', ?, ?)
+    INSERT INTO points_ledger (id, customer_id, visit_id, entry_type, points, performed_by, created_at) VALUES (?, ?, NULL, 'redeem', ?, ?, ?)
   `
-  ).run(uuid(), customerId, settings.points_redeem_limit, t);
+  ).run(uuid(), customerId, settings.points_redeem_limit, req.user.username, t);
 
   if (visitId) {
     db.prepare("UPDATE visits SET action_type = 'redeem', action_at = ?, is_approved = 1 WHERE id = ?")
@@ -1399,6 +1382,29 @@ app.post("/api/admin/users/delete", requireAuth(["admin"]), (req, res) => {
   db.prepare("DELETE FROM users WHERE id = ?").run(id);
   res.json({ ok: true });
 });
+
+function makeWhatsAppLink(phone){
+  try{
+    const raw = String(phone||"");
+    const digits = raw.replace(/\D/g,"");
+    if(!digits) return "";
+    // Saudi common: 05xxxxxxxx -> 9665xxxxxxx
+    let d = digits;
+    if(d.startsWith("0") && d.length===10) d = "966"+d.slice(1);
+    else if(d.startsWith("5") && d.length===9) d = "966"+d;
+    else if(d.startsWith("00966")) d = d.replace(/^00966/, "966");
+    return "https://wa.me/" + d;
+  }catch(e){ return ""; }
+}
+
+function formatPlate(ve){
+  try{
+    if(!ve) return "";
+    const letters = (ve.plate_letters_ar||"").toString().trim();
+    const nums = (ve.plate_numbers||"").toString().trim();
+    return (letters && nums) ? (letters + " " + nums) : (letters||nums||"");
+  }catch(e){ return ""; }
+}
 
 // -------------------- Export --------------------
 
