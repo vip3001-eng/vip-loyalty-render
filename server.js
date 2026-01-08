@@ -65,6 +65,10 @@ try {
   ensureColumn("settings", "notify_two_bad", "INTEGER DEFAULT 1");
   ensureColumn("settings", "notify_high_high_bad", "INTEGER DEFAULT 1");
   
+
+  ensureColumn("settings", "notify_two_bad", "INTEGER DEFAULT 1");
+  ensureColumn("settings", "notify_high_high_bad", "INTEGER DEFAULT 1");
+  
   ensureColumn("users", "display_name", "TEXT");
   ensureColumn("visits", "action_by", "TEXT");
   ensureColumn("points_ledger", "performed_by", "TEXT");
@@ -347,6 +351,12 @@ app.get("/api/auth/me", (req, res) => {
 });
 
 // -------------------- Public settings --------------------
+
+app.get("/api/public/home-popup",(req,res)=>{
+  const row=db.prepare("SELECT home_popup_enabled,home_popup_text FROM settings WHERE id=1").get();
+  res.json({ok:true,enabled:!!row?.home_popup_enabled,text:row?.home_popup_text||""});
+});
+
 app.get("/api/public/settings", (req, res) => {
   const s = getSettings();
   res.json({
@@ -808,7 +818,10 @@ app.get("/api/admin/dashboard/cashiers", requireAuth(["admin"]), (req, res) => {
 
 
 app.get("/api/admin/dashboard", requireAuth(["admin"]), (req, res) => {
-  const avgRating =
+  
+/* WEIGHT_LAST_5_RATINGS */
+const avgRating =
+
     db.prepare("SELECT AVG(rating) as avgRating FROM visits WHERE is_approved = 1").get().avgRating || 0;
 
   const cashiers = db.prepare(
