@@ -138,6 +138,42 @@ fetch('/api/public/home-popup')
 })();
 </script>
 
+<!-- VIP HOME POPUP START -->
+<div id="vip-home-popup" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:9999;align-items:center;justify-content:center">
+  <div style="background:#111;border:2px solid #d4af37;color:#fff;padding:18px;border-radius:14px;max-width:92%;text-align:center">
+    <div id="vip-home-popup-text" style="white-space:pre-wrap;line-height:1.7"></div>
+    <button id="vip-home-popup-ok" style="margin-top:14px;padding:10px 22px;background:#d4af37;border:none;border-radius:10px;font-weight:700">تم</button>
+  </div>
+</div>
+<script>
+(function(){
+  function showPopup(text){
+    var box=document.getElementById("vip-home-popup");
+    var t=document.getElementById("vip-home-popup-text");
+    var ok=document.getElementById("vip-home-popup-ok");
+    if(!box||!t||!ok) return;
+    t.textContent = text || "";
+    box.style.display="flex";
+    ok.onclick=function(){ box.style.display="none"; };
+  }
+
+  fetch("/api/public/home-popup",{cache:"no-store"})
+    .then(function(r){ return r.json(); })
+    .then(function(d){
+      if(!d || !d.enabled) return;
+      var ver = String(d.text||"") + "|" + (d.enabled?1:0) + "|" + (d.once?1:0);
+      var key = "vip_home_popup_seen_v1";
+      if(d.once){
+        var seen = localStorage.getItem(key);
+        if(seen === ver) return;
+        localStorage.setItem(key, ver);
+      }
+      showPopup(d.text||"");
+    })
+    .catch(function(){});
+})();
+</script>
+<!-- VIP HOME POPUP END -->
 </body>
 </html>
 

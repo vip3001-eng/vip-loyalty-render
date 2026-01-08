@@ -1600,6 +1600,60 @@ app.get("/api/admin/customer-search", requireAuth(["admin"]), (req, res) => {
 });
 /* ==================== /Group4 ==================== */
 
+// __VIP_UI_FIX_SAFE__ START
+// Home popup admin control
+app.get("/api/admin/home-popup", requireAuth(["admin"]), (req,res)=>{
+  const row = db.prepare("SELECT home_popup_enabled, home_popup_text, home_popup_once FROM settings WHERE id=1").get();
+  res.json({ ok:true, enabled: !!(row && row.home_popup_enabled), once: !!(row && row.home_popup_once), text: (row && row.home_popup_text) ? String(row.home_popup_text) : "" });
+});
+app.post("/api/admin/home-popup", requireAuth(["admin"]), (req,res)=>{
+  const enabled = (req.body && typeof req.body.enabled !== "undefined") ? (req.body.enabled ? 1 : 0) : 0;
+  const once = (req.body && typeof req.body.once !== "undefined") ? (req.body.once ? 1 : 0) : 1;
+  const text = (req.body && typeof req.body.text !== "undefined") ? String(req.body.text || "") : "";
+  db.prepare("UPDATE settings SET home_popup_enabled=?, home_popup_once=?, home_popup_text=? WHERE id=1").run(enabled, once, text);
+  res.json({ ok:true });
+});
+
+// Enhanced customer search (last visit + whatsapp)
+app.get("/api/admin/customer-search2", requireAuth(["admin"]), (req,res)=>{
+  const q = (req.query.q || "").toString().trim();
+  if(!q) return res.json({ ok:true, rows: [] });
+
+  const like = "%" + q + "%";
+  const rows = db.prepare(`
+    SELECT
+      c.id as customer_id,
+      c.name as customer_name,
+      c.phone as customer_phone,
+      ve.plate_letters_ar,
+      ve.plate_numbers,
+      ve.car_type,
+      ve.car_model,
+      (SELECT MAX(v.created_at) FROM visits v WHERE v.customer_id = c.id) as last_visit_at
+    FROM customers c
+    LEFT JOIN vehicles ve ON ve.customer_id = c.id
+    WHERE c.phone LIKE ? OR c.name LIKE ? OR ve.plate_numbers LIKE ? OR ve.plate_letters_ar LIKE ?
+    ORDER BY last_visit_at DESC
+    LIMIT 50
+  `).all(like, like, like, like);
+
+  const norm = (p)=>{
+    p = String(p||"").replace(/\D/g,"");
+    if(p.startsWith("0")) return "966" + p.slice(1);
+    if(p.startsWith("966")) return p;
+    return p;
+  };
+
+  res.json({
+    ok:true,
+    rows: rows.map(r=>({
+      ...r,
+      whatsapp: r.customer_phone ? ("https://wa.me/" + norm(r.customer_phone)) : ""
+    }))
+  });
+});
+// __VIP_UI_FIX_SAFE__ END
+
 app.use("/api", (req, res) => {
   res.status(404).json({ ok: false, error: "NOT_FOUND", message: "المسار غير موجود" });
 });

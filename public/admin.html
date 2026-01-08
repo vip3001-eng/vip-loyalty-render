@@ -1105,6 +1105,154 @@
 })();
 </script>
 
+<!-- VIP ADMIN UI SAFE START -->
+<style>
+  #vip-search-results{ margin-top:12px; display:grid; gap:10px; }
+  .vip-card{ background:#0f0f12;border:1px solid #2a2a33;border-radius:14px;padding:12px; }
+  .vip-row{ display:flex; justify-content:space-between; gap:10px; align-items:center; flex-wrap:wrap; }
+  .vip-muted{ opacity:.75; font-size:12px; }
+  .vip-pill{ padding:6px 10px; border-radius:999px; border:1px solid #2a2a33; font-size:12px; }
+  .vip-wa{ text-decoration:none; border:1px solid #2a2a33; padding:8px 10px; border-radius:10px; display:inline-flex; gap:8px; align-items:center; color:#fff; }
+  .vip-wa:hover{ border-color:#d4af37; }
+  .vip-section{ margin-top:14px; background:#0f0f12; border:1px solid #2a2a33; border-radius:14px; padding:12px; }
+  .vip-section h3{ margin:0 0 10px 0; font-size:14px; }
+  .vip-actions{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+  .vip-btn{ background:#d4af37; border:none; border-radius:10px; padding:10px 14px; font-weight:700; cursor:pointer; }
+  .vip-btn2{ background:transparent; border:1px solid #2a2a33; color:#fff; border-radius:10px; padding:10px 14px; font-weight:700; cursor:pointer; }
+</style>
+
+<script>
+(function(){
+  function fmt(dt){
+    try{ if(!dt) return ""; var d=new Date(dt); if(String(d)==="Invalid Date") return String(dt); return d.toLocaleString("ar-SA"); }
+    catch(e){ return String(dt||""); }
+  }
+
+  // ----- Popup settings panel -----
+  function injectPopupPanel(){
+    if(document.getElementById("vip-homepopup-settings")) return;
+    var host = document.querySelector("main") || document.body;
+
+    var sec = document.createElement("div");
+    sec.className="vip-section";
+    sec.id="vip-homepopup-settings";
+    sec.innerHTML =
+      '<h3>رسالة منبثقة (الصفحة الرئيسية)</h3>' +
+      '<label class="vip-muted"><input type="checkbox" id="vipPopEnabled"> تفعيل الرسالة</label><br><br>' +
+      '<label class="vip-muted"><input type="checkbox" id="vipPopOnce" checked> تظهر مرة واحدة لكل جهاز (إلا إذا تغيّر النص)</label><br><br>' +
+      '<div class="vip-muted">نص الرسالة</div>' +
+      '<textarea id="vipPopText" style="width:100%;min-height:90px;resize:vertical"></textarea><br>' +
+      '<div class="vip-actions">' +
+        '<button class="vip-btn" id="vipPopSave">حفظ</button>' +
+        '<button class="vip-btn2" id="vipPopReload">تحديث</button>' +
+        '<span id="vipPopMsg" class="vip-muted"></span>' +
+      '</div>';
+
+    host.appendChild(sec);
+
+    function setMsg(t){ var el=document.getElementById("vipPopMsg"); if(el) el.textContent=t||""; }
+    function load(){
+      setMsg("...");
+      fetch("/api/admin/home-popup",{cache:"no-store"}).then(function(r){return r.json();}).then(function(d){
+        document.getElementById("vipPopEnabled").checked = !!(d && d.enabled);
+        document.getElementById("vipPopOnce").checked = !!(d && d.once);
+        document.getElementById("vipPopText").value = (d && d.text) ? d.text : "";
+        setMsg("تم التحميل");
+        setTimeout(function(){setMsg("");},1200);
+      }).catch(function(){ setMsg("تعذر التحميل"); });
+    }
+
+    document.getElementById("vipPopReload").onclick = load;
+    document.getElementById("vipPopSave").onclick = function(){
+      setMsg("جاري الحفظ...");
+      fetch("/api/admin/home-popup",{
+        method:"POST",
+        headers:{ "Content-Type":"application/json; charset=utf-8" },
+        body: JSON.stringify({
+          enabled: document.getElementById("vipPopEnabled").checked,
+          once: document.getElementById("vipPopOnce").checked,
+          text: document.getElementById("vipPopText").value || ""
+        })
+      }).then(function(r){return r.json();})
+        .then(function(){ setMsg("تم الحفظ"); setTimeout(function(){setMsg("");},1200); })
+        .catch(function(){ setMsg("فشل الحفظ"); });
+    };
+
+    load();
+  }
+
+  var tries=0;
+  var t=setInterval(function(){
+    tries++;
+    injectPopupPanel();
+    if(document.getElementById("vip-homepopup-settings") || tries>15) clearInterval(t);
+  },700);
+
+  // ----- Better search results -----
+  function ensureResultsHost(){
+    var host=document.getElementById("vip-search-results");
+    if(host) return host;
+    host=document.createElement("div");
+    host.id="vip-search-results";
+    (document.querySelector("main")||document.body).appendChild(host);
+    return host;
+  }
+
+  async function doSearch(q){
+    var host=ensureResultsHost();
+    host.innerHTML="";
+    if(!q) return;
+
+    var d=null;
+    try{
+      var r=await fetch("/api/admin/customer-search2?q="+encodeURIComponent(q),{cache:"no-store"});
+      d=await r.json();
+    }catch(e){}
+
+    var rows=(d && d.rows) ? d.rows : [];
+    if(!rows.length){ host.innerHTML='<div class="vip-muted">لا توجد نتائج.</div>'; return; }
+
+    rows.forEach(function(r){
+      var card=document.createElement("div");
+      card.className="vip-card";
+      var last=fmt(r.last_visit_at);
+      var plate=[r.plate_letters_ar,r.plate_numbers].filter(Boolean).join(" ");
+      var car=[r.car_type,r.car_model].filter(Boolean).join(" / ");
+      card.innerHTML =
+        '<div class="vip-row">' +
+          '<div>' +
+            '<div style="font-weight:800">'+ (r.customer_name||"بدون اسم") +'</div>' +
+            '<div class="vip-muted">'+ (r.customer_phone||"") +'</div>' +
+          '</div>' +
+          (r.whatsapp ? ('<a class="vip-wa" href="'+r.whatsapp+'" target="_blank" rel="noopener">واتس</a>') : '') +
+        '</div>' +
+        '<div class="vip-row" style="margin-top:10px">' +
+          (plate ? ('<div class="vip-pill">لوحة: '+plate+'</div>') : '') +
+          (car ? ('<div class="vip-pill">مركبة: '+car+'</div>') : '') +
+        '</div>' +
+        '<div class="vip-muted" style="margin-top:10px">آخر زيارة: <b>'+ (last||"—") +'</b></div>';
+      host.appendChild(card);
+    });
+  }
+
+  // hook: attach to any input and button that looks like search
+  setTimeout(function(){
+    var inputs=Array.from(document.querySelectorAll("input"));
+    var input=inputs.find(function(x){ return (x.placeholder||"").includes("ابحث") || (x.placeholder||"").includes("الجوال") || (x.placeholder||"").includes("اللوحة"); });
+    if(!input) return;
+
+    input.addEventListener("keydown", function(e){
+      if(e.key==="Enter"){ e.preventDefault(); doSearch((input.value||"").trim()); }
+    });
+
+    var btns=Array.from(document.querySelectorAll("button"));
+    btns.filter(function(b){ return (b.textContent||"").includes("بحث"); }).forEach(function(b){
+      b.addEventListener("click", function(){ doSearch((input.value||"").trim()); });
+    });
+  }, 900);
+})();
+</script>
+<!-- VIP ADMIN UI SAFE END -->
 </body>
 </html>
 
