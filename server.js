@@ -126,6 +126,22 @@ function broadcastNoti() {
 app.use(express.json({ limit: "1mb" }));
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
+
+/* VIP_PROTECT_ADMIN_PAGES_V2 */
+app.get(["/admin.html","/cashier.html"], (req,res,next)=>{
+  try{
+    const token = (req.cookies && req.cookies.vip_token) || "";
+    if(!token) return res.redirect(302, "/login.html");
+    const jwt = require("jsonwebtoken");
+    jwt.verify(token, JWT_SECRET);
+    return next();
+  }catch(e){
+    return res.redirect(302, "/login.html");
+  }
+});
+/* END VIP_PROTECT_ADMIN_PAGES_V2 */
+
+
 app.use((req,res,next)=>{ try{ res.setHeader("Cache-Control","no-store"); res.setHeader("Pragma","no-cache"); res.setHeader("Expires","0"); }catch(e){} next(); });
 
 // -------------------- Redirect HTTP -> HTTPS (للجوال) --------------------
