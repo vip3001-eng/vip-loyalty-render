@@ -1432,6 +1432,31 @@ app.get("/api/admin/export/word", requireAuth(["admin"]), async (req, res) => {
 });
 
 // -------------------- API 404 + Error handler --------------------
+
+/* ==================== Group4: Admin Customer Search ==================== */
+// Search by phone OR plate OR name (admin only)
+app.get("/api/admin/customer-search", requireAuth(["admin"]), (req, res) => {
+  const q = (req.query.q || "").toString().trim();
+  if (!q) return res.json({ ok: true, results: [] });
+
+  const like = "%" + q.replace(/[%_]/g, "") + "%";
+  const qNorm = normalizePlateNumbers(q);
+
+  const rows = db.prepare(`
+    SELECT c.id as customer_id, c.name, c.phone,
+           ve.plate_letters_ar, ve.plate_numbers, ve.car_type, ve.car_model,
+           (SELECT MAX(v.created_at) FROM visits v WHERE v.customer_id = c.id) as last_visit_at
+    FROM customers c
+    LEFT JOIN vehicles ve ON ve.customer_id = c.id
+    WHERE c.phone LIKE ? OR c.name LIKE ? OR ve.plate_numbers LIKE ? OR ve.plate_numbers_norm = ?
+    ORDER BY last_visit_at DESC
+    LIMIT 50
+  `).all(like, like, like, qNorm);
+
+  res.json({ ok: true, results: rows });
+});
+/* ==================== /Group4 ==================== */
+
 app.use("/api", (req, res) => {
   res.status(404).json({ ok: false, error: "NOT_FOUND", message: "المسار غير موجود" });
 });
