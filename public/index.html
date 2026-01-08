@@ -103,6 +103,41 @@ fetch('/api/public/home-popup')
    }
  });
 </script>
+
+<!-- GroupB FIX: Home popup overlay -->
+<div id="home-popup-overlay" style="display:none;position:fixed;inset:0;background:#000c;z-index:9999;align-items:center;justify-content:center;">
+  <div style="background:#111;border:2px solid gold;color:#fff;padding:20px;border-radius:12px;max-width:90%;text-align:center;">
+    <div id="home-popup-text" style="white-space:pre-wrap;line-height:1.8;"></div>
+    <button id="home-popup-close" style="margin-top:15px;padding:10px 22px;background:gold;border:none;border-radius:10px;font-weight:900;">تم</button>
+  </div>
+</div>
+
+
+<!-- GroupB FIX: Home popup once -->
+<script>
+(function(){
+  fetch('/api/public/home-popup',{cache:'no-store'}).then(function(r){return r.json();}).then(function(d){
+    if(!d || !d.ok || !d.enabled) return;
+
+    // ✅ مرة واحدة فقط لكل جهاز
+    var onceKey = 'vip_home_popup_seen_once';
+    try{ if(localStorage.getItem(onceKey)==='1') return; }catch(e){}
+
+    var overlay = document.getElementById('home-popup-overlay');
+    var textEl  = document.getElementById('home-popup-text');
+    var closeBtn= document.getElementById('home-popup-close');
+    if(!overlay || !textEl || !closeBtn) return;
+
+    textEl.textContent = d.text || '';
+    overlay.style.display = 'flex';
+    closeBtn.onclick = function(){
+      try{ localStorage.setItem(onceKey,'1'); }catch(e){}
+      overlay.style.display = 'none';
+    };
+  }).catch(function(){});
+})();
+</script>
+
 </body>
 </html>
 

@@ -363,6 +363,17 @@ app.get("/api/public/home-popup",(req,res)=>{
   res.json({ok:true,enabled:!!row?.home_popup_enabled,text:row?.home_popup_text||""});
 });
 
+
+/* -------------------- GroupB FIX: Home popup (public endpoint) -------------------- */
+app.get("/api/public/home-popup",(req,res)=>{
+  try{
+    const row=db.prepare("SELECT home_popup_enabled,home_popup_text,home_popup_version FROM settings WHERE id=1").get();
+    res.json({ok:true,enabled:!!(row&&row.home_popup_enabled),text:String((row&&row.home_popup_text)||""),version:Number((row&&row.home_popup_version)||1)});
+  }catch(e){
+    res.json({ok:true,enabled:false,text:"",version:1});
+  }
+});
+
 app.get("/api/public/settings", (req, res) => {
   const s = getSettings();
   res.json({
@@ -1100,6 +1111,85 @@ app.get("/api/admin/stats/rolling", requireAuth(["admin"]), (req, res) => {
   });
 });
 
+
+/* -------------------- GroupB FIX: Admin customer search v2 -------------------- */
+function normalizePhoneToWa(phone){
+  const d = String(phone||"").replace(/\D+/g,"");
+  if (!d) return "";
+  if (d.length === 10 && d.startsWith("05")) return "966" + d.slice(1);
+  if (d.startsWith("966")) return d;
+  return d;
+}
+
+app.get("/api/admin/customer-search", requireAuth(["admin"]), (req,res)=>{
+  const q = String((req.query.q||"")).trim();
+  if (!q) return res.json({ ok:true, items: [] });
+
+  const like = "%" + q.replace(/%/g,"") + "%";
+  try{
+    const rows = db.prepare(`
+      SELECT
+        c.id as customer_id,
+        c.name as name,
+        c.phone as phone,
+
+        (SELECT v.created_at
+          FROM visits v
+          WHERE v.customer_id=c.id
+          ORDER BY v.created_at DESC
+          LIMIT 1
+        ) as last_visit_at,
+
+        (SELECT ve.plate_letters_ar||' '||ve.plate_numbers
+          FROM visits v2
+          JOIN vehicles ve ON ve.id=v2.vehicle_id
+          WHERE v2.customer_id=c.id
+          ORDER BY v2.created_at DESC
+          LIMIT 1
+        ) as last_plate,
+
+        (SELECT COALESCE(MAX(v3.approved_at), MAX(v3.action_at))
+          FROM visits v3
+          WHERE v3.customer_id=c.id
+        ) as last_action_at,
+
+        (SELECT COALESCE(
+            (SELECT v4.approved_by FROM visits v4 WHERE v4.customer_id=c.id AND v4.approved_by IS NOT NULL ORDER BY v4.approved_at DESC LIMIT 1),
+            (SELECT v5.approved_by FROM visits v5 WHERE v5.customer_id=c.id AND v5.approved_by IS NOT NULL ORDER BY v5.action_at DESC LIMIT 1)
+          )
+        ) as last_actor
+
+      FROM customers c
+      WHERE c.phone LIKE ? OR c.name LIKE ?
+      OR EXISTS (
+        SELECT 1 FROM vehicles ve
+        WHERE ve.customer_id=c.id
+          AND (ve.plate_numbers LIKE ? OR ve.plate_numbers_norm LIKE ? OR ve.plate_letters_ar LIKE ?)
+      )
+      ORDER BY COALESCE(last_visit_at, c.created_at) DESC
+      LIMIT 50
+    `).all(like, like, like, like, like);
+
+    const items = rows.map(r=>{
+      const wa = normalizePhoneToWa(r.phone);
+      return {
+        id: r.customer_id,
+        name: r.name,
+        phone: r.phone,
+        last_visit_at: r.last_visit_at || null,
+        last_plate: r.last_plate || "",
+        last_action_at: r.last_action_at || null,
+        last_actor: r.last_actor || "",
+        wa_link: wa ? ("https://wa.me/" + wa) : ""
+      };
+    });
+
+    res.json({ ok:true, items });
+  }catch(e){
+    res.json({ ok:false, error:"SERVER_ERROR" });
+  }
+});
+
 // -------------------- Settings (admin) --------------------
 
 /* ==================== Home Popup (Admin) ==================== */
@@ -1129,6 +1219,30 @@ app.post("/api/admin/home-popup", requireAuth(["admin"]), (req,res)=>{
   }
 });
 /* ==================== /Home Popup (Admin) ==================== */
+
+
+/* -------------------- GroupB FIX: Home popup (admin endpoints) -------------------- */
+app.get("/api/admin/home-popup", requireAuth(["admin"]), (req,res)=>{
+  try{
+    const row = db.prepare("SELECT home_popup_enabled, home_popup_text, home_popup_version FROM settings WHERE id=1").get();
+    res.json({ ok:true, enabled: !!(row && row.home_popup_enabled), text: (row && row.home_popup_text) ? String(row.home_popup_text) : "", version: Number((row && row.home_popup_version) || 1) });
+  }catch(e){
+    res.json({ ok:false, error:"SERVER_ERROR" });
+  }
+});
+
+app.post("/api/admin/home-popup", requireAuth(["admin"]), (req,res)=>{
+  try{
+    const enabled = req.body && (req.body.enabled ? 1 : 0);
+    const text = (req.body && typeof req.body.text !== "undefined") ? String(req.body.text) : "";
+    db.prepare("UPDATE settings SET home_popup_enabled=?, home_popup_text=?, home_popup_version=COALESCE(home_popup_version,1)+1 WHERE id=1")
+      .run(enabled, text);
+    const row = db.prepare("SELECT home_popup_enabled, home_popup_text, home_popup_version FROM settings WHERE id=1").get();
+    res.json({ ok:true, enabled: !!row.home_popup_enabled, text: row.home_popup_text||"", version: Number(row.home_popup_version||1) });
+  }catch(e){
+    res.json({ ok:false, error:"SERVER_ERROR" });
+  }
+});
 
 app.get("/api/admin/settings", requireAuth(["admin"]), (req, res) => {
   res.json({ ok: true, settings: getSettings() });
