@@ -1192,28 +1192,12 @@ app.get("/api/admin/customer-search", requireAuth(["admin"]), (req,res)=>{
 // -------------------- Settings (admin) --------------------
 
 /* ==================== Home Popup (Admin) ==================== */
-app.get("/api/admin/home-popup", requireAuth(["admin"]), (req,res)=>{
-  try{
-    const row = db.prepare("SELECT home_popup_enabled, home_popup_text FROM settings WHERE id=1").get();
-    res.json({ ok:true, enabled: !!(row && row.home_popup_enabled), text: (row && row.home_popup_text) ? String(row.home_popup_text) : "" });
-  }catch(e){
+}catch(e){
     res.json({ ok:false, error:"SERVER_ERROR" });
   }
 });
 
-app.post("/api/admin/home-popup", requireAuth(["admin"]), (req,res)=>{
-  try{
-    const enabledRaw = req.body && req.body.enabled;
-    const textRaw = req.body && req.body.text;
-
-    const enabled = (enabledRaw === true || enabledRaw === "1" || enabledRaw === 1 || enabledRaw === "true");
-    const text = (textRaw ?? "").toString();
-
-    db.prepare("UPDATE settings SET home_popup_enabled = ?, home_popup_text = ? WHERE id = 1")
-      .run(enabled ? 1 : 0, text);
-
-    res.json({ ok:true });
-  }catch(e){
+}catch(e){
     res.json({ ok:false, error:"SERVER_ERROR" });
   }
 });
@@ -1221,24 +1205,12 @@ app.post("/api/admin/home-popup", requireAuth(["admin"]), (req,res)=>{
 
 
 /* -------------------- GroupB FIX: Home popup (admin endpoints) -------------------- */
-app.get("/api/admin/home-popup", requireAuth(["admin"]), (req,res)=>{
-  try{
-    const row = db.prepare("SELECT home_popup_enabled, home_popup_text, home_popup_version FROM settings WHERE id=1").get();
-    res.json({ ok:true, enabled: !!(row && row.home_popup_enabled), text: (row && row.home_popup_text) ? String(row.home_popup_text) : "", version: Number((row && row.home_popup_version) || 1) });
-  }catch(e){
+}catch(e){
     res.json({ ok:false, error:"SERVER_ERROR" });
   }
 });
 
-app.post("/api/admin/home-popup", requireAuth(["admin"]), (req,res)=>{
-  try{
-    const enabled = req.body && (req.body.enabled ? 1 : 0);
-    const text = (req.body && typeof req.body.text !== "undefined") ? String(req.body.text) : "";
-    db.prepare("UPDATE settings SET home_popup_enabled=?, home_popup_text=?, home_popup_version=COALESCE(home_popup_version,1)+1 WHERE id=1")
-      .run(enabled, text);
-    const row = db.prepare("SELECT home_popup_enabled, home_popup_text, home_popup_version FROM settings WHERE id=1").get();
-    res.json({ ok:true, enabled: !!row.home_popup_enabled, text: row.home_popup_text||"", version: Number(row.home_popup_version||1) });
-  }catch(e){
+}catch(e){
     res.json({ ok:false, error:"SERVER_ERROR" });
   }
 });
@@ -1624,16 +1596,7 @@ app.get("/api/admin/customer-search", requireAuth(["admin"]), (req, res) => {
 
 // __VIP_UI_FIX_SAFE__ START
 // Home popup admin control
-app.get("/api/admin/home-popup", requireAuth(["admin"]), (req,res)=>{
-  const row = db.prepare("SELECT home_popup_enabled, home_popup_text, home_popup_once FROM settings WHERE id=1").get();
-  res.json({ ok:true, enabled: !!(row && row.home_popup_enabled), once: !!(row && row.home_popup_once), text: (row && row.home_popup_text) ? String(row.home_popup_text) : "" });
 });
-app.post("/api/admin/home-popup", requireAuth(["admin"]), (req,res)=>{
-  const enabled = (req.body && typeof req.body.enabled !== "undefined") ? (req.body.enabled ? 1 : 0) : 0;
-  const once = (req.body && typeof req.body.once !== "undefined") ? (req.body.once ? 1 : 0) : 1;
-  const text = (req.body && typeof req.body.text !== "undefined") ? String(req.body.text || "") : "";
-  db.prepare("UPDATE settings SET home_popup_enabled=?, home_popup_once=?, home_popup_text=? WHERE id=1").run(enabled, once, text);
-  res.json({ ok:true });
 });
 
 // Enhanced customer search (last visit + whatsapp)
