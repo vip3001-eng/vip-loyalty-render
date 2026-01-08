@@ -62,6 +62,9 @@ function ensureColumn(table, colName, colDefSql) {
 try {
   ensureColumn("settings", "defaults_inited", "INTEGER NOT NULL DEFAULT 0");
   ensureColumn("users", "display_name", "TEXT");
+  ensureColumn("visits", "action_by", "TEXT");
+  ensureColumn("points_ledger", "performed_by", "TEXT");
+
   // fill display_name if empty
   try {
     db.prepare("UPDATE users SET display_name = COALESCE(display_name, username) WHERE display_name IS NULL OR TRIM(display_name) = ''").run();
@@ -677,6 +680,79 @@ app.post("/api/visit/redeem", requireAuth(["admin", "cashier"]), (req, res) => {
 });
 
 // -------------------- Admin dashboard/stats --------------------
+
+/**
+ * Cashier of month: based on current month approved visits:
+ * Rank by avgRating DESC, then washes DESC
+ */
+app.get("/api/admin/cashier-of-month", requireAuth(["admin"]), (req, res) => {
+  try {
+    const now = new Date();
+    const from = new Date(now.getFullYear(), now.getMonth(), 1);
+    const fromIso = from.toISOString().slice(0,10);
+
+    const rows = db.prepare(`
+      SELECT approved_by as cashier, COUNT(*) as washes, AVG(rating) as avgRating
+      FROM visits
+      WHERE is_approved = 1
+        AND approved_by IS NOT NULL
+        AND approved_at >= ?
+      GROUP BY approved_by
+      ORDER BY avgRating DESC, washes DESC
+      LIMIT 1
+    `).all(fromIso);
+
+    const best = rows && rows.length ? rows[0] : null;
+    res.json({ ok: true, from: fromIso, best });
+  } catch (e) {
+    res.json({ ok: false, error: "FAILED", message: e.message });
+  }
+});
+
+/**
+ * Customer status counts:
+ * active if last approved visit <= daysA, else inactive.
+ * Also returns inactive60 if last approved visit <= daysB.
+ */
+app.get("/api/admin/customers/status-counts", requireAuth(["admin"]), (req, res) => {
+  try {
+    const daysA = Math.max(1, Number(req.query.daysA || 30));
+    const daysB = Math.max(daysA, Number(req.query.daysB || 60));
+    const now = new Date();
+    const sinceA = new Date(now.getTime() - daysA*24*60*60*1000).toISOString().slice(0,10);
+    const sinceB = new Date(now.getTime() - daysB*24*60*60*1000).toISOString().slice(0,10);
+
+    // last approved visit per customer
+    const last = db.prepare(`
+      SELECT c.id,
+             (SELECT MAX(v.approved_at) FROM visits v WHERE v.customer_id = c.id AND v.is_approved=1) as last_approved
+      FROM customers c
+    `).all();
+
+    let activeA = 0, inactiveA = 0, activeB = 0, inactiveB = 0;
+    for (const r of last) {
+      const la = (r.last_approved || "").slice(0,10);
+      if (la && la >= sinceA) activeA++; else inactiveA++;
+      if (la && la >= sinceB) activeB++; else inactiveB++;
+    }
+
+    res.json({
+      ok: true,
+      daysA, daysB,
+      sinceA, sinceB,
+      counts: {
+        active_daysA: activeA,
+        inactive_daysA: inactiveA,
+        active_daysB: activeB,
+        inactive_daysB: inactiveB
+      }
+    });
+  } catch (e) {
+    res.json({ ok: false, error: "FAILED", message: e.message });
+  }
+});
+
+
 app.get("/api/admin/dashboard", requireAuth(["admin"]), (req, res) => {
   const avgRating =
     db.prepare("SELECT AVG(rating) as avgRating FROM visits WHERE is_approved = 1").get().avgRating || 0;
@@ -935,6 +1011,59 @@ app.post("/api/admin/users/update", requireAuth(["admin"]), (req, res) => {
 
   res.json({ ok: true });
 });
+
+
+/**
+ * DANGER: wipe all customers + related data
+ * 3-step confirmation within 10 minutes (per IP), requires admin username/password.
+ */
+const __wipeAttempts = new Map(); // ip -> {count, firstAt}
+
+app.post("/api/admin/danger/wipe-customers", requireAuth(["admin"]), (req, res) => {
+  try {
+    const { username, password } = req.body || {};
+    if (!username || !password) return res.status(400).json({ ok:false, error:"MISSING_FIELDS" });
+
+    // verify against DB user (admin)
+    const u = db.prepare("SELECT * FROM users WHERE username = ? AND role='admin' AND is_active=1").get(username);
+    if (!u) return res.status(401).json({ ok:false, error:"INVALID_CREDENTIALS" });
+    const ok = bcrypt.compareSync(password, u.password_hash);
+    if (!ok) return res.status(401).json({ ok:false, error:"INVALID_CREDENTIALS" });
+
+    const ip = (req.headers["x-forwarded-for"] || req.socket.remoteAddress || "unknown").toString().split(",")[0].trim();
+    const now = Date.now();
+    const ttl = 10*60*1000;
+
+    const cur = __wipeAttempts.get(ip);
+    if (!cur || (now - cur.firstAt) > ttl) {
+      __wipeAttempts.set(ip, { count: 1, firstAt: now });
+      return res.json({ ok:true, step:1, need:3, message:"تحذير: كرر الطلب 3 مرات خلال 10 دقائق لتأكيد الحذف." });
+    }
+
+    cur.count += 1;
+    __wipeAttempts.set(ip, cur);
+
+    if (cur.count < 3) {
+      return res.json({ ok:true, step:cur.count, need:3, message:"تحذير: تبقى " + (3-cur.count) + " تأكيد/تأكيدات." });
+    }
+
+    // confirmed: wipe (transaction)
+    db.transaction(() => {
+      db.prepare("DELETE FROM notifications").run();
+      db.prepare("DELETE FROM points_ledger").run();
+      db.prepare("DELETE FROM visits").run();
+      db.prepare("DELETE FROM vehicles").run();
+      db.prepare("DELETE FROM customers").run();
+    })();
+
+    __wipeAttempts.delete(ip);
+    return res.json({ ok:true, done:true, message:"تم حذف جميع بيانات العملاء بنجاح." });
+
+  } catch (e) {
+    return res.status(500).json({ ok:false, error:"SERVER_ERROR", message:e.message });
+  }
+});
+
 
 app.post("/api/admin/users/delete", requireAuth(["admin"]), (req, res) => {
   const { id } = req.body || {};
