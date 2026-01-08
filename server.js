@@ -62,7 +62,9 @@ function ensureColumn(table, colName, colDefSql) {
 try {
   ensureColumn("settings", "defaults_inited", "INTEGER NOT NULL DEFAULT 0");
 
-  ensureColumn("settings", "notify_two_bad", "INTEGER DEFAULT 1");
+    ensureColumn("settings", "home_popup_enabled", "INTEGER NOT NULL DEFAULT 0");
+  ensureColumn("settings", "home_popup_text", "TEXT");
+ensureColumn("settings", "notify_two_bad", "INTEGER DEFAULT 1");
   ensureColumn("settings", "notify_high_high_bad", "INTEGER DEFAULT 1");
   
 
