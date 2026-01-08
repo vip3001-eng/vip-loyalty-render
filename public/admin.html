@@ -882,6 +882,7 @@
           '<div style="font-weight:800">'+(x.name||'')+'</div>' +
           '<div style="opacity:.9">جوال: '+(x.phone||'')+'</div>' +
           '<div style="opacity:.9">لوحة: '+((x.plate_letters_ar||'')+' '+(x.plate_numbers||''))+'</div>' +
+          '<div style="opacity:.85">آخر زيارة: '+(x.last_visit_at ? (new Date(x.last_visit_at)).toLocaleString('ar-SA') : '-')+'</div>' +
         '</div>'
       )).join("");
 
@@ -895,6 +896,7 @@
             '<div style="margin-top:6px"><b>الجوال:</b> '+(x.phone||'')+'</div>' +
             '<div style="margin-top:6px"><b>السيارة:</b> '+((x.car_type||'')+' / '+(x.car_model||''))+'</div>' +
             '<div style="margin-top:6px"><b>اللوحة:</b> '+((x.plate_letters_ar||'')+' '+(x.plate_numbers||''))+'</div>' +
+            '<div style="margin-top:6px"><b>آخر زيارة:</b> '+(x.last_visit_at ? (new Date(x.last_visit_at)).toLocaleString('ar-SA') : '-')+'</div>' +
             '<div style="margin-top:10px;text-align:center">' +
               '<a href="'+wa+'" target="_blank" rel="noopener" style="display:inline-block;padding:10px 14px;background:gold;color:#000;border-radius:10px;font-weight:800;text-decoration:none">فتح واتساب العميل</a>' +
             '</div>'
@@ -909,6 +911,64 @@
 
   btn && btn.addEventListener("click", runSearch);
   input && input.addEventListener("keydown", (e)=>{ if(e.key==="Enter") runSearch(); });
+})();
+</script>
+
+
+<!-- ==================== Home Popup Admin Box ==================== -->
+<div id="vipHomePopupBox" style="margin:14px 0;padding:12px;border:2px solid gold;border-radius:12px;background:#111;color:#fff">
+  <div style="font-weight:800;margin-bottom:8px">رسالة الصفحة الرئيسية</div>
+  <label style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+    <input id="vipHomePopupEnabled" type="checkbox" />
+    <span>تشغيل الرسالة</span>
+  </label>
+  <textarea id="vipHomePopupText" rows="4" placeholder="اكتب نص الرسالة هنا..." style="width:100%;padding:10px;border-radius:10px;border:1px solid #333;background:#000;color:#fff;resize:vertical"></textarea>
+  <div style="margin-top:10px;display:flex;gap:10px;align-items:center">
+    <button id="vipHomePopupSave" style="padding:10px 14px;border-radius:10px;border:none;background:gold;color:#000;font-weight:800">حفظ</button>
+    <span id="vipHomePopupMsg" style="opacity:.85"></span>
+  </div>
+  <div style="margin-top:8px;opacity:.75;font-size:12px">
+    ملاحظة: الرسالة تظهر للعميل مرة واحدة فقط لكل نص. إذا غيّرت النص ستظهر مرة واحدة من جديد.
+  </div>
+</div>
+<!-- ==================== /Home Popup Admin Box ==================== -->
+<script id="vipHomePopupAdminJS">
+(async function(){
+  const enabledEl = document.getElementById('vipHomePopupEnabled');
+  const textEl = document.getElementById('vipHomePopupText');
+  const msgEl = document.getElementById('vipHomePopupMsg');
+  const saveBtn = document.getElementById('vipHomePopupSave');
+
+  async function load(){
+    try{
+      const r = await fetch('/api/admin/home-popup', {credentials:'include', cache:'no-store'});
+      const d = await r.json();
+      if(d && d.ok){
+        enabledEl.checked = !!d.enabled;
+        textEl.value = d.text || '';
+      }
+    }catch(e){}
+  }
+
+  async function save(){
+    msgEl.textContent = '... جاري الحفظ';
+    try{
+      const r = await fetch('/api/admin/home-popup',{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        credentials:'include',
+        body: JSON.stringify({ enabled: enabledEl.checked, text: textEl.value || '' })
+      });
+      const d = await r.json();
+      msgEl.textContent = (d && d.ok) ? '✅ تم الحفظ' : '❌ فشل الحفظ';
+    }catch(e){
+      msgEl.textContent = '❌ خطأ اتصال';
+    }
+    setTimeout(()=>{ msgEl.textContent=''; }, 2000);
+  }
+
+  saveBtn.addEventListener('click', save);
+  load();
 })();
 </script>
 

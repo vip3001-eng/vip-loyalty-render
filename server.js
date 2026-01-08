@@ -1101,6 +1101,35 @@ app.get("/api/admin/stats/rolling", requireAuth(["admin"]), (req, res) => {
 });
 
 // -------------------- Settings (admin) --------------------
+
+/* ==================== Home Popup (Admin) ==================== */
+app.get("/api/admin/home-popup", requireAuth(["admin"]), (req,res)=>{
+  try{
+    const row = db.prepare("SELECT home_popup_enabled, home_popup_text FROM settings WHERE id=1").get();
+    res.json({ ok:true, enabled: !!(row && row.home_popup_enabled), text: (row && row.home_popup_text) ? String(row.home_popup_text) : "" });
+  }catch(e){
+    res.json({ ok:false, error:"SERVER_ERROR" });
+  }
+});
+
+app.post("/api/admin/home-popup", requireAuth(["admin"]), (req,res)=>{
+  try{
+    const enabledRaw = req.body && req.body.enabled;
+    const textRaw = req.body && req.body.text;
+
+    const enabled = (enabledRaw === true || enabledRaw === "1" || enabledRaw === 1 || enabledRaw === "true");
+    const text = (textRaw ?? "").toString();
+
+    db.prepare("UPDATE settings SET home_popup_enabled = ?, home_popup_text = ? WHERE id = 1")
+      .run(enabled ? 1 : 0, text);
+
+    res.json({ ok:true });
+  }catch(e){
+    res.json({ ok:false, error:"SERVER_ERROR" });
+  }
+});
+/* ==================== /Home Popup (Admin) ==================== */
+
 app.get("/api/admin/settings", requireAuth(["admin"]), (req, res) => {
   res.json({ ok: true, settings: getSettings() });
 });
