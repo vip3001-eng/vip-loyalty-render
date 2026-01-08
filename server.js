@@ -1369,3 +1369,39 @@ function buildExportStats() {
     visits
   };
 }
+
+/* ===== Group5: Daily Database Backup ===== */
+function runDailyBackup() {
+  try {
+    const dbPath = process.env.DB_PATH || path.join(__dirname, "data.sqlite");
+    if (!fs.existsSync(dbPath)) return;
+
+    const dir = path.join(__dirname, "backups");
+    if (!fs.existsSync(dir)) fs.mkdirSync(dir);
+
+    const d = new Date();
+    const stamp = d.toISOString().slice(0,10);
+    const out = path.join(dir, "backup-" + stamp + ".sqlite");
+
+    if (!fs.existsSync(out)) {
+      fs.copyFileSync(dbPath, out);
+      console.log("🗂️ Backup created:", out);
+    }
+  } catch (e) {
+    console.log("Backup failed:", e.message);
+  }
+}
+
+// run once at startup
+runDailyBackup();
+
+// then every 24h
+setInterval(runDailyBackup, 24*60*60*1000);
+
+/* ===== Group5: WhatsApp Export Helper ===== */
+function buildWhatsAppLink(phone, message) {
+  if (!phone) return "";
+  const p = phone.replace(/\D/g,"");
+  const msg = encodeURIComponent(message || "");
+  return "https://wa.me/" + p + (msg ? "?text=" + msg : "");
+}
