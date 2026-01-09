@@ -401,6 +401,10 @@ a{color:inherit; text-decoration:none}
   transform: translateY(-1px);
 }
 body {
+  font-family: 'Cairo', system-ui, sans-serif;
+  direction: rtl;
+}
+body {
   font-family: 'Cairo', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
   direction: rtl;
 }

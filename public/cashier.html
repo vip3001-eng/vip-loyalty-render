@@ -4,9 +4,9 @@
 <meta charset="UTF-8">`n<meta charset="UTF-8">
 
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
-  <title>VIP — لوحة المحاسب</title>
-  <link rel="stylesheet" href="/css/styles.css?v=202601072341"/>
-  <!-- بدون مكتبات خارجية: المسح عبر BarcodeDetector داخل common.js -->
+  <title>VIP � ���� �������</title>
+  <link rel="stylesheet" href="/css/styles.css?v=202601091251"/>
+  <!-- ���� ������ ������: ����� ��� BarcodeDetector ���� common.js -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
@@ -16,18 +16,18 @@
   <div class="card">
     <div class="topbar">
       <div class="lang">
-        <span class="pill">محاسب</span>
+        <span class="pill">�����</span>
       </div>
       <div class="lang">
         <button class="pill" id="btnLang">EN</button>
-        <a class="pill" href="#" id="btnLogout">خروج</a>
+        <a class="pill" href="#" id="btnLogout">����</a>
       </div>
     </div>
 
     <div class="section">
       <div class="page-title" style="padding:0 0 10px">
-        <h2 id="t1">قارئ الباركود</h2>
-        <p id="t2">امسح QR أو استخدم الإدخال اليدوي (جوال + لوحة).</p>
+        <h2 id="t1">���� ��������</h2>
+        <p id="t2">���� QR �� ������ ������� ������ (���� + ����).</p>
       </div>
 
       <div id="notice" class="notice" style="display:none"></div>
@@ -36,62 +36,62 @@
         <div class="kpi" style="padding:10px">
           <div id="reader" style="width:100%"></div>
           <div class="row2" style="margin-top:10px">
-            <button class="btn btn-primary" id="btnCam" type="button">تشغيل الكاميرا</button>
-            <button class="btn btn-ghost" id="btnStopCam" type="button" disabled>إيقاف</button>
-            <button class="btn btn-ghost" id="btnScanImage" type="button">التقاط/مسح صورة</button>
+            <button class="btn btn-primary" id="btnCam" type="button">����� ��������</button>
+            <button class="btn btn-ghost" id="btnStopCam" type="button" disabled>�����</button>
+            <button class="btn btn-ghost" id="btnScanImage" type="button">������/��� ����</button>
             <input id="scanImageInput" type="file" accept="image/*" capture="environment" style="display:none" />
           </div>
-          <div class="small" style="margin-top:8px" id="t3">إذا لم تعمل الكاميرا، امنح إذن الكاميرا أو استخدم الإدخال اليدوي.</div>
+          <div class="small" style="margin-top:8px" id="t3">��� �� ���� �������ǡ ���� ��� �������� �� ������ ������� ������.</div>
         </div>
 
         <div class="kpi" style="padding:10px">
           <div class="field">
-            <label id="lPhone">رقم الجوال</label>
+            <label id="lPhone">��� ������</label>
             <input id="mPhone" inputmode="tel" placeholder="05xxxxxxxx"/>
           </div>
           <div class="field" style="margin-top:8px">
-            <label id="lPlate">أرقام اللوحة</label>
+            <label id="lPlate">����� ������</label>
             <input id="mPlate" class="mono" placeholder="1234"/>
           </div>
-          <button class="btn btn-ghost" id="btnManual" style="margin-top:10px">بحث يدوي</button>
+          <button class="btn btn-ghost" id="btnManual" style="margin-top:10px">��� ����</button>
         </div>
       </div>
     </div>
 
     <div class="section" id="resultBox" style="display:none">
       <div class="page-title" style="padding:0 0 10px">
-        <h2 id="tRes">نتيجة البحث</h2>
+        <h2 id="tRes">����� �����</h2>
       </div>
 
       <div class="kpi">
-        <div class="label" id="lCust">العميل</div>
-        <div class="value" id="custName" style="font-size:16px">—</div>
+        <div class="label" id="lCust">������</div>
+        <div class="value" id="custName" style="font-size:16px">�</div>
         <div class="small" id="custMeta"></div>
-        <div class="small" style="margin-top:8px">التقييم: <span id="visitRatingStars" class="stars-inline">—</span></div>
+        <div class="small" style="margin-top:8px">�������: <span id="visitRatingStars" class="stars-inline">�</span></div>
       </div>
 
       <div class="row2" style="margin-top:10px">
         <div class="kpi">
-          <div class="label" id="lVisits">عدد الزيارات (معتمدة)</div>
-          <div class="value" id="visitsCount">—</div>
+          <div class="label" id="lVisits">��� �������� (������)</div>
+          <div class="value" id="visitsCount">�</div>
         </div>
         <div class="kpi">
-          <div class="label" id="lPoints">النقاط الحالية</div>
-          <div class="value" id="pointsNow">—</div>
+          <div class="label" id="lPoints">������ �������</div>
+          <div class="value" id="pointsNow">�</div>
           <div class="small" id="pointsMeta"></div>
         </div>
       </div>
 
       <div class="row2" style="margin-top:10px">
-        <button class="btn btn-primary" id="btnApprove">اعتماد زيارة</button>
-        <button class="btn btn-ghost" id="btnRedeem">استبدال النقاط</button>
+        <button class="btn btn-primary" id="btnApprove">������ �����</button>
+        <button class="btn btn-ghost" id="btnRedeem">������� ������</button>
       </div>
     </div>
 
   </div>
 </div>
-  <script src="/vendor/html5-qrcode.min.js?v=202601072341"></script>
-  <script src="/js/common.js?v=202601072341"></script>
+  <script src="/vendor/html5-qrcode.min.js?v=202601091251"></script>
+  <script src="/js/common.js?v=202601091251"></script>
 <script>
   let lastVisit = null;
   let scanner = null;
@@ -107,26 +107,26 @@ function showActionStatus(msg, type=""){
 
   const dict = {
     ar: {
-      btnManual:"بحث يدوي",
-      approve:"اعتماد زيارة",
-      redeem:"استبدال النقاط",
-      logout:"خروج",
-      t1:"قارئ الباركود",
-      t2:"امسح QR أو استخدم الإدخال اليدوي (جوال + لوحة).",
-      t3:"إذا لم تعمل الكاميرا، استخدم الإدخال اليدوي.",
-      lPhone:"رقم الجوال",
-      lPlate:"أرقام اللوحة",
-      tRes:"نتيجة البحث",
-      lCust:"العميل",
-      lVisits:"عدد الزيارات (معتمدة)",
-      lPoints:"النقاط الحالية",
-      msgFound:"تم جلب بيانات الزيارة.",
-      msgBad:"QR غير صالح أو منتهي.",
-      msgNeed:"اكتب رقم الجوال وأرقام اللوحة.",
-      msgNF:"لم يتم العثور على بيانات.",
-      msgApp:"تم اعتماد الزيارة.",
-      msgRedeemOk:"تم استبدال النقاط.",
-      msgRedeemNo:(cur,need)=>`لا يمكن الاستبدال. نقاط العميل ${cur}/${need}`
+      btnManual:"��� ����",
+      approve:"������ �����",
+      redeem:"������� ������",
+      logout:"����",
+      t1:"���� ��������",
+      t2:"���� QR �� ������ ������� ������ (���� + ����).",
+      t3:"��� �� ���� �������ǡ ������ ������� ������.",
+      lPhone:"��� ������",
+      lPlate:"����� ������",
+      tRes:"����� �����",
+      lCust:"������",
+      lVisits:"��� �������� (������)",
+      lPoints:"������ �������",
+      msgFound:"�� ��� ������ �������.",
+      msgBad:"QR ��� ���� �� �����.",
+      msgNeed:"���� ��� ������ ������ ������.",
+      msgNF:"�� ��� ������ ��� ������.",
+      msgApp:"�� ������ �������.",
+      msgRedeemOk:"�� ������� ������.",
+      msgRedeemNo:(cur,need)=>`�� ���� ���������. ���� ������ ${cur}/${need}`
     },
     en: {
       btnManual:"Manual lookup",
@@ -233,8 +233,8 @@ function showActionStatus(msg, type=""){
       else{ showNotice(t().msgBad,'bad'); }
     }catch(err){
       const msg = (err && err.message === 'NO_SUPPORT')
-        ? ((lang==='ar')?'هذا المتصفح لا يدعم مسح QR من صورة.':'Browser does not support scan-from-image.')
-        : ((lang==='ar')?'تعذر مسح الصورة.':'Failed to scan image.');
+        ? ((lang==='ar')?'��� ������� �� ���� ��� QR �� ����.':'Browser does not support scan-from-image.')
+        : ((lang==='ar')?'���� ��� ������.':'Failed to scan image.');
       showNotice(msg,'bad');
     } finally {
       e.target.value = '';
@@ -244,11 +244,11 @@ function showActionStatus(msg, type=""){
   $("#btnApprove").addEventListener("click", async ()=>{
     if(!lastVisit) return;
     const r = await api("/api/visit/approve","POST",{ visitId: lastVisit.id });
-    showNotice(t().msgApp + ` — نقاطك الآن ${r.points.current_points}/50`, "good");
+    showNotice(t().msgApp + ` � ����� ���� ${r.points.current_points}/50`, "good");
     $("#pointsNow").textContent = r.points.current_points;
-    $("#pointsMeta").textContent = `Earned: ${r.points.earned_points} — Redeemed: ${r.points.redeemed_points}`;
+    $("#pointsMeta").textContent = `Earned: ${r.points.earned_points} � Redeemed: ${r.points.redeemed_points}`;
     await refreshRedeemButton();
-    // بعد الاعتماد نخفي بيانات العميل وتظهر رسالة فقط
+    // ��� �������� ���� ������ ������ ����� ����� ���
     $("#resultBox").style.display = "none";
     lastVisit = null;
   });
@@ -260,11 +260,11 @@ function showActionStatus(msg, type=""){
       showActionStatus(t().msgRedeemNo(r.current, r.need), "bad");
       return;
     }
-    showNotice(t().msgRedeemOk + ` — نقاطك الآن ${r.points.current_points}/50`, "good");
+    showNotice(t().msgRedeemOk + ` � ����� ���� ${r.points.current_points}/50`, "good");
     $("#pointsNow").textContent = r.points.current_points;
-    $("#pointsMeta").textContent = `Earned: ${r.points.earned_points} — Redeemed: ${r.points.redeemed_points}`;
+    $("#pointsMeta").textContent = `Earned: ${r.points.earned_points} � Redeemed: ${r.points.redeemed_points}`;
     await refreshRedeemButton();
-    // بعد الاستبدال نخفي بيانات العميل وتظهر رسالة فقط
+    // ��� ��������� ���� ������ ������ ����� ����� ���
     $("#resultBox").style.display = "none";
     lastVisit = null;
   });
@@ -283,15 +283,15 @@ function showActionStatus(msg, type=""){
     lastVisit = r.visit;
     $("#resultBox").style.display="block";
     $("#custName").textContent = r.visit.customer_name;
-    $("#custMeta").textContent = `Phone: ${r.visit.customer_phone} — Plate: ${r.visit.plate_letters_ar} ${r.visit.plate_numbers}`;
+    $("#custMeta").textContent = `Phone: ${r.visit.customer_phone} � Plate: ${r.visit.plate_letters_ar} ${r.visit.plate_numbers}`;
     // rating stars
     const rating = Number(r.visit.rating || 0);
-    const stars = Array.from({length:5}).map((_,i)=> i<rating ? "★" : "☆").join("");
+    const stars = Array.from({length:5}).map((_,i)=> i<rating ? "?" : "?").join("");
     const rsEl = document.querySelector("#visitRatingStars");
     if(rsEl) rsEl.textContent = stars;
     $("#visitsCount").textContent = r.visitsCount;
     $("#pointsNow").textContent = r.points.current_points;
-    $("#pointsMeta").textContent = `Earned: ${r.points.earned_points} — Redeemed: ${r.points.redeemed_points}`;
+    $("#pointsMeta").textContent = `Earned: ${r.points.earned_points} � Redeemed: ${r.points.redeemed_points}`;
     await refreshRedeemButton();
   }
 
@@ -321,7 +321,7 @@ function showActionStatus(msg, type=""){
       if(isNotSecure){
         if(httpsUrl){
           const msg = (lang==="ar")
-            ? `لم يتم تشغيل الكاميرا لأن الصفحة ليست آمنة (HTTP). سيتم تحويلك تلقائياً للنسخة الآمنة. إذا لم يحدث التحويل اضغط: <button class="pill" id="openHttpsBtn" type="button">فتح عبر HTTPS</button>`
+            ? `�� ��� ����� �������� ��� ������ ���� ���� (HTTP). ���� ������ �������� ������ ������. ��� �� ���� ������� ����: <button class="pill" id="openHttpsBtn" type="button">��� ��� HTTPS</button>`
             : `Camera requires HTTPS. Redirecting now. If not redirected, click: <button class="pill" id="openHttpsBtn" type="button">Open HTTPS</button>`;
           showNoticeHtml(msg, "bad");
           setTimeout(()=>{
@@ -330,28 +330,28 @@ function showActionStatus(msg, type=""){
           }, 0);
         }else{
           showNotice((lang==="ar")
-            ? `لم يتم تشغيل الكاميرا لأن الصفحة ليست آمنة. افتح عبر https على المنفذ 3443 (مثال: https://${location.hostname}:3443).`
+            ? `�� ��� ����� �������� ��� ������ ���� ����. ���� ��� https ��� ������ 3443 (����: https://${location.hostname}:3443).`
             : 'Camera requires HTTPS (port 3443).', "bad");
         }
         return;
       }
-      // إذا كان المتصفح لا يدعم مسح QR بالكاميرا
+      // ��� ��� ������� �� ���� ��� QR ���������
       if(!(window.Html5Qrcode || ("BarcodeDetector" in window))){
         const m = (lang==="ar")
-          ? "هذا المتصفح لا يدعم مسح QR بالكاميرا. استخدم الإدخال اليدوي أو افتح الصفحة في Chrome/Edge حديث."
+          ? "��� ������� �� ���� ��� QR ���������. ������ ������� ������ �� ���� ������ �� Chrome/Edge ����."
           : "This browser does not support QR scanning. Use manual input or open in a recent Chrome/Edge.";
         showNotice(m, "bad");
         return;
       }
-      // أخطاء صلاحيات/استخدام الكاميرا
+      // ����� �������/������� ��������
       const n = (err && err.name) ? err.name : '';
       const msgAr = (n==='NotAllowedError' || n==='PermissionDeniedError')
-        ? 'تم رفض إذن الكاميرا. من إعدادات المتصفح: Site settings > Camera > Allow ثم حدّث الصفحة.'
+        ? '�� ��� ��� ��������. �� ������� �������: Site settings > Camera > Allow �� ���� ������.'
         : (n==='NotFoundError')
-          ? 'لا توجد كاميرا متاحة على هذا الجهاز.'
+          ? '�� ���� ������ ����� ��� ��� ������.'
           : (n==='NotReadableError')
-            ? 'الكاميرا مشغولة بتطبيق آخر. اغلق أي تطبيق يستخدم الكاميرا ثم جرّب.'
-            : 'تعذر تشغيل الكاميرا. جرّب فتح الصفحة في Chrome/Edge واسمح بإذن الكاميرا.';
+            ? '�������� ������ ������ ���. ���� �� ����� ������ �������� �� ����.'
+            : '���� ����� ��������. ���� ��� ������ �� Chrome/Edge ����� ���� ��������.';
       const msgEn = (n==='NotAllowedError' || n==='PermissionDeniedError')
         ? 'Camera permission denied. Allow it in Site Settings then refresh.'
         : (n==='NotFoundError')
@@ -359,7 +359,7 @@ function showActionStatus(msg, type=""){
           : (n==='NotReadableError')
             ? 'Camera is in use by another app. Close it and retry.'
             : 'Failed to start camera. Try Chrome/Edge and allow permission.';
-      const html = ((lang==="ar") ? msgAr : msgEn) + ` — <button class="pill" id="useImageScanBtn" type="button">${(lang==="ar")?'مسح من صورة':'Scan from image'}</button>`;
+      const html = ((lang==="ar") ? msgAr : msgEn) + ` � <button class="pill" id="useImageScanBtn" type="button">${(lang==="ar")?'��� �� ����':'Scan from image'}</button>`;
       showNoticeHtml(html, "bad");
       setTimeout(()=>{ const b=document.getElementById('useImageScanBtn'); if(b) b.addEventListener('click', ()=>{ const inp=document.getElementById('scanImageInput'); if(inp) inp.click(); }); },0);
     });

@@ -1,43 +1,47 @@
 <!doctype html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="utf-8"/>
+<meta charset="UTF-8">
+
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
-  <title>VIP — تسجيل الدخول</title>
-  <link rel="stylesheet" href="/css/styles.css"/>
+  <title>VIP � ����� ������</title>
+  <link rel="stylesheet" href="/css/styles.css?v=202601091251"/>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
 <div class="container">
   <div class="card">
     <div class="header">
-      <a class="back-btn" href="/">رجوع</a>
+      <a class="back-btn" href="/">����</a>
       <img class="logo" src="/assets/logo-transparent.png" alt="VIP Logo"/>
     </div>
 
     <div class="page-title">
-      <h2>تسجيل الدخول</h2>
-      <p>الدخول مخصص للأدمن والمحاسبين.</p>
+      <h2>����� ������</h2>
+      <p>������ ���� ������ ����������.</p>
     </div>
 
     <div id="notice" class="notice" style="display:none"></div>
 
     <form class="form" id="loginForm">
       <div class="field">
-        <label>اسم المستخدم</label>
+        <label>��� ��������</label>
         <input name="username" autocomplete="off" required/>
       </div>
       <div class="field">
-        <label>كلمة السر</label>
+        <label>���� ����</label>
         <input name="password" type="password" autocomplete="off" required/>
       </div>
-      <button class="btn btn-primary" type="submit">دخول</button>
+      <button class="btn btn-primary" type="submit">����</button>
     </form>
 
-    <!-- تم حذف التلميحات كما طلبت -->
+    <!-- �� ��� ��������� ��� ���� -->
   </div>
 </div>
 
-<script src="/js/common.js"></script>
+<script src="/js/common.js?v=202601091251"></script>
 <script>
   $("#loginForm").addEventListener("submit", async (e)=>{
     e.preventDefault();
@@ -49,13 +53,15 @@
       if(r.ok){
         location.href = (r.role === "admin") ? "/admin.html" : "/cashier.html";
       }else{
-        // api() لا يرمي خطأ عادةً، لذلك نظهر رسالة واضحة هنا
-        showNotice(r.message || "بيانات الدخول غير صحيحة.", "bad");
+        // api() �� ���� ��� ����� ���� ���� ����� ����� ���
+        showNotice(r.message || "������ ������ ��� �����.", "bad");
       }
     }catch(err){
-      showNotice("بيانات الدخول غير صحيحة.", "bad");
+      showNotice("������ ������ ��� �����.", "bad");
     }
   });
 </script>
 </body>
 </html>
+
+

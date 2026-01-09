@@ -5,9 +5,9 @@ initDb();
 
 /**
  * ensureUser:
- * - إذا المستخدم غير موجود: ينشئه
- * - إذا موجود: يحدث كلمة المرور والدور ويعيد تفعيل الحساب
- *   (مفيد للتجارب المحلية حتى ما تعلق بسبب كلمات مرور قديمة)
+ * - ��� �������� ��� �����: �����
+ * - ��� �����: ���� ���� ������ ������ ����� ����� ������
+ *   (���� ������� ������� ��� �� ���� ���� ����� ���� �����)
  */
 function ensureUser(username, password, role) {
   const hash = bcrypt.hashSync(password, 10);
@@ -35,7 +35,7 @@ db.prepare(`
     social_snap = COALESCE(social_snap, 'https://www.snapchat.com/'),
     social_tiktok = COALESCE(social_tiktok, 'https://www.tiktok.com/'),
     social_maps = COALESCE(social_maps, 'https://maps.google.com/'),
-    terms_text = COALESCE(terms_text, 'الشروط والأحكام: ...')
+    terms_text = COALESCE(terms_text, '������ ��������: ...')
   WHERE id = 1
 `).run();
 

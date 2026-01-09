@@ -1,6 +1,826 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">`n<meta charset="UTF-8">
 
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+  <title>VIP � ���� ������</title>
+  <link rel="stylesheet" href="/css/styles.css?v=202601091251"/>
+  <!-- ���� ������ ������: ����� ��� BarcodeDetector ���� common.js -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+<div class="container">
+  <div class="card">
+    <div class="topbar iconbar">
+      <div class="icon-group">
+        <button class="icon-btn" id="btnMe" type="button" title="����"></button>
+      </div>
+      <div class="icon-group">
+        <button class="icon-btn" id="btnSettings" type="button" title="���������"></button>
+        <button class="icon-btn" id="btnNoti" type="button" title="���������"><span class="badge" id="notiBadge">0</span></button>
+        <button class="icon-btn" id="btnExportX" type="button" title="����� Excel"></button>
+        <button class="icon-btn" id="btnExportW" type="button" title="����� Word"></button>
+        <button class="icon-btn" id="btnLogout" type="button" title="����"></button>
+      </div>
+    </div>
+
+    <div class="section grid2">
+      <div class="kpi">
+        <div class="label">���� ����� �������</div>
+        <div class="value" id="avgRating">�</div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="page-title" style="padding:0 0 10px">
+        <h2>���� ��������</h2>
+        <p>���� QR �� ������ ������� ������ (���� + ����).</p>
+      </div>
+
+      <div id="notice" class="notice" style="display:none"></div>
+
+      <div class="row2">
+        <div class="kpi" style="padding:10px">
+          <div id="reader" style="width:100%"></div>
+          <div class="row2" style="margin-top:10px">
+            <button class="btn btn-primary" id="btnCam" type="button">����� ��������</button>
+            <button class="btn btn-ghost" id="btnStopCam" type="button" disabled>�����</button>
+            <button class="btn btn-ghost" id="btnScanImage" type="button">������/��� ����</button>
+            <input id="scanImageInput" type="file" accept="image/*" capture="environment" style="display:none" />
+          </div>
+          <div class="small" style="margin-top:8px">��� �� ���� �������ǡ ������ ������� ������.</div>
+        </div>
+
+        <div class="kpi" style="padding:10px">
+          <div class="field">
+            <label>��� ������</label>
+            <input id="mPhone" inputmode="tel" placeholder="05xxxxxxxx"/>
+          </div>
+          <div class="field" style="margin-top:8px">
+            <label>����� ������</label>
+            <input id="mPlate" class="mono" placeholder="1234"/>
+          </div>
+          <button class="btn btn-ghost" id="btnManual" style="margin-top:10px">��� ����</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="section" id="resultBox" style="display:none">
+      <div class="page-title" style="padding:0 0 10px">
+        <h2>����� �����</h2>
+      </div>
+
+      <div class="kpi">
+        <div class="label">������</div>
+        <div class="value" id="custName" style="font-size:16px">�</div>
+        <div class="small" id="custMeta"></div>
+        <div class="small" style="margin-top:8px">�������: <span id="visitRatingStars" class="stars-inline">�</span></div>
+      </div>
+
+      <div class="row2" style="margin-top:10px">
+        <div class="kpi">
+          <div class="label">��� �������� (������)</div>
+          <div class="value" id="visitsCount">�</div>
+        </div>
+        <div class="kpi">
+          <div class="label">������ �������</div>
+          <div class="value" id="pointsNow">�</div>
+          <div class="small" id="pointsMeta"></div>
+        </div>
+      </div>
+
+      <div class="row2" style="margin-top:10px">
+        <button class="btn btn-primary" id="btnApprove">������ �����</button>
+        <button class="btn btn-ghost" id="btnRedeem">������� ������</button>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="page-title" style="padding:0 0 10px">
+        <h2>����� ��� �����</h2>
+      </div>
+      <table class="table" id="cashierTable">
+        <thead><tr><th>�������</th><th>��� �������</th><th>������</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <!-- Stats: placed at the end as requested -->
+    <div class="section" id="statsSection" style="margin-top:6px">
+      <div class="page-title" style="padding:0 0 10px">
+        <h2 id="statsLabel">�������� ��� 30 ���</h2>
+        <p>������ �� ���� ���� � ���� �� ����� ��������.</p>
+      </div>
+
+      <div class="stats-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px">
+        <button class="kpi stat-tile" id="openStatsCashiers" type="button" style="text-align:right">
+          <div class="label">������ ���������</div>
+          <div class="small">����� ������� + �������</div>
+        </button>
+        <button class="kpi stat-tile" id="openStatsVisits" type="button" style="text-align:right">
+          <div class="label">�������� / ���������</div>
+          <div class="small">������ ����� ����� �������</div>
+        </button>
+        <button class="kpi stat-tile" id="openStatsRatings" type="button" style="text-align:right">
+          <div class="label">����� ���������</div>
+          <div class="small">1? ��� 5?</div>
+        </button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Stats Modal -->
+<div class="modal-backdrop" id="statsBack" onclick="if(event.target.id==='statsBack') closeStats()" style="display:none">
+  <div class="modal">
+    <h3 id="statsModalTitle">����������</h3>
+    <div class="small" id="statsModalSub" style="margin-top:-6px">�</div>
+    <div class="kpi" style="margin-top:10px">
+      <canvas id="statsChart" height="220"></canvas>
+    </div>
+    <div class="kpi" style="margin-top:10px">
+      <div class="label">������</div>
+      <div id="statsDetails" class="small" style="white-space:pre-line"></div>
+    </div>
+    <div class="row2" style="margin-top:12px">
+      <button class="btn btn-ghost" type="button" onclick="closeStats()">�����</button>
+    </div>
+  </div>
+</div>
+
+<!-- Settings Modal -->
+<div class="modal-backdrop" id="settingsBack" onclick="if(event.target.id==='settingsBack') closeSettings()">
+  <div class="modal">
+    <h3>���������</h3>
+    <div id="settingsNotice" class="notice" style="display:none"></div>
+    <form class="form" id="settingsForm" style="padding:0">
+      <div class="field">
+        <label>�� ������ �������� 1</label>
+        <input name="home_text_1"/>
+      </div>
+      <div class="field">
+        <label>�� ������ �������� 2</label>
+        <input name="home_text_2"/>
+      </div>
+
+      <div class="field">
+        <label>������ �������� (���� ������ �� ��������)</label>
+        <textarea name="terms_text" placeholder="���� ������ ���..."></textarea>
+      </div>
+      <div class="row2">
+        <div class="field">
+          <label>�� ����� ������ (�������)</label>
+          <input name="points_add_limit" inputmode="numeric"/>
+        </div>
+        <div class="field">
+          <label>�� ������� ������</label>
+          <input name="points_redeem_limit" inputmode="numeric"/>
+        </div>
+      </div>
+      <div class="field">
+        <label>���� ��� ����� (������)</label>
+        <input name="points_per_visit" inputmode="numeric"/>
+      </div>
+      <div class="row2">
+        <div class="field">
+          <label>���� ������</label>
+          <input name="social_whatsapp"/>
+        </div>
+        <div class="field">
+          <label>���� ����</label>
+          <input name="social_snap"/>
+        </div>
+      </div>
+      <div class="field">
+        <label>���� ��� ���</label>
+        <input name="social_tiktok"/>
+      </div>
+      <div class="field">
+        <label>���� ���� ���</label>
+        <input name="social_maps" placeholder="https://maps.google.com/..."/>
+      </div>
+
+      <div class="field">
+        <label>�� ����� �� ��� �������� (���� ��� ������ �������)</label>
+        <input name="after_approve_text" placeholder="���: ������..."/>
+      </div>
+      <button class="btn btn-primary" type="submit">���</button>
+      <button class="btn btn-ghost" type="button" onclick="closeSettings()">�����</button>
+    </form>
+
+    <hr style="border-color:rgba(255,255,255,.12);margin:14px 0"/>
+
+    <h3>����� ����������</h3>
+    <div class="small">�����/�����/��� (����/�����)</div>
+    <div class="notice" id="usersNotice" style="display:none"></div>
+
+    <form class="form" id="addUserForm" style="padding:0;margin-top:10px">
+      <div class="row2">
+        <div class="field">
+          <label>��� �������� (������)</label>
+          <input name="username" required/>
+        </div>
+        <div class="field">
+          <label>��� ������� (���� ����������)</label>
+          <input name="display_name" required/>
+        </div>
+      </div>
+      <div class="row2">
+        <div class="field">
+          <label>���� ����</label>
+          <input name="password" type="password" required autocomplete="new-password"/>
+        </div>
+        <div class="field">
+          <label>��������</label>
+          <select name="role" required>
+            <option value="cashier">�����</option>
+            <option value="admin">����</option>
+          </select>
+        </div>
+      </div>
+      <button class="btn btn-ghost" type="submit">����� ������</button>
+    </form>
+
+    <div class="section" style="padding:0;margin-top:10px">
+      <table class="table" id="usersTable">
+        <thead><tr><th>��������</th><th>�����</th><th>���</th><th>�����</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+  </div>
+</div>
+
+<!-- Notifications Modal -->
+<div class="modal-backdrop" id="notiBack" onclick="if(event.target.id==='notiBack') closeNoti()">
+  <div class="modal">
+    <h3>���������</h3>
+    <div class="small">��� 50 �����</div>
+    <div class="kpi" id="notiDetail" style="display:none;margin-top:10px">
+      <div class="label">������ �������</div>
+      <div class="value" id="notiCust" style="font-size:16px">�</div>
+      <div class="small" id="notiMeta"></div>
+      <div class="small" style="margin-top:10px">��������:</div>
+      <div class="small mono" id="notiVisits" style="white-space:pre-wrap; line-height:1.7"></div>
+    </div>
+    <div class="section" style="padding:0;margin-top:10px">
+      <table class="table" id="notiTable">
+        <thead><tr><th>������</th><th>�������</th><th>�����</th><th>�����</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+    <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:10px">
+      <button class="btn btn-ghost" type="button" id="clearNotiBtn">��� ���������</button>
+      <button class="btn btn-ghost" type="button" onclick="closeNoti()">�����</button>
+    </div>
+  </div>
+</div>
+  <script src="/vendor/chart.umd.js?v=202601091251"></script>
+  <script src="/vendor/html5-qrcode.min.js?v=202601091251"></script>
+  <script src="/js/common.js?v=202601091251"></script>
+<script>
+  let lastVisit = null;
+  let scanner = null;
+
+  async function guard(){
+    const me = await api("/api/auth/me");
+    if(!me.user || me.user.role !== "admin") location.href="/admin-login.html";
+  }
+
+  function openSettings(){ $("#settingsBack").style.display="grid"; }
+  function closeSettings(){ $("#settingsBack").style.display="none"; }
+  function openNoti(){ $("#notiBack").style.display="grid"; }
+  function closeNoti(){ $("#notiBack").style.display="none"; }
+
+  function showToast(msg){
+    const n = document.getElementById("notiNotice") || document.getElementById("notice");
+    if(n){
+      n.style.display="block";
+      n.className="notice good";
+      n.textContent = msg;
+      setTimeout(()=>{n.style.display="none";}, 1800);
+      return;
+    }
+    alert(msg);
+  }
+
+  // ������� ������ ������
+  $("#btnMe").innerHTML = iconAdmin();
+  $("#btnSettings").innerHTML = iconSettings();
+  $("#btnNoti").innerHTML = iconBell() + '<span class="badge" id="notiBadge">0</span>';
+  $("#btnExportX").innerHTML = iconExcel();
+  $("#btnExportW").innerHTML = iconWord();
+  $("#btnLogout").innerHTML = iconLogout();
+
+  $("#btnLogout").addEventListener("click", async ()=>{ await api("/api/auth/logout","POST",{}); location.href="/"; });
+  $("#btnSettings").addEventListener("click", async ()=>{ await loadSettings(); await loadUsers(); openSettings(); });
+  $("#btnNoti").addEventListener("click", async ()=>{ openNoti(); await loadNoti().catch(()=>{}); });
+
+  $("#btnExportX").addEventListener("click",()=>{ window.open("/api/admin/export/excel","_blank"); });
+  $("#btnExportW").addEventListener("click",()=>{ window.open("/api/admin/export/word","_blank"); });
+
+  $("#btnManual").addEventListener("click", async (e)=>{
+    e.preventDefault();
+    await lookupManual();
+  });
+
+  $("#btnApprove").addEventListener("click", async ()=>{
+    if(!lastVisit) return;
+    const r = await api("/api/visit/approve","POST",{ visitId: lastVisit.id });
+    showNotice(`�� ����� ������. ���� ������ ���� ${r.points.current_points}/${(await api("/api/admin/settings")).settings.points_add_limit}`, "good");
+    // ��� �������� ���� ������ ������ ��� �������
+    $("#resultBox").style.display = "none";
+    lastVisit = null;
+  });
+
+  $("#btnRedeem").addEventListener("click", async ()=>{
+    if(!lastVisit) return;
+    const r = await api("/api/visit/redeem","POST",{ customerId: lastVisit.customer_id, visitId: lastVisit.id }).catch(err=>err.data);
+    if(!r.ok){
+      showNotice(`�� ���� ���������. ���� ������ ${r.current}/${r.need}`, "bad");
+      return;
+    }
+    showNotice(`�� ������� ������. ������ ���� ${r.points.current_points}`, "good");
+    $("#resultBox").style.display = "none";
+    lastVisit = null;
+  });
+
+  $("#settingsForm").addEventListener("submit", async (e)=>{
+    e.preventDefault();
+    const body = Object.fromEntries(new FormData(e.target).entries());
+    const r = await api("/api/admin/settings","POST",body);
+    $("#settingsNotice").style.display="block";
+    $("#settingsNotice").className="notice good";
+    $("#settingsNotice").textContent="�� ��� ���������.";
+  });
+
+  $("#addUserForm").addEventListener("submit", async (e)=>{
+    e.preventDefault();
+    const body = Object.fromEntries(new FormData(e.target).entries());
+    const r = await api("/api/admin/users/add","POST",body).catch(err=>err.data);
+    if(!r.ok){
+      $("#usersNotice").style.display="block";
+      $("#usersNotice").className="notice bad";
+      $("#usersNotice").textContent="���� ������� (�� ���� ��� �������� �����).";
+      return;
+    }
+    e.target.reset();
+    await loadUsers();
+  });
+
+  async function loadSettings(){
+    const r = await api("/api/admin/settings");
+    const f = $("#settingsForm");
+    f.home_text_1.value = r.settings.home_text_1 || "";
+    f.home_text_2.value = r.settings.home_text_2 || "";
+    if(f.terms_text) f.terms_text.value = r.settings.terms_text || "";
+    f.points_add_limit.value = r.settings.points_add_limit || 50;
+    f.points_redeem_limit.value = r.settings.points_redeem_limit || 50;
+    f.points_per_visit.value = r.settings.points_per_visit || 10;
+    f.social_whatsapp.value = r.settings.social_whatsapp || "";
+    f.social_snap.value = r.settings.social_snap || "";
+    f.social_tiktok.value = r.settings.social_tiktok || "";
+    f.social_maps.value = r.settings.social_maps || "";
+    f.after_approve_text.value = r.settings.after_approve_text || "";
+    $("#settingsNotice").style.display="none";
+  }
+
+  async function loadUsers(){
+    const r = await api("/api/admin/users");
+    const tbody = $("#usersTable tbody");
+    tbody.innerHTML="";
+    r.users.forEach(u=>{
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td>${u.username}</td>
+        <td>${u.role === "admin" ? "����" : "�����"}</td>
+        <td>${u.is_active ? "���" : "��"}</td>
+        <td>
+          <button class="pill" data-act="toggle" data-id="${u.id}" data-active="${u.is_active}">${u.is_active ? "�����" : "�����"}</button>
+          <button class="pill" data-act="reset" data-id="${u.id}">����� ����</button>
+          <button class="pill" data-act="del" data-id="${u.id}">���</button>
+        </td>`;
+      tbody.appendChild(tr);
+    });
+
+    tbody.querySelectorAll("button").forEach(b=>{
+      b.addEventListener("click", async ()=>{
+        const id = b.dataset.id;
+        const act = b.dataset.act;
+        if(act==="toggle"){
+          await api("/api/admin/users/update","POST",{ id, is_active: b.dataset.active !== "1" });
+          await loadUsers();
+        }else if(act==="reset"){
+          const p = prompt("���� ���� ���� �������:");
+          if(!p) return;
+          await api("/api/admin/users/update","POST",{ id, password: p });
+          alert("�� ����� ���� ����.");
+        }else if(act==="del"){
+          if(!confirm("��� ��������")) return;
+          await api("/api/admin/users/delete","POST",{ id });
+          await loadUsers();
+        }
+      });
+    });
+  }
+
+  async function loadNoti(){
+    const r = await api("/api/admin/notifications").catch(()=>({ ok:false }));
+    const tbody = $("#notiTable tbody");
+    if(!tbody) return;
+
+    tbody.innerHTML = "";
+
+    const list = (r && r.ok && Array.isArray(r.notifications)) ? r.notifications : [];
+
+    if(!r || !r.ok){
+      // �� ���� ������� ��� ��� �����
+      showNotice("���� ����� ���������. ���� ��� ���� ���� �����.", "bad");
+    }
+
+    if(list.length === 0){
+      const tr = document.createElement("tr");
+      tr.innerHTML = `<td colspan="4" style="text-align:center;opacity:.7">�� ���� �������</td>`;
+      tbody.appendChild(tr);
+      await updateNotiBadge().catch(()=>{});
+      return;
+    }
+
+    list.forEach(n=>{
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td><button class='pill' data-act='show' data-id='${n.id}'>${n.customer_name} � ${n.customer_phone}</button></td>
+        <td>${n.message}</td>
+        <td class="mono">${(n.created_at||'').slice(0,19).replace("T"," ")}</td>
+        <td>${n.is_read ? "���" : "<button class='pill' data-id='"+n.id+"'>����� ������</button>"}</td>
+      `;
+      tbody.appendChild(tr);
+    });
+
+    tbody.querySelectorAll("button").forEach(btn=>{
+      btn.addEventListener("click", async ()=>{
+        const act = btn.dataset.act;
+        if(act === "show"){
+          await showNotiDetail(btn.dataset.id);
+          return;
+        }
+        const rr = await api("/api/admin/notifications/mark-read","POST",{ id: btn.dataset.id }).catch(()=>({ok:false}));
+        if(!rr.ok){
+          showNotice("���� ����� �������.", "bad");
+          return;
+        }
+        await updateNotiBadge().catch(()=>{});
+        await loadNoti().catch(()=>{});
+      });
+    });
+
+    await updateNotiBadge().catch(()=>{});
+  }
+
+
+  async function updateNotiBadge(){
+    const r = await api("/api/admin/notifications/unread-count").catch(()=>({ ok:false }));
+    if(!r || !r.ok) return;
+    const n = Number(r.count||0);
+    const b = document.querySelector("#notiBadge");
+    if(!b) return;
+    b.textContent = n>99 ? "99+" : String(n);
+    b.style.display = n>0 ? "inline-flex" : "none";
+  }
+
+
+  async function showNotiDetail(id){
+    const r = await api("/api/admin/notifications/detail?id=" + encodeURIComponent(id)).catch(err=>err.data);
+    if(!r || !r.ok) {
+      showNotice("���� ��� ��������.", "bad");
+      return;
+    }
+    $("#notiDetail").style.display = "block";
+    $("#notiCust").textContent = `${r.customer.name} � ${r.customer.phone}`;
+    $("#notiMeta").textContent = r.notification.message;
+
+    const rows = (r.visits||[]).map(v=>{
+      const dt = (v.created_at||"").slice(0,19).replace("T"," ");
+      const cashier = v.cashier_name || v.cashier_username || "�";
+      const plate = `${v.plate_letters_ar} ${v.plate_numbers}`.trim();
+      const stars = Array.from({length:5}).map((_,i)=> i < Number(v.rating||0) ? "?" : "?").join("");
+      return `<tr><td class="mono">${dt}</td><td>${plate}</td><td style="font-size:14px">${stars}</td><td>${cashier}</td></tr>`;
+    }).join("");
+
+    const table = `
+      <table class="tmini">
+        <thead>
+          <tr><th>�������</th><th>������</th><th>�������</th><th>�������</th></tr>
+        </thead>
+        <tbody>${rows || `<tr><td colspan="4" style="text-align:center;opacity:.7">�� ���� ������</td></tr>`}</tbody>
+      </table>
+    `;
+    const box = $("#notiVisits");
+    box.innerHTML = table;
+  }
+
+  async function lookupManual(){
+    hideNotice();
+    const phone = $("#mPhone").value.trim();
+    const plate_numbers = $("#mPlate").value.trim();
+    if(!phone || !plate_numbers) return showNotice("���� ��� ������ ������ ������.", "bad");
+    const r = await api("/api/visit/lookup","POST",{ phone, plate_numbers }).catch(err=>err.data);
+    if(!r.ok) return showNotice("�� ��� ������ ��� ������.", "bad");
+    applyLookup(r);
+  }
+
+  async function applyLookup(r){
+    lastVisit = r.visit;
+    $("#resultBox").style.display="block";
+    $("#custName").textContent = r.visit.customer_name;
+    $("#custMeta").textContent = `����: ${r.visit.customer_phone} � ����: ${r.visit.plate_letters_ar} ${r.visit.plate_numbers}`;
+    // rating stars
+    const rating = Number(r.visit.rating || 0);
+    const stars = Array.from({length:5}).map((_,i)=> i<rating ? "?" : "?").join("");
+    const rsEl = document.querySelector("#visitRatingStars");
+    if(rsEl) rsEl.textContent = stars;
+    $("#visitsCount").textContent = r.visitsCount;
+    $("#pointsNow").textContent = r.points.current_points;
+    $("#pointsMeta").textContent = `������: ${r.points.earned_points} � �������: ${r.points.redeemed_points}`;
+    await refreshRedeemButton();
+  }
+
+  async function refreshRedeemButton(){
+    const s = await api("/api/admin/settings");
+    const can = Number($("#pointsNow").textContent || "0") >= Number(s.settings.points_redeem_limit || 50);
+    $("#btnRedeem").disabled = !can;
+    $("#btnRedeem").style.opacity = can ? "1" : ".55";
+  }
+
+  async function loadDashboard(){
+    const r = await api("/api/admin/dashboard");
+    $("#avgRating").textContent = (Number(r.avgRating || 0)).toFixed(2);
+    const tbody = $("#cashierTable tbody");
+    tbody.innerHTML="";
+    r.cashiers.forEach(c=>{
+      const tr = document.createElement("tr");
+      tr.innerHTML = `<td>${c.cashier || "�"}</td><td>${c.washes}</td><td>${(Number(c.avgRating||0)).toFixed(2)}</td>`;
+      tbody.appendChild(tr);
+    });
+  }
+
+  async function startScanner(){
+    hideNotice();
+    if(!scanner) scanner = createQrScanner($("#reader"), async (decodedText)=>{
+      playScanBeep();
+      const r = await api("/api/visit/lookup","POST",{ qrText: decodedText }).catch(err=>err.data);
+      if(r.ok){
+        applyLookup(r);
+        showNotice("�� ��� ������ �������.", "good");
+      }else{
+        showNotice("QR ��� ���� �� �����.", "bad");
+      }
+    }, (err)=>{
+      // ��� �� ������ ����� ����� (�� �� ���� �������)� ���� �����
+      if(!(window.Html5Qrcode || ("BarcodeDetector" in window))){
+        const m = '��� ������� �� ���� ��� QR ���������. ������ ������� ������ �� ���� ������ �� Chrome/Edge ����.';
+        const html = m + ` � <button class="pill" id="useImageScanBtn" type="button">��� �� ����</button>`;
+        showNoticeHtml(html, 'bad');
+        setTimeout(()=>{ const b=document.getElementById('useImageScanBtn'); if(b) b.addEventListener('click', ()=>{ const inp=document.getElementById('scanImageInput'); if(inp) inp.click(); }); },0);
+        return;
+      }
+
+      const isNotSecure = !!(err && (err.code==='NOT_SECURE' || err.name==='NOT_SECURE' || err.message==='NOT_SECURE'));
+      const httpsUrl = suggestedHttpsUrl();
+      const name = (err && (err.name||err.message)) ? (err.name||err.message) : '';
+
+      if(isNotSecure){
+        if(httpsUrl){
+          const html = `�� ��� ����� �������� ��� ������ ���� ���� (HTTP). ���� ������ �������� ������ ������. ��� �� ���� ������� ����: <button class="pill" id="openHttpsBtn" type="button">��� ��� HTTPS</button>`;
+          showNoticeHtml(html + (name?(' <span class="muted">('+name+')</span>'):''), 'bad');
+          setTimeout(()=>{
+            const b = document.getElementById('openHttpsBtn');
+            if(b) b.addEventListener('click', ()=>{ location.href = httpsUrl; });
+          }, 0);
+        }else{
+          showNotice(`�� ��� ����� �������� ��� ������ ���� ����. ���� ��� https ��� ������ 3443 (����: https://${location.hostname}:3443).`, 'bad');
+        }
+        return;
+      }
+
+      // ����� �������/������� ��������
+      const n = (err && err.name) ? err.name : '';
+      const msgAr = (n==='NotAllowedError' || n==='PermissionDeniedError')
+        ? '�� ��� ��� ��������. �� ������� �������: Site settings > Camera > Allow �� ���� ������.'
+        : (n==='NotFoundError')
+          ? '�� ���� ������ ����� ��� ��� ������.'
+          : (n==='NotReadableError')
+            ? '�������� ������ ������ ���. ���� �� ����� ������ �������� �� ����.'
+            : '���� ����� ��������. ���� ��� ������ �� Chrome/Edge ����� ���� ��������.';
+      const html = `${msgAr}${name ? ' ('+name+')' : ''} � <button class="pill" id="useImageScanBtn" type="button">��� �� ����</button>`;
+      showNoticeHtml(html, 'bad');
+      setTimeout(()=>{ const b=document.getElementById('useImageScanBtn'); if(b) b.addEventListener('click', ()=>{ const inp=document.getElementById('scanImageInput'); if(inp) inp.click(); }); },0);
+    });
+    await scanner.start();
+    const btnStop = document.querySelector("#btnStopCam");
+    if(btnStop) btnStop.disabled = false;
+  }
+
+  async function stopScanner(){
+    if(!scanner) return;
+    await scanner.stop();
+    const btnStop = document.querySelector("#btnStopCam");
+    if(btnStop) btnStop.disabled = true;
+  }
+
+
+  // -------------------- Stats (Charts) --------------------
+  let statsChartInstance = null;
+  function openStats(){ $("#statsBack").style.display = "grid"; }
+  function closeStats(){
+    $("#statsBack").style.display = "none";
+    try{ if(statsChartInstance){ statsChartInstance.destroy(); statsChartInstance = null; } }catch(e){}
+  }
+
+  async function showStats(kind){
+    // kind: cashiers | visits | ratings
+    const r = await api('/api/admin/stats/rolling').catch(err=>err.data);
+    if(!r || !r.ok){ showNotice('���� ����� ����������.', 'bad'); return; }
+    const since = r.since;
+    const days = r.windowDays;
+    const title = (kind==='cashiers') ? '������ ���������'
+      : (kind==='visits') ? '�������� / ���������'
+      : '����� ���������';
+    $("#statsModalTitle").textContent = title;
+    $("#statsModalSub").textContent = `��� ${days} ��� (�� ${since})`;
+
+    // Prepare chart data
+    const ctx = document.getElementById('statsChart').getContext('2d');
+    try{ if(statsChartInstance){ statsChartInstance.destroy(); statsChartInstance = null; } }catch(e){}
+
+    let config = null;
+    let details = '';
+
+    if(kind==='cashiers'){
+      const rows = (r.cashierRows||[]).map(x=>({ name: x.cashier||'�', washes: Number(x.washes||0), avg: Number(x.avgRating||0) }));
+      const labels = rows.map(x=>x.name);
+      const washes = rows.map(x=>x.washes);
+      config = {
+        type: 'bar',
+        data: { labels, datasets: [{ label: '��� �������', data: washes }] },
+        options: { responsive: true, plugins:{ legend:{ display:true } }, scales:{ y:{ beginAtZero:true } } }
+      };
+      details = rows.map(x=>`${x.name}: ${x.washes} ���� � ����� ${x.avg.toFixed(2)}`).join('\n') || '�� ���� ������.';
+    } else if(kind==='visits'){
+      const earned = Number(r.earnedCount||0);
+      const redeemed = Number(r.redeemedCount||0);
+      config = {
+        type: 'doughnut',
+        data: { labels: ['����� ����', '�������'], datasets: [{ label:'', data:[earned, redeemed] }] },
+        options: { responsive: true }
+      };
+      details = `����� ����: ${earned}
+�������: ${redeemed}`;
+    } else {
+      const dist = new Map((r.ratingDist||[]).map(x=>[String(x.rating), Number(x.c||0)]));
+      const labels = ['1','2','3','4','5'];
+      const data = labels.map(k=>dist.get(k)||0);
+      config = {
+        type: 'bar',
+        data: { labels: labels.map(x=>x+'?'), datasets: [{ label:'��� ���������', data }] },
+        options: { responsive:true, plugins:{ legend:{ display:true } }, scales:{ y:{ beginAtZero:true } } }
+      };
+      details = labels.map(k=>`${k}?: ${dist.get(k)||0}`).join('\n');
+    }
+
+    // Render chart only if Chart.js is available
+    if(window.Chart && config){
+      statsChartInstance = new Chart(ctx, config);
+    } else {
+      showNotice('����� ���������� �� ������ (Chart.js). ���� �� /vendor/chart.umd.js ����.', 'bad');
+    }
+
+    $("#statsDetails").textContent = details;
+    openStats();
+  }
+
+  (function bindUi(){
+    // ����� �������� ����� ��� �� �� ��� ���������
+    const btnCam = document.querySelector("#btnCam");
+    const btnStop = document.querySelector("#btnStopCam");
+    if(btnCam) btnCam.addEventListener("click", async ()=>{
+      await startScanner();
+      if(btnStop) btnStop.disabled = false;
+    });
+    if(btnStop) btnStop.addEventListener("click", async ()=>{
+      await stopScanner();
+      btnStop.disabled = true;
+    });
+
+    // Scan from an image (works even if camera is blocked or on iPhone)
+    const btnImg = document.getElementById('btnScanImage');
+    const imgInp = document.getElementById('scanImageInput');
+    if(btnImg && imgInp){
+      btnImg.addEventListener('click', ()=> imgInp.click());
+      imgInp.addEventListener('change', async (e)=>{
+        const f = e.target.files && e.target.files[0];
+        if(!f) return;
+        try{
+          let decoded = null;
+
+          if(window.Html5Qrcode){
+            const tmpId = 'qr_img_' + Math.random().toString(16).slice(2);
+            const tmp = document.createElement('div');
+            tmp.id = tmpId;
+            tmp.style.display = 'none';
+            document.body.appendChild(tmp);
+            const h = new Html5Qrcode(tmpId);
+            try{
+              decoded = await h.scanFile(f, true);
+            } finally {
+              try{ h.clear(); }catch(_e){}
+              try{ tmp.remove(); }catch(_e){}
+            }
+          } else if('BarcodeDetector' in window){
+            const img = await createImageBitmap(f);
+            const det = new BarcodeDetector({formats:['qr_code']});
+            const codes = await det.detect(img);
+            decoded = (codes && codes[0] && codes[0].rawValue) ? codes[0].rawValue : null;
+          } else {
+            throw new Error('NO_SUPPORT');
+          }
+
+          if(!decoded) throw new Error('NO_CODE');
+          playScanBeep();
+          const r = await api('/api/visit/lookup','POST',{ qrText: decoded }).catch(err=>err.data);
+          if(r.ok){ applyLookup(r); showNotice('�� ��� ������ �������.', 'good'); }
+          else{ showNotice('QR ��� ���� �� �����.', 'bad'); }
+        }catch(err){
+          const msg = (err && err.message === 'NO_SUPPORT')
+            ? '��� ������� �� ���� ��� QR �� ����. ���� ������ �� Chrome/Edge ����.'
+            : '���� ��� ������.';
+          showNotice(msg, 'bad');
+        } finally { e.target.value=''; }
+      });
+    }
+
+
+
+    // Stats tiles
+    const bCash = document.getElementById('openStatsCashiers');
+    const bVisits = document.getElementById('openStatsVisits');
+    const bRates = document.getElementById('openStatsRatings');
+    if(bCash) bCash.addEventListener('click', ()=>showStats('cashiers'));
+    if(bVisits) bVisits.addEventListener('click', ()=>showStats('visits'));
+    if(bRates) bRates.addEventListener('click', ()=>showStats('ratings'));
+    // Clear notifications (����)
+    const clearBtn = document.getElementById("clearNotiBtn");
+    if(clearBtn){
+      clearBtn.addEventListener("click", async ()=>{
+        const r = await api("/api/admin/notifications/clear", "POST", {});
+        if(r.ok){ showNotice("�� ��� ���������.", "good"); await updateNotiBadge(); }
+      });
+    }
+  })();
+
+  (async ()=>{
+    // �� ��� �� ����� �� ��� �� ����� �������/��������
+    try{
+      await guard();
+    }catch(e){
+      showNotice("������ ����� ������ ��� ����.", "bad");
+      location.href="/admin-login.html";
+      return;
+    }
+
+    try{ await loadDashboard(); }catch(e){ showNotice("���� ����� ���� ������.", "bad"); }
+    try{ await updateNotiBadge(); }catch(e){}
+    setInterval(()=>{ updateNotiBadge().catch(()=>{}); }, 1000);
+
+    // ����� ���� ������ ��� SSE (�������)
+    try{
+      const es = new EventSource('/api/admin/notifications/stream');
+      let fail = 0;
+
+      es.addEventListener('count', (ev)=>{
+        try{
+          const data = JSON.parse(ev.data||'{}');
+          const c = Number(data.count||0);
+          const b = document.getElementById('notiBadge');
+          if(b){ b.textContent = c>99 ? '99+' : String(c); b.style.display = c? 'inline-flex':'none'; }
+          fail = 0;
+        }catch(e){}
+      });
+
+      // ��� ��� SSE (401/����/�����) �� ����� ���� �������� �����
+      es.onerror = ()=>{
+        fail += 1;
+        if(fail >= 3){
+          try{ es.close(); }catch(e){}
+        }
+      };
+    }catch(e){}
+  })();
 </script>
-<!-- VIP ADMIN UI SAFE END -->
 </body>
 </html>
 

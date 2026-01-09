@@ -5,7 +5,7 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
   <title>VIP â€” ظ„ظˆط­ط© ط§ظ„ظ…ط­ط§ط³ط¨</title>
-  <link rel="stylesheet" href="/css/styles.css?v=202601072341"/>
+  <link rel="stylesheet" href="/css/styles.css?v=202601091251"/>
   <!-- ط¨ط¯ظˆظ† ظ…ظƒطھط¨ط§طھ ط®ط§ط±ط¬ظٹط©: ط§ظ„ظ…ط³ط­ ط¹ط¨ط± BarcodeDetector ط¯ط§ط®ظ„ common.js -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -90,8 +90,8 @@
 
   </div>
 </div>
-  <script src="/vendor/html5-qrcode.min.js?v=202601072341"></script>
-  <script src="/js/common.js?v=202601072341"></script>
+  <script src="/vendor/html5-qrcode.min.js?v=202601091251"></script>
+  <script src="/js/common.js?v=202601091251"></script>
 <script>
   let lastVisit = null;
   let scanner = null;

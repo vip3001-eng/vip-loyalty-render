@@ -40,14 +40,14 @@ const HTTPS_PORT = Number(process.env.HTTPS_PORT || 3443);
 const JWT_SECRET =
   process.env.JWT_SECRET || "CHANGE_ME__VERY_LONG_RANDOM_SECRET";
 
-// تحويل HTTP -> HTTPS للجوال (الكاميرا)
-// افتراضيًا شغال، تقدر تطفيه بـ FORCE_HTTPS_REDIRECT=0
+// ����� HTTP -> HTTPS ������ (��������)
+// ��������� ���� ���� ����� �� FORCE_HTTPS_REDIRECT=0
 const FORCE_HTTPS_REDIRECT =
   (process.env.FORCE_HTTPS_REDIRECT ?? "1") !== "0";
 
 initDb();
 
-// -------------------- DB migrations (منع الأعطال عند اختلاف نسخ قاعدة البيانات) --------------------
+// -------------------- DB migrations (��� ������� ��� ������ ��� ����� ��������) --------------------
 function ensureColumn(table, colName, colDefSql) {
   try {
     const cols = db.prepare(`PRAGMA table_info(${table})`).all();
@@ -61,24 +61,7 @@ function ensureColumn(table, colName, colDefSql) {
 // Add missing columns safely
 try {
   ensureColumn("settings", "defaults_inited", "INTEGER NOT NULL DEFAULT 0");
-
-  ensureColumn("settings", "notify_two_bad", "INTEGER DEFAULT 1");
-  ensureColumn("settings", "notify_high_high_bad", "INTEGER DEFAULT 1");
-  
-
-    ensureColumn("settings", "home_popup_enabled", "INTEGER NOT NULL DEFAULT 0");
-  ensureColumn("settings", "home_popup_text", "TEXT");
-ensureColumn("settings", "notify_two_bad", "INTEGER DEFAULT 1");
-  ensureColumn("settings", "notify_high_high_bad", "INTEGER DEFAULT 1");
-  
-
-  ensureColumn("settings", "notify_two_bad", "INTEGER DEFAULT 1");
-  ensureColumn("settings", "notify_high_high_bad", "INTEGER DEFAULT 1");
-  
   ensureColumn("users", "display_name", "TEXT");
-  ensureColumn("visits", "action_by", "TEXT");
-  ensureColumn("points_ledger", "performed_by", "TEXT");
-
   // fill display_name if empty
   try {
     db.prepare("UPDATE users SET display_name = COALESCE(display_name, username) WHERE display_name IS NULL OR TRIM(display_name) = ''").run();
@@ -109,7 +92,7 @@ function broadcastNoti() {
         db.prepare("INSERT INTO users (id, username, display_name, password_hash, role, is_active, created_at) VALUES (?, ?, ?, ?, ?, 1, ?)")
           .run(uuid(), username, displayName || username, hash, role, nowIso());
       }else{
-        // ��� Render Free �� ���� ����� �����/����ɡ ���� ������ ���� ������
+        // ??? Render Free ?? ???? ????? ?????/????? ???? ?????? ???? ??????
         db.prepare("UPDATE users SET password_hash = ?, role = ?, is_active = 1, display_name = COALESCE(display_name, ?) WHERE username = ?")
           .run(hash, role, (displayName || username), username);
       }
@@ -126,25 +109,9 @@ function broadcastNoti() {
 app.use(express.json({ limit: "1mb" }));
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
-
-/* VIP_PROTECT_ADMIN_PAGES_V2 */
-app.get(["/admin.html","/cashier.html"], (req,res,next)=>{
-  try{
-    const token = (req.cookies && req.cookies.vip_token) || "";
-    if(!token) return res.redirect(302, "/login.html");
-    const jwt = require("jsonwebtoken");
-    jwt.verify(token, JWT_SECRET);
-    return next();
-  }catch(e){
-    return res.redirect(302, "/login.html");
-  }
-});
-/* END VIP_PROTECT_ADMIN_PAGES_V2 */
-
-
 app.use((req,res,next)=>{ try{ res.setHeader("Cache-Control","no-store"); res.setHeader("Pragma","no-cache"); res.setHeader("Expires","0"); }catch(e){} next(); });
 
-// -------------------- Redirect HTTP -> HTTPS (للجوال) --------------------
+// -------------------- Redirect HTTP -> HTTPS (������) --------------------
 app.use((req, res, next) => {
   try {
     if (!FORCE_HTTPS_REDIRECT) return next();
@@ -155,7 +122,7 @@ app.use((req, res, next) => {
     const proto = (req.headers["x-forwarded-proto"] || "").toString();
     const isHttps = req.secure || proto === "https";
 
-    // نحول GET فقط + لا نحول API (عشان ما نكسر Post/Fetch)
+    // ���� GET ��� + �� ���� API (���� �� ���� Post/Fetch)
     if (!isHttps && !isLocal && req.method === "GET" && !req.path.startsWith("/api")) {
       return res.redirect(302, `https://${hostname}:${HTTPS_PORT}${req.originalUrl}`);
     }
@@ -164,8 +131,8 @@ app.use((req, res, next) => {
 });
 
 // -------------------- Ensure vendor assets exist (Chart.js + QR lib) --------------------
-// بعض البيئات/فك الضغط قد يحذف مجلد public/vendor أو يتغير مساره.
-// هذا الكود يضمن وجود الملفات المطلوبة للإحصائيات والماسح بدون تعطيل أي ميزة.
+// ��� �������/�� ����� �� ���� ���� public/vendor �� ����� �����.
+// ��� ����� ���� ���� ������� �������� ���������� ������� ���� ����� �� ����.
 function ensureVendorAssets() {
   try {
     const vendorDir = path.join(__dirname, "public", "vendor");
@@ -203,18 +170,18 @@ function ensureVendorAssets() {
 
 ensureVendorAssets();
 
-// -------------------- Static: Vendor + Public (حل A جذري) --------------------
-// ✅ Vendor: served ONLY from public/vendor (no node_modules)
+// -------------------- Static: Vendor + Public (�� A ����) --------------------
+// ? Vendor: served ONLY from public/vendor (no node_modules)
 app.use(
   "/vendor",
   express.static(path.join(__dirname, "public", "vendor"), {
-    fallthrough: false, // إذا غير موجود -> 404 مباشرة
+    fallthrough: false, // ��� ��� ����� -> 404 ������
     etag: true,
     maxAge: 0,
   })
 );
 
-// ✅ Public site
+// ? Public site
 app.use(
   express.static(path.join(__dirname, "public"), {
     extensions: ["html"],
@@ -242,7 +209,7 @@ function issueToken(req, res, user) {
   res.cookie("vip_token", token, {
     httpOnly: true,
     sameSite: "lax",
-    // ✅ Secure cookie فقط عند الدخول عبر HTTPS (يحمي الإنتاج + لا يكسر التشغيل المحلي على HTTP)
+    // ? Secure cookie ��� ��� ������ ��� HTTPS (���� ������� + �� ���� ������� ������ ��� HTTP)
     secure: isReqHttps(req),
     maxAge: 7 * 24 * 60 * 60 * 1000,
   });
@@ -251,10 +218,10 @@ function issueToken(req, res, user) {
 function requireAuth(roles = []) {
   return (req, res, next) => {
     try {
-      // ✅ مصادر التوكن (بالترتيب):
-      // 1) Cookie (الافتراضي للمتصفح)
-      // 2) Authorization: Bearer <token> (مفيد للاختبارات مثل PowerShell)
-      // 3) Query token/access_token (مفيد لـ SSE/EventSource عند الحاجة)
+      // ? ����� ������ (��������):
+      // 1) Cookie (��������� �������)
+      // 2) Authorization: Bearer <token> (���� ���������� ��� PowerShell)
+      // 3) Query token/access_token (���� �� SSE/EventSource ��� ������)
       let token = (req.cookies && req.cookies.vip_token) || null;
 
       if (!token) {
@@ -293,8 +260,8 @@ function makeVisitToken() {
 }
 
 function maybeCreateNotification(customerId) {
-  // rule 1: تقييمين سيئين متتاليين (<=2)
-  // rule 2: تقييم عالي مرتين ثم تقييم سيء (>=4, >=4, <=2)
+  // rule 1: ������� ����� �������� (<=2)
+  // rule 2: ����� ���� ����� �� ����� ��� (>=4, >=4, <=2)
   try {
     const last3 = db.prepare(`
       SELECT rating, created_at
@@ -314,7 +281,7 @@ function maybeCreateNotification(customerId) {
       db.prepare(`
         INSERT INTO notifications (customer_id, rule_type, message, is_read, created_at)
         VALUES (?, 'two_bad', ?, 0, ?)
-      `).run(customerId, "تنبيه: تقييمين سيئين متتاليين", nowIso());
+      `).run(customerId, "�����: ������� ����� ��������", nowIso());
       broadcastNoti();
       return;
     }
@@ -325,7 +292,7 @@ function maybeCreateNotification(customerId) {
         db.prepare(`
           INSERT INTO notifications (customer_id, rule_type, message, is_read, created_at)
           VALUES (?, 'high_high_bad', ?, 0, ?)
-        `).run(customerId, "تنبيه: تقييم عالي مرتين ثم تقييم سيء", nowIso());
+        `).run(customerId, "�����: ����� ���� ����� �� ����� ���", nowIso());
         broadcastNoti();
         return;
       }
@@ -373,8 +340,6 @@ app.get("/api/auth/me", (req, res) => {
 });
 
 // -------------------- Public settings --------------------
-
-/* -------------------- GroupB FIX: Home popup (public endpoint) -------------------- */
 app.get("/api/public/settings", (req, res) => {
   const s = getSettings();
   res.json({
@@ -395,13 +360,13 @@ app.get("/api/public/settings", (req, res) => {
 // -------------------- Public visit status --------------------
 app.get("/api/public/visit-status", (req, res) => {
   const visitId = (req.query.visitId || "").toString();
-  if (!visitId) return res.json({ ok: false, message: "visitId مطلوب" });
+  if (!visitId) return res.json({ ok: false, message: "visitId �����" });
 
   const visit = db
     .prepare("SELECT id, customer_id, is_approved, action_type FROM visits WHERE id = ?")
     .get(visitId);
 
-  if (!visit) return res.json({ ok: false, message: "زيارة غير موجودة" });
+  if (!visit) return res.json({ ok: false, message: "����� ��� ������" });
 
   if (!visit.is_approved && visit.action_type !== "redeem")
     return res.json({ ok: true, approved: false });
@@ -439,7 +404,7 @@ app.post("/api/customer/loyal/submit", (req, res) => {
     return res.status(400).json({
       ok: false,
       error: "MISSING_REQUIRED_FIELDS",
-      message: "رجاءً عبّئ رقم الجوال/اللوحة واختر التقييم.",
+      message: "����� ���� ��� ������/������ ����� �������.",
     });
   }
 
@@ -450,7 +415,7 @@ app.post("/api/customer/loyal/submit", (req, res) => {
     return res.json({
       ok: false,
       error: "NOT_FOUND",
-      message: "يبدو أنك عميل جديد. اضغط للتوجيه لصفحة العميل الجديد.",
+      message: "���� ��� ���� ����. ���� ������� ����� ������ ������.",
     });
   }
 
@@ -460,7 +425,7 @@ app.post("/api/customer/loyal/submit", (req, res) => {
       ok: false,
       error: "VEHICLE_NOT_FOUND",
       message:
-        "هذه المركبة غير مسجلة لهذا العميل. اضغط للتوجيه لصفحة العميل الجديد لإضافة المركبة.",
+        "��� ������� ��� ����� ���� ������. ���� ������� ����� ������ ������ ������ �������.",
     });
   }
 
@@ -494,12 +459,12 @@ app.post("/api/customer/new/submit", (req, res) => {
   const plateLettersClean = (plate_letters_ar ?? "").toString().trim();
   const plateNumbersClean = (plate_numbers ?? "").toString().trim();
 
-  // حسب طلبك: جميع الحقول إلزامية في "عميل جديد" ما عدا الملاحظات
+  // ��� ����: ���� ������ ������� �� "���� ����" �� ��� ���������
   if (!nameClean || !phoneClean || !carTypeClean || !carModelClean || !plateLettersClean || !plateNumbersClean || !rating) {
     return res.status(400).json({
       ok: false,
       error: "MISSING_REQUIRED_FIELDS",
-      message: "رجاءً عبّئ الحقول الإلزامية واختر التقييم.",
+      message: "����� ���� ������ ��������� ����� �������.",
     });
   }
 
@@ -512,7 +477,7 @@ app.post("/api/customer/new/submit", (req, res) => {
       return res.json({
         ok: false,
         error: "ALREADY_EXISTS",
-        message: "يبدو أنك عميل وفي. اضغط للتوجيه لصفحة العميل الوفي.",
+        message: "���� ��� ���� ���. ���� ������� ����� ������ �����.",
       });
     }
 
@@ -545,7 +510,7 @@ app.post("/api/customer/new/submit", (req, res) => {
     const qrPayload = JSON.stringify({ visitId, t: token });
     return QRCode.toDataURL(qrPayload, { margin: 1, width: 190 }, (err, url) => {
       if (err) return res.status(500).json({ ok: false, error: "QR_FAIL" });
-      res.json({ ok: true, visitId, qrDataUrl: url, note: "تمت إضافة مركبة جديدة لنفس العميل." });
+      res.json({ ok: true, visitId, qrDataUrl: url, note: "��� ����� ����� ����� ���� ������." });
     });
   }
 
@@ -666,9 +631,10 @@ app.post("/api/visit/approve", requireAuth(["admin", "cashier"]), (req, res) => 
 
     db.prepare(
       `
-      INSERT INTO points_ledger (id, customer_id, visit_id, entry_type, points, performed_by, created_at) VALUES (?, ?, ?, 'earn', ?, ?, ?)
+      INSERT INTO points_ledger (id, customer_id, visit_id, entry_type, points, created_at)
+      VALUES (?, ?, ?, 'earn', ?, ?)
     `
-    ).run(uuid(), visit.customer_id, visitId, pointsPerVisit, req.user.username, nowIso());
+    ).run(uuid(), visit.customer_id, visitId, pointsPerVisit, nowIso());
 
     // notifications rules
     try { maybeCreateNotification(visit.customer_id); } catch(e) {}
@@ -696,9 +662,10 @@ app.post("/api/visit/redeem", requireAuth(["admin", "cashier"]), (req, res) => {
   const t = nowIso();
   db.prepare(
     `
-    INSERT INTO points_ledger (id, customer_id, visit_id, entry_type, points, performed_by, created_at) VALUES (?, ?, NULL, 'redeem', ?, ?, ?)
+    INSERT INTO points_ledger (id, customer_id, visit_id, entry_type, points, created_at)
+    VALUES (?, ?, NULL, 'redeem', ?, ?)
   `
-  ).run(uuid(), customerId, settings.points_redeem_limit, req.user.username, t);
+  ).run(uuid(), customerId, settings.points_redeem_limit, t);
 
   if (visitId) {
     db.prepare("UPDATE visits SET action_type = 'redeem', action_at = ?, is_approved = 1 WHERE id = ?")
@@ -710,184 +677,8 @@ app.post("/api/visit/redeem", requireAuth(["admin", "cashier"]), (req, res) => {
 });
 
 // -------------------- Admin dashboard/stats --------------------
-
-/**
- * Cashier of month: based on current month approved visits:
- * Rank by avgRating DESC, then washes DESC
- */
-app.get("/api/admin/cashier-of-month", requireAuth(["admin"]), (req, res) => {
-  try {
-    const now = new Date();
-    const from = new Date(now.getFullYear(), now.getMonth(), 1);
-    const fromIso = from.toISOString().slice(0,10);
-
-    const rows = db.prepare(`
-      SELECT approved_by as cashier, COUNT(*) as washes, AVG(rating) as avgRating
-      FROM visits
-      WHERE is_approved = 1
-        AND approved_by IS NOT NULL
-        AND approved_at >= ?
-      GROUP BY approved_by
-      ORDER BY avgRating DESC, washes DESC
-      LIMIT 1
-    `).all(fromIso);
-
-    const best = rows && rows.length ? rows[0] : null;
-    res.json({ ok: true, from: fromIso, best });
-  } catch (e) {
-    res.json({ ok: false, error: "FAILED", message: e.message });
-  }
-});
-
-/**
- * Customer status counts:
- * active if last approved visit <= daysA, else inactive.
- * Also returns inactive60 if last approved visit <= daysB.
- */
-app.get("/api/admin/customers/status-counts", requireAuth(["admin"]), (req, res) => {
-  try {
-    const daysA = Math.max(1, Number(req.query.daysA || 30));
-    const daysB = Math.max(daysA, Number(req.query.daysB || 60));
-    const now = new Date();
-    const sinceA = new Date(now.getTime() - daysA*24*60*60*1000).toISOString().slice(0,10);
-    const sinceB = new Date(now.getTime() - daysB*24*60*60*1000).toISOString().slice(0,10);
-
-    // last approved visit per customer
-    const last = db.prepare(`
-      SELECT c.id,
-             (SELECT MAX(v.approved_at) FROM visits v WHERE v.customer_id = c.id AND v.is_approved=1) as last_approved
-      FROM customers c
-    `).all();
-
-    let activeA = 0, inactiveA = 0, activeB = 0, inactiveB = 0;
-    for (const r of last) {
-      const la = (r.last_approved || "").slice(0,10);
-      if (la && la >= sinceA) activeA++; else inactiveA++;
-      if (la && la >= sinceB) activeB++; else inactiveB++;
-    }
-
-    res.json({
-      ok: true,
-      daysA, daysB,
-      sinceA, sinceB,
-      counts: {
-        active_daysA: activeA,
-        inactive_daysA: inactiveA,
-        active_daysB: activeB,
-        inactive_daysB: inactiveB
-      }
-    });
-  } catch (e) {
-    res.json({ ok: false, error: "FAILED", message: e.message });
-  }
-});
-
-
-
-/* ===== Group3: Best Customers Dashboard ===== */
-app.get("/api/admin/dashboard/best-customers", requireAuth(["admin"]), (req, res) => {
-  try {
-    const rows = db.prepare(`
-      SELECT
-        c.id,
-        c.name,
-        c.phone,
-        COUNT(v.id) as visits,
-        AVG(v.rating) as avg_rating,
-        SUM(CASE WHEN p.entry_type='redeem' THEN 1 ELSE 0 END) as redeems
-      FROM customers c
-      LEFT JOIN visits v ON v.customer_id = c.id AND v.is_approved = 1
-      LEFT JOIN points_ledger p ON p.customer_id = c.id
-      GROUP BY c.id
-      ORDER BY visits DESC, avg_rating DESC
-      LIMIT 20
-    `).all();
-
-    res.json({ ok:true, customers: rows });
-  } catch(e) {
-    res.json({ ok:false, error:"FAILED", message:e.message });
-  }
-});
-
-
-
-/* ===== Group3: Cashier Performance ===== */
-app.get("/api/admin/dashboard/cashiers", requireAuth(["admin"]), (req, res) => {
-  try {
-    const rows = db.prepare(`
-      SELECT
-        approved_by as cashier,
-        COUNT(*) as washes,
-        AVG(rating) as avg_rating
-      FROM visits
-      WHERE is_approved = 1
-        AND approved_by IS NOT NULL
-      GROUP BY approved_by
-      ORDER BY washes DESC, avg_rating DESC
-    `).all();
-
-    res.json({ ok:true, cashiers: rows });
-  } catch(e) {
-    res.json({ ok:false, error:"FAILED", message:e.message });
-  }
-});
-
-
-
-/* ===== Group3: Best Customers Dashboard ===== */
-app.get("/api/admin/dashboard/best-customers", requireAuth(["admin"]), (req, res) => {
-  try {
-    const rows = db.prepare(`
-      SELECT
-        c.id,
-        c.name,
-        c.phone,
-        COUNT(v.id) as visits,
-        AVG(v.rating) as avg_rating,
-        SUM(CASE WHEN p.entry_type='redeem' THEN 1 ELSE 0 END) as redeems
-      FROM customers c
-      LEFT JOIN visits v ON v.customer_id = c.id AND v.is_approved = 1
-      LEFT JOIN points_ledger p ON p.customer_id = c.id
-      GROUP BY c.id
-      ORDER BY visits DESC, avg_rating DESC
-      LIMIT 20
-    `).all();
-
-    res.json({ ok:true, customers: rows });
-  } catch(e) {
-    res.json({ ok:false, error:"FAILED", message:e.message });
-  }
-});
-
-
-
-/* ===== Group3: Cashier Performance ===== */
-app.get("/api/admin/dashboard/cashiers", requireAuth(["admin"]), (req, res) => {
-  try {
-    const rows = db.prepare(`
-      SELECT
-        approved_by as cashier,
-        COUNT(*) as washes,
-        AVG(rating) as avg_rating
-      FROM visits
-      WHERE is_approved = 1
-        AND approved_by IS NOT NULL
-      GROUP BY approved_by
-      ORDER BY washes DESC, avg_rating DESC
-    `).all();
-
-    res.json({ ok:true, cashiers: rows });
-  } catch(e) {
-    res.json({ ok:false, error:"FAILED", message:e.message });
-  }
-});
-
-
 app.get("/api/admin/dashboard", requireAuth(["admin"]), (req, res) => {
-  
-/* WEIGHT_LAST_5_RATINGS */
-const avgRating =
-
+  const avgRating =
     db.prepare("SELECT AVG(rating) as avgRating FROM visits WHERE is_approved = 1").get().avgRating || 0;
 
   const cashiers = db.prepare(
@@ -906,68 +697,6 @@ const avgRating =
 
 
 // -------------------- Admin Notifications --------------------
-
-/* ===== Group3: Notification controls ===== */
-
-// Toggle notification types
-app.post("/api/admin/notifications/settings", requireAuth(["admin"]), (req, res) => {
-  const { two_bad, high_high_bad } = req.body || {};
-  db.prepare(`
-    UPDATE settings SET
-      notify_two_bad = COALESCE(?, notify_two_bad),
-      notify_high_high_bad = COALESCE(?, notify_high_high_bad)
-    WHERE id = 1
-  `).run(
-    typeof two_bad === "boolean" ? (two_bad ? 1 : 0) : null,
-    typeof high_high_bad === "boolean" ? (high_high_bad ? 1 : 0) : null
-  );
-  res.json({ ok: true });
-});
-
-// Bulk delete notifications
-app.post("/api/admin/notifications/clear-bulk", requireAuth(["admin"]), (req, res) => {
-  const { ids } = req.body || {};
-  if (!Array.isArray(ids) || !ids.length)
-    return res.status(400).json({ ok:false, error:"NO_IDS" });
-
-  const q = ids.map(()=>"?").join(",");
-  db.prepare(`DELETE FROM notifications WHERE id IN (${q})`).run(...ids);
-  broadcastNoti();
-  res.json({ ok:true, deleted: ids.length });
-});
-
-
-
-/* ===== Group3: Notification controls ===== */
-
-// Toggle notification types
-app.post("/api/admin/notifications/settings", requireAuth(["admin"]), (req, res) => {
-  const { two_bad, high_high_bad } = req.body || {};
-  db.prepare(`
-    UPDATE settings SET
-      notify_two_bad = COALESCE(?, notify_two_bad),
-      notify_high_high_bad = COALESCE(?, notify_high_high_bad)
-    WHERE id = 1
-  `).run(
-    typeof two_bad === "boolean" ? (two_bad ? 1 : 0) : null,
-    typeof high_high_bad === "boolean" ? (high_high_bad ? 1 : 0) : null
-  );
-  res.json({ ok: true });
-});
-
-// Bulk delete notifications
-app.post("/api/admin/notifications/clear-bulk", requireAuth(["admin"]), (req, res) => {
-  const { ids } = req.body || {};
-  if (!Array.isArray(ids) || !ids.length)
-    return res.status(400).json({ ok:false, error:"NO_IDS" });
-
-  const q = ids.map(()=>"?").join(",");
-  db.prepare(`DELETE FROM notifications WHERE id IN (${q})`).run(...ids);
-  broadcastNoti();
-  res.json({ ok:true, deleted: ids.length });
-});
-
-
 app.get("/api/admin/notifications", requireAuth(["admin"]), (req, res) => {
   const showAll = (req.query.all === "1");
   let sql = `
@@ -987,7 +716,7 @@ app.get("/api/admin/notifications/unread-count", requireAuth(["admin"]), (req, r
   res.json({ ok: true, count: row.c || 0 });
 });
 
-// aliases (توافق/تسهيل اختبارات)
+// aliases (�����/����� ��������)
 app.get("/api/admin/notifications/unreadCount", requireAuth(["admin"]), (req, res) => {
   const row = db.prepare("SELECT COUNT(*) as c FROM notifications WHERE is_read = 0").get();
   res.json({ ok: true, count: row.c || 0 });
@@ -1065,7 +794,7 @@ app.get("/api/admin/notifications/detail", requireAuth(["admin"]), (req, res) =>
   res.json({ ok: true, notification, customer, visits });
 });
 
-// Rolling stats (آخر 30 يوم)
+// Rolling stats (��� 30 ���)
 app.get("/api/admin/stats/rolling", requireAuth(["admin"]), (req, res) => {
   const days = 30;
   const since = new Date(Date.now() - days * 24 * 60 * 60 * 1000);
@@ -1110,111 +839,7 @@ app.get("/api/admin/stats/rolling", requireAuth(["admin"]), (req, res) => {
   });
 });
 
-
-/* -------------------- GroupB FIX: Admin customer search v2 -------------------- */
-function normalizePhoneToWa(phone){
-  const d = String(phone||"").replace(/\D+/g,"");
-  if (!d) return "";
-  if (d.length === 10 && d.startsWith("05")) return "966" + d.slice(1);
-  if (d.startsWith("966")) return d;
-  return d;
-}
-
-app.get("/api/admin/customer-search", requireAuth(["admin"]), (req,res)=>{
-  const q = String((req.query.q||"")).trim();
-  if (!q) return res.json({ ok:true, items: [] });
-
-  const like = "%" + q.replace(/%/g,"") + "%";
-  try{
-    const rows = db.prepare(`
-      SELECT
-        c.id as customer_id,
-        c.name as name,
-        c.phone as phone,
-
-        (SELECT v.created_at
-          FROM visits v
-          WHERE v.customer_id=c.id
-          ORDER BY v.created_at DESC
-          LIMIT 1
-        ) as last_visit_at,
-
-        (SELECT ve.plate_letters_ar||' '||ve.plate_numbers
-          FROM visits v2
-          JOIN vehicles ve ON ve.id=v2.vehicle_id
-          WHERE v2.customer_id=c.id
-          ORDER BY v2.created_at DESC
-          LIMIT 1
-        ) as last_plate,
-
-        (SELECT COALESCE(MAX(v3.approved_at), MAX(v3.action_at))
-          FROM visits v3
-          WHERE v3.customer_id=c.id
-        ) as last_action_at,
-
-        (SELECT COALESCE(
-            (SELECT v4.approved_by FROM visits v4 WHERE v4.customer_id=c.id AND v4.approved_by IS NOT NULL ORDER BY v4.approved_at DESC LIMIT 1),
-            (SELECT v5.approved_by FROM visits v5 WHERE v5.customer_id=c.id AND v5.approved_by IS NOT NULL ORDER BY v5.action_at DESC LIMIT 1)
-          )
-        ) as last_actor
-
-      FROM customers c
-      WHERE c.phone LIKE ? OR c.name LIKE ?
-      OR EXISTS (
-        SELECT 1 FROM vehicles ve
-        WHERE ve.customer_id=c.id
-          AND (ve.plate_numbers LIKE ? OR ve.plate_numbers_norm LIKE ? OR ve.plate_letters_ar LIKE ?)
-      )
-      ORDER BY COALESCE(last_visit_at, c.created_at) DESC
-      LIMIT 50
-    `).all(like, like, like, like, like);
-
-    const items = rows.map(r=>{
-      const wa = normalizePhoneToWa(r.phone);
-      return {
-        id: r.customer_id,
-        name: r.name,
-        phone: r.phone,
-        last_visit_at: r.last_visit_at || null,
-        last_plate: r.last_plate || "",
-        last_action_at: r.last_action_at || null,
-        last_actor: r.last_actor || "",
-        wa_link: wa ? ("https://wa.me/" + wa) : ""
-      };
-    });
-
-    res.json({ ok:true, items });
-  }catch(e){
-    res.json({ ok:false, error:"SERVER_ERROR" });
-  }
-});
-
 // -------------------- Settings (admin) --------------------
-
-/* ==================== Home Popup (Admin) ==================== */
-}catch(e){
-    res.json({ ok:false, error:"SERVER_ERROR" });
-  }
-});
-
-}catch(e){
-    res.json({ ok:false, error:"SERVER_ERROR" });
-  }
-});
-/* ==================== /Home Popup (Admin) ==================== */
-
-
-/* -------------------- GroupB FIX: Home popup (admin endpoints) -------------------- */
-}catch(e){
-    res.json({ ok:false, error:"SERVER_ERROR" });
-  }
-});
-
-}catch(e){
-    res.json({ ok:false, error:"SERVER_ERROR" });
-  }
-});
-
 app.get("/api/admin/settings", requireAuth(["admin"]), (req, res) => {
   res.json({ ok: true, settings: getSettings() });
 });
@@ -1311,59 +936,6 @@ app.post("/api/admin/users/update", requireAuth(["admin"]), (req, res) => {
   res.json({ ok: true });
 });
 
-
-/**
- * DANGER: wipe all customers + related data
- * 3-step confirmation within 10 minutes (per IP), requires admin username/password.
- */
-const __wipeAttempts = new Map(); // ip -> {count, firstAt}
-
-app.post("/api/admin/danger/wipe-customers", requireAuth(["admin"]), (req, res) => {
-  try {
-    const { username, password } = req.body || {};
-    if (!username || !password) return res.status(400).json({ ok:false, error:"MISSING_FIELDS" });
-
-    // verify against DB user (admin)
-    const u = db.prepare("SELECT * FROM users WHERE username = ? AND role='admin' AND is_active=1").get(username);
-    if (!u) return res.status(401).json({ ok:false, error:"INVALID_CREDENTIALS" });
-    const ok = bcrypt.compareSync(password, u.password_hash);
-    if (!ok) return res.status(401).json({ ok:false, error:"INVALID_CREDENTIALS" });
-
-    const ip = (req.headers["x-forwarded-for"] || req.socket.remoteAddress || "unknown").toString().split(",")[0].trim();
-    const now = Date.now();
-    const ttl = 10*60*1000;
-
-    const cur = __wipeAttempts.get(ip);
-    if (!cur || (now - cur.firstAt) > ttl) {
-      __wipeAttempts.set(ip, { count: 1, firstAt: now });
-      return res.json({ ok:true, step:1, need:3, message:"تحذير: كرر الطلب 3 مرات خلال 10 دقائق لتأكيد الحذف." });
-    }
-
-    cur.count += 1;
-    __wipeAttempts.set(ip, cur);
-
-    if (cur.count < 3) {
-      return res.json({ ok:true, step:cur.count, need:3, message:"تحذير: تبقى " + (3-cur.count) + " تأكيد/تأكيدات." });
-    }
-
-    // confirmed: wipe (transaction)
-    db.transaction(() => {
-      db.prepare("DELETE FROM notifications").run();
-      db.prepare("DELETE FROM points_ledger").run();
-      db.prepare("DELETE FROM visits").run();
-      db.prepare("DELETE FROM vehicles").run();
-      db.prepare("DELETE FROM customers").run();
-    })();
-
-    __wipeAttempts.delete(ip);
-    return res.json({ ok:true, done:true, message:"تم حذف جميع بيانات العملاء بنجاح." });
-
-  } catch (e) {
-    return res.status(500).json({ ok:false, error:"SERVER_ERROR", message:e.message });
-  }
-});
-
-
 app.post("/api/admin/users/delete", requireAuth(["admin"]), (req, res) => {
   const { id } = req.body || {};
   if (!id) return res.status(400).json({ ok: false, error: "MISSING_ID" });
@@ -1371,80 +943,7 @@ app.post("/api/admin/users/delete", requireAuth(["admin"]), (req, res) => {
   res.json({ ok: true });
 });
 
-function makeWhatsAppLink(phone){
-  try{
-    const raw = String(phone||"");
-    const digits = raw.replace(/\D/g,"");
-    if(!digits) return "";
-    // Saudi common: 05xxxxxxxx -> 9665xxxxxxx
-    let d = digits;
-    if(d.startsWith("0") && d.length===10) d = "966"+d.slice(1);
-    else if(d.startsWith("5") && d.length===9) d = "966"+d;
-    else if(d.startsWith("00966")) d = d.replace(/^00966/, "966");
-    return "https://wa.me/" + d;
-  }catch(e){ return ""; }
-}
-
-function formatPlate(ve){
-  try{
-    if(!ve) return "";
-    const letters = (ve.plate_letters_ar||"").toString().trim();
-    const nums = (ve.plate_numbers||"").toString().trim();
-    return (letters && nums) ? (letters + " " + nums) : (letters||nums||"");
-  }catch(e){ return ""; }
-}
-
 // -------------------- Export --------------------
-
-/* ===== Group2: Enhanced Excel Export ===== */
-function buildExportRows() {
-  return db.prepare(`
-    SELECT
-      c.id,
-      c.name,
-      c.phone,
-      ve.car_type,
-      ve.car_model,
-      ve.plate_numbers,
-      COUNT(v.id) as visits_count,
-      SUM(CASE WHEN p.entry_type='redeem' THEN 1 ELSE 0 END) as redeem_count,
-      MAX(v.created_at) as last_visit,
-      MAX(COALESCE(v.action_by, p.performed_by)) as last_actor
-    FROM customers c
-    LEFT JOIN vehicles ve ON ve.customer_id = c.id
-    LEFT JOIN visits v ON v.customer_id = c.id AND v.is_approved = 1
-    LEFT JOIN points_ledger p ON p.customer_id = c.id
-    GROUP BY c.id
-    ORDER BY last_visit DESC
-  `).all();
-}
-
-
-
-/* ===== Group2: Enhanced Excel Export ===== */
-function buildExportRows() {
-  return db.prepare(`
-    SELECT
-      c.id,
-      c.name,
-      c.phone,
-      ve.car_type,
-      ve.car_model,
-      ve.plate_numbers,
-      COUNT(v.id) as visits_count,
-      SUM(CASE WHEN p.entry_type='redeem' THEN 1 ELSE 0 END) as redeem_count,
-      MAX(v.created_at) as last_visit,
-      MAX(COALESCE(v.action_by, p.performed_by)) as last_actor
-    FROM customers c
-    LEFT JOIN vehicles ve ON ve.customer_id = c.id
-    LEFT JOIN visits v ON v.customer_id = c.id AND v.is_approved = 1
-    LEFT JOIN points_ledger p ON p.customer_id = c.id
-    GROUP BY c.id
-    ORDER BY last_visit DESC
-  `).all();
-}
-
-
 app.get("/api/admin/export/excel", requireAuth(["admin"]), async (req, res) => {
   const customers = db.prepare(
     `
@@ -1460,12 +959,12 @@ app.get("/api/admin/export/excel", requireAuth(["admin"]), async (req, res) => {
   const wb = new ExcelJS.Workbook();
   const ws = wb.addWorksheet("Customers");
   ws.columns = [
-    { header: "الاسم", key: "name", width: 22 },
-    { header: "رقم الجوال", key: "phone", width: 16 },
-    { header: "تاريخ التسجيل", key: "created_at", width: 22 },
-    { header: "عدد الزيارات", key: "visits_count", width: 12 },
-    { header: "مرات الاستبدال", key: "redeem_count", width: 12 },
-    { header: "معدل التقييم", key: "avg_rating", width: 12 },
+    { header: "�����", key: "name", width: 22 },
+    { header: "��� ������", key: "phone", width: 16 },
+    { header: "����� �������", key: "created_at", width: 22 },
+    { header: "��� ��������", key: "visits_count", width: 12 },
+    { header: "���� ���������", key: "redeem_count", width: 12 },
+    { header: "���� �������", key: "avg_rating", width: 12 },
   ];
 
   customers.forEach((c) => {
@@ -1488,20 +987,6 @@ app.get("/api/admin/export/excel", requireAuth(["admin"]), async (req, res) => {
   res.end();
 });
 
-
-/* ===== Group2: Enhanced Word Export ===== */
-function buildWordRows() {
-  return buildExportRows();
-}
-
-
-
-/* ===== Group2: Enhanced Word Export ===== */
-function buildWordRows() {
-  return buildExportRows();
-}
-
-
 app.get("/api/admin/export/word", requireAuth(["admin"]), async (req, res) => {
   const customers = db.prepare(
     `
@@ -1517,7 +1002,7 @@ app.get("/api/admin/export/word", requireAuth(["admin"]), async (req, res) => {
 
   const rows = [
     new TableRow({
-      children: ["الاسم", "الجوال", "تاريخ التسجيل", "الزيارات", "الاستبدال", "معدل التقييم"].map(
+      children: ["�����", "������", "����� �������", "��������", "���������", "���� �������"].map(
         (t) =>
           new TableCell({
             children: [
@@ -1550,7 +1035,7 @@ app.get("/api/admin/export/word", requireAuth(["admin"]), async (req, res) => {
       {
         children: [
           new Paragraph({
-            children: [new TextRun({ text: "تقرير عملاء VIP (مختصر)", bold: true })],
+            children: [new TextRun({ text: "����� ����� VIP (�����)", bold: true })],
           }),
           new Paragraph(""),
           new Table({ rows }),
@@ -1569,83 +1054,13 @@ app.get("/api/admin/export/word", requireAuth(["admin"]), async (req, res) => {
 });
 
 // -------------------- API 404 + Error handler --------------------
-
-/* ==================== Group4: Admin Customer Search ==================== */
-// Search by phone OR plate OR name (admin only)
-app.get("/api/admin/customer-search", requireAuth(["admin"]), (req, res) => {
-  const q = (req.query.q || "").toString().trim();
-  if (!q) return res.json({ ok: true, results: [] });
-
-  const like = "%" + q.replace(/[%_]/g, "") + "%";
-  const qNorm = normalizePlateNumbers(q);
-
-  const rows = db.prepare(`
-    SELECT c.id as customer_id, c.name, c.phone,
-           ve.plate_letters_ar, ve.plate_numbers, ve.car_type, ve.car_model,
-           (SELECT MAX(v.created_at) FROM visits v WHERE v.customer_id = c.id) as last_visit_at
-    FROM customers c
-    LEFT JOIN vehicles ve ON ve.customer_id = c.id
-    WHERE c.phone LIKE ? OR c.name LIKE ? OR ve.plate_numbers LIKE ? OR ve.plate_numbers_norm = ?
-    ORDER BY last_visit_at DESC
-    LIMIT 50
-  `).all(like, like, like, qNorm);
-
-  res.json({ ok: true, results: rows });
-});
-/* ==================== /Group4 ==================== */
-
-// __VIP_UI_FIX_SAFE__ START
-// Home popup admin control
-});
-});
-
-// Enhanced customer search (last visit + whatsapp)
-app.get("/api/admin/customer-search2", requireAuth(["admin"]), (req,res)=>{
-  const q = (req.query.q || "").toString().trim();
-  if(!q) return res.json({ ok:true, rows: [] });
-
-  const like = "%" + q + "%";
-  const rows = db.prepare(`
-    SELECT
-      c.id as customer_id,
-      c.name as customer_name,
-      c.phone as customer_phone,
-      ve.plate_letters_ar,
-      ve.plate_numbers,
-      ve.car_type,
-      ve.car_model,
-      (SELECT MAX(v.created_at) FROM visits v WHERE v.customer_id = c.id) as last_visit_at
-    FROM customers c
-    LEFT JOIN vehicles ve ON ve.customer_id = c.id
-    WHERE c.phone LIKE ? OR c.name LIKE ? OR ve.plate_numbers LIKE ? OR ve.plate_letters_ar LIKE ?
-    ORDER BY last_visit_at DESC
-    LIMIT 50
-  `).all(like, like, like, like);
-
-  const norm = (p)=>{
-    p = String(p||"").replace(/\D/g,"");
-    if(p.startsWith("0")) return "966" + p.slice(1);
-    if(p.startsWith("966")) return p;
-    return p;
-  };
-
-  res.json({
-    ok:true,
-    rows: rows.map(r=>({
-      ...r,
-      whatsapp: r.customer_phone ? ("https://wa.me/" + norm(r.customer_phone)) : ""
-    }))
-  });
-});
-// __VIP_UI_FIX_SAFE__ END
-
 app.use("/api", (req, res) => {
-  res.status(404).json({ ok: false, error: "NOT_FOUND", message: "المسار غير موجود" });
+  res.status(404).json({ ok: false, error: "NOT_FOUND", message: "������ ��� �����" });
 });
 
 app.use((err, req, res, next) => {
   console.error("SERVER_ERROR", err);
-  res.status(500).json({ ok: false, error: "SERVER_ERROR", message: "حدث خطأ بالخادم. أعد المحاولة." });
+  res.status(500).json({ ok: false, error: "SERVER_ERROR", message: "��� ��� �������. ��� ��������." });
 });
 
 // catch-all for non-api
@@ -1684,7 +1099,7 @@ try {
       }
     }
     const ipHint = ips.length ? `https://${ips[0]}:${HTTPS_PORT}` : `https://localhost:${HTTPS_PORT}`;
-    console.log(`HTTPS (camera): ${ipHint}  (قد تظهر رسالة تحذير - اختر متابعة)`);
+    console.log(`HTTPS (camera): ${ipHint}  (�� ���� ����� ����� - ���� ������)`);
   });
 } catch (e) {
   console.log("HTTPS disabled:", e.message);
@@ -1693,54 +1108,3 @@ try {
 
 
 
-
-/* ===== Group2: Export Statistics ===== */
-function buildExportStats() {
-  const totalCustomers = db.prepare("SELECT COUNT(*) c FROM customers").get().c;
-  const avgRating = db.prepare("SELECT AVG(rating) a FROM visits WHERE is_approved=1").get().a || 0;
-  const redeemed = db.prepare("SELECT COUNT(DISTINCT customer_id) c FROM points_ledger WHERE entry_type='redeem'").get().c;
-  const visits = db.prepare("SELECT COUNT(*) c FROM visits").get().c;
-
-  return {
-    totalCustomers,
-    avgRating: Number(avgRating).toFixed(2),
-    redeemed,
-    visits
-  };
-}
-
-/* ===== Group5: Daily Database Backup ===== */
-function runDailyBackup() {
-  try {
-    const dbPath = process.env.DB_PATH || path.join(__dirname, "data.sqlite");
-    if (!fs.existsSync(dbPath)) return;
-
-    const dir = path.join(__dirname, "backups");
-    if (!fs.existsSync(dir)) fs.mkdirSync(dir);
-
-    const d = new Date();
-    const stamp = d.toISOString().slice(0,10);
-    const out = path.join(dir, "backup-" + stamp + ".sqlite");
-
-    if (!fs.existsSync(out)) {
-      fs.copyFileSync(dbPath, out);
-      console.log("🗂️ Backup created:", out);
-    }
-  } catch (e) {
-    console.log("Backup failed:", e.message);
-  }
-}
-
-// run once at startup
-runDailyBackup();
-
-// then every 24h
-setInterval(runDailyBackup, 24*60*60*1000);
-
-/* ===== Group5: WhatsApp Export Helper ===== */
-function buildWhatsAppLink(phone, message) {
-  if (!phone) return "";
-  const p = phone.replace(/\D/g,"");
-  const msg = encodeURIComponent(message || "");
-  return "https://wa.me/" + p + (msg ? "?text=" + msg : "");
-}

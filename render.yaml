@@ -2,7 +2,7 @@
   - type: web
     name: vip-loyalty
     runtime: node
-    plan: free
+    plan: starter
     buildCommand: npm ci
     startCommand: npm start
     envVars:
@@ -10,5 +10,11 @@
         value: production
       - key: FORCE_HTTPS_REDIRECT
         value: "0"
+      - key: DB_PATH
+        value: /var/data/data.sqlite
       - key: JWT_SECRET
         generateValue: true
+    disk:
+      name: vip-data
+      mountPath: /var/data
+      sizeGB: 1

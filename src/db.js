@@ -42,7 +42,7 @@ function initDb() {
       is_approved INTEGER NOT NULL DEFAULT 0,
       approved_at TEXT,
       approved_by TEXT,
-      action_type TEXT, -- 'earn' | 'redeem' (آخر إجراء ظهر للعميل في شاشة QR)
+      action_type TEXT, -- 'earn' | 'redeem' (��� ����� ��� ������ �� ���� QR)
       action_at TEXT,
       qr_token TEXT,
       created_at TEXT NOT NULL,
@@ -63,14 +63,14 @@ function initDb() {
 
     CREATE TABLE IF NOT EXISTS settings (
       id INTEGER PRIMARY KEY CHECK(id = 1),
-      home_text_1 TEXT NOT NULL DEFAULT 'أهلاً بك في غسيل وتلميع VIP',
-      home_text_2 TEXT NOT NULL DEFAULT 'اختر نوع العميل وابدأ رحلتك معنا',
-      terms_text TEXT NOT NULL DEFAULT 'الشروط والأحكام: ...',
+      home_text_1 TEXT NOT NULL DEFAULT '����� �� �� ���� ������ VIP',
+      home_text_2 TEXT NOT NULL DEFAULT '���� ��� ������ ����� ����� ����',
+      terms_text TEXT NOT NULL DEFAULT '������ ��������: ...',
       social_whatsapp TEXT,
       social_snap TEXT,
       social_tiktok TEXT,
       social_maps TEXT,
-      after_approve_text TEXT NOT NULL DEFAULT 'تابعنا على حساباتنا للتحديثات والعروض',
+      after_approve_text TEXT NOT NULL DEFAULT '������ ��� �������� ��������� �������',
       points_add_limit INTEGER NOT NULL DEFAULT 50,
       points_redeem_limit INTEGER NOT NULL DEFAULT 50,
       points_per_visit INTEGER NOT NULL DEFAULT 10
@@ -119,9 +119,9 @@ function initDb() {
     if(!scols.includes("after_approve_text")) db.exec("ALTER TABLE settings ADD COLUMN after_approve_text TEXT");
     if(!scols.includes("defaults_inited")) db.exec("ALTER TABLE settings ADD COLUMN defaults_inited INTEGER NOT NULL DEFAULT 0");
     // default terms_text if null
-    db.prepare("UPDATE settings SET terms_text = COALESCE(terms_text, 'الشروط والأحكام: ...') WHERE id = 1").run();
+    db.prepare("UPDATE settings SET terms_text = COALESCE(terms_text, '������ ��������: ...') WHERE id = 1").run();
     // default after_approve_text if null
-    db.prepare("UPDATE settings SET after_approve_text = COALESCE(after_approve_text, 'تابعنا على حساباتنا للتحديثات والعروض') WHERE id = 1").run();
+    db.prepare("UPDATE settings SET after_approve_text = COALESCE(after_approve_text, '������ ��� �������� ��������� �������') WHERE id = 1").run();
     // default defaults_inited if null
     db.prepare("UPDATE settings SET defaults_inited = COALESCE(defaults_inited, 0) WHERE id = 1").run();
   }catch(e){}
@@ -142,7 +142,7 @@ function uuid() {
 // Normalize: keep digits (Arabic-Indic & Latin) and map Arabic-Indic to Latin
 function normalizePlateNumbers(input) {
   const map = {
-    "٠":"0","١":"1","٢":"2","٣":"3","٤":"4","٥":"5","٦":"6","٧":"7","٨":"8","٩":"9"
+    "0":"0","1":"1","2":"2","3":"3","4":"4","5":"5","6":"6","7":"7","8":"8","9":"9"
   };
   const s = String(input || "").trim();
   let out = "";
@@ -185,16 +185,3 @@ module.exports = {
 };
 
 
-
-
-/* BLOCK_UNAPPROVED_RATING */
-function canRateVisit(visit){
-  return visit && visit.is_approved===1;
-}
-function getCustomerStatus(lastVisitIso){
-  if(!lastVisitIso) return 'inactive';
-  const days=Math.floor((Date.now()-new Date(lastVisitIso))/86400000);
-  if(days<=30) return 'active';
-  if(days<=60) return 'semi_inactive';
-  return 'inactive';
-}
