@@ -1,10 +1,11 @@
-﻿<!doctype html>
+<!doctype html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8">`n<meta charset="UTF-8">
+<meta charset="utf-8">
+`n
 
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
-  <title>VIP â€” ط¹ظ…ظٹظ„ ظˆظپظٹ</title>
+  <title>VIP — عميل وفي</title>
   <link rel="stylesheet" href="/css/styles.css?v=202601091251"/>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -14,81 +15,81 @@
   <div class="container">
     <div class="card">
     <div class="header">
-      <a class="back-btn" href="/">ط±ط¬ظˆط¹</a>
-      <!-- ط¨ط¯ظˆظ† ط´ط¹ط§ط± ظپظٹ طµظپط­ط§طھ ط§ظ„ط¹ظ…ظ„ط§ط، -->
+      <a class="back-btn" href="/">رجوع</a>
+      <!-- بدون شعار في صفحات العملاء -->
       <div style="width:120px"></div>
     </div>
 
       <div class="page-title">
-        <h2>ظ…ط±ط­ط¨ط§ظ‹ ط¨ط¹ظ…ظٹظ„ظ†ط§ ط§ظ„ظˆظپظٹ</h2>
+        <h2>مرحباً بعميلنا الوفي</h2>
         </div>
 
       <div id="notice" class="notice" style="display:none"></div>
 
       <form class="form" id="loyalForm">
         <div class="field">
-          <label>ط§ظ„ط§ط³ظ…</label>
+          <label>الاسم</label>
           <input name="name"/>
         </div>
 
         <div class="field">
-          <label>ط±ظ‚ظ… ط§ظ„ط¬ظˆط§ظ„ *</label>
+          <label>رقم الجوال *</label>
           <input name="phone" inputmode="tel" required/>
         </div>
 
         <div class="row2">
           <div class="field">
-            <label>ط­ط±ظˆظپ ط§ظ„ظ„ظˆط­ط© (ط¹ط±ط¨ظٹ) *</label>
+            <label>حروف اللوحة (عربي) *</label>
             <input name="plate_letters_ar" required/>
           </div>
           <div class="field">
-            <label>ط£ط±ظ‚ط§ظ… ط§ظ„ظ„ظˆط­ط© (ط¹ط±ط¨ظٹ/ط¥ظ†ط¬ظ„ظٹط²ظٹ) *</label>
+            <label>أرقام اللوحة (عربي/إنجليزي) *</label>
             <input name="plate_numbers" class="mono" required/>
           </div>
         </div>
 
         <div class="field">
-          <label>ط§ظ„طھظ‚ظٹظٹظ… *</label>
+          <label>التقييم *</label>
           <div class="stars" id="stars">
-            <button type="button" class="star" data-v="1">âک…</button>
-            <button type="button" class="star" data-v="2">âک…</button>
-            <button type="button" class="star" data-v="3">âک…</button>
-            <button type="button" class="star" data-v="4">âک…</button>
-            <button type="button" class="star" data-v="5">âک…</button>
+            <button type="button" class="star" data-v="1">★</button>
+            <button type="button" class="star" data-v="2">★</button>
+            <button type="button" class="star" data-v="3">★</button>
+            <button type="button" class="star" data-v="4">★</button>
+            <button type="button" class="star" data-v="5">★</button>
           </div>
           <input type="hidden" name="rating" id="rating" required/>
         </div>
 
         <div class="field">
-          <label>ظ…ظ„ط§ط­ط¸ط§طھ</label>
+          <label>ملاحظات</label>
           <textarea name="notes"></textarea>
         </div>
 
-        <button class="btn btn-primary" type="submit">طھظ…</button>
+        <button class="btn btn-primary" type="submit">تم</button>
       </form>
     </div>
   </div>
 
 <div class="modal-backdrop" id="modalBack" data-go-home="1" onclick="if(event.target.id==='modalBack') closeModal()">
   <div class="modal qr-modal">
-      <h3 id="modalTitle">ظˆط¬ظ‘ظ‡ ط§ظ„ط¨ط§ط±ظƒظˆط¯ ظ„ظ„ظ…ط­ط§ط³ط¨ ظ„ظ„ط§ط¹طھظ…ط§ط¯</h3>
+      <h3 id="modalTitle">وجّه الباركود للمحاسب للاعتماد</h3>
       <div class="qr-wrap">
         <img id="qrImg" class="qr-img" alt="QR"/>
       </div>
-      <p class="small" id="modalHint">ط¨ط¹ط¯ ط§ط¹طھظ…ط§ط¯ ط§ظ„ظ…ط­ط§ط³ط¨ ط³طھط¸ظ‡ط± ط±ط³ط§ظ„ط© ط¥ط¶ط§ظپط© ط§ظ„ظ†ظ‚ط§ط·.</p>
+      <p class="small" id="modalHint">بعد اعتماد المحاسب ستظهر رسالة إضافة النقاط.</p>
       <div id="carsBlock" style="display:none">
-        <div class="cars-progress" id="carsProgress" aria-label="ط´ط±ظٹط· ط§ظ„طھظ‚ط¯ظ‘ظ…"></div>
+        <div class="cars-progress" id="carsProgress" aria-label="شريط التقدّم"></div>
       </div>
       <div id="afterApprove" class="after-approve" style="display:none">
         <p id="afterApproveText" class="small" style="margin:0 0 10px 0"></p>
         <div class="social" style="justify-content:center">
-          <a class="icon" id="aaWa" href="#" target="_blank" rel="noopener" aria-label="ظˆط§طھط³ ط£ط¨"><span id="aaWaI"></span></a>
-          <a class="icon" id="aaSn" href="#" target="_blank" rel="noopener" aria-label="ط³ظ†ط§ط¨ ط´ط§طھ"><span id="aaSnI"></span></a>
-          <a class="icon" id="aaTk" href="#" target="_blank" rel="noopener" aria-label="طھظٹظƒ طھظˆظƒ"><span id="aaTkI"></span></a>
-          <a class="icon" id="aaMap" href="#" target="_blank" rel="noopener" aria-label="ظ‚ظˆظ‚ظ„ ظ…ط§ط¨"><span id="aaMapI"></span></a>
+          <a class="icon" id="aaWa" href="#" target="_blank" rel="noopener" aria-label="واتس أب"><span id="aaWaI"></span></a>
+          <a class="icon" id="aaSn" href="#" target="_blank" rel="noopener" aria-label="سناب شات"><span id="aaSnI"></span></a>
+          <a class="icon" id="aaTk" href="#" target="_blank" rel="noopener" aria-label="تيك توك"><span id="aaTkI"></span></a>
+          <a class="icon" id="aaMap" href="#" target="_blank" rel="noopener" aria-label="قوقل ماب"><span id="aaMapI"></span></a>
         </div>
       </div>
-      <button class="btn btn-ghost" onclick="closeModal()">ط¥ط؛ظ„ط§ظ‚</button>
+      <button class="btn btn-ghost" onclick="closeModal()">إغلاق</button>
     </div>
   </div>
 
@@ -150,18 +151,18 @@
     const fd = new FormData(e.target);
     const body = Object.fromEntries(fd.entries());
     if(!body.rating){
-      showNotice("ط§ط®طھط± ط§ظ„طھظ‚ظٹظٹظ… ط¨ط§ظ„ظ†ط¬ظˆظ… ط«ظ… ط§ط¶ط؛ط· طھظ….", "bad");
+      showNotice("اختر التقييم بالنجوم ثم اضغط تم.", "bad");
       return;
     }
     try{
       const r = await api("/api/customer/loyal/submit", "POST", body);
       if(!r.ok){
         if(r.error === "NOT_FOUND" || r.error==="VEHICLE_NOT_FOUND"){
-          showNotice("ظ‡ط°ظ‡ ط§ظ„ط¨ظٹط§ظ†ط§طھ ط؛ظٹط± ظ…ط³ط¬ظ„ط© ظ„ط¯ظٹظ†ط§. ط§ط¶ط؛ط· ط§ظ„ط²ط± ظ„ظ„ط§ظ†طھظ‚ط§ظ„ ظ„طµظپط­ط© ط§ظ„ط¹ظ…ظٹظ„ ط§ظ„ط¬ط¯ظٹط¯.", "bad");
+          showNotice("هذه البيانات غير مسجلة لدينا. اضغط الزر للانتقال لصفحة العميل الجديد.", "bad");
           const btn = document.createElement("a");
           btn.href = "/new.html";
           btn.className = "btn btn-ghost";
-          btn.textContent = "ط§ظ„ط§ظ†طھظ‚ط§ظ„ ظ„طµظپط­ط© ط§ظ„ط¹ظ…ظٹظ„ ط§ظ„ط¬ط¯ظٹط¯";
+          btn.textContent = "الانتقال لصفحة العميل الجديد";
           btn.style.marginTop = "12px";
           btn.style.width = "100%";
           btn.style.display = "flex";
@@ -170,11 +171,11 @@
           $("#notice").appendChild(btn);
           return;
         }
-        showNotice(r.message || "طھط­ظ‚ظ‚ ظ…ظ† ط§ظ„ط­ظ‚ظˆظ„ ط§ظ„ظ…ط·ظ„ظˆط¨ط©.", "bad");
+        showNotice(r.message || "تحقق من الحقول المطلوبة.", "bad");
         return;
       }
       $("#qrImg").src = r.qrDataUrl;
-      $("#modalTitle").textContent = "ظˆط¬ظ‘ظ‡ ط§ظ„ط¨ط§ط±ظƒظˆط¯ ظ„ظ„ظ…ط­ط§ط³ط¨ ظ„ظ„ط§ط¹طھظ…ط§ط¯";
+      $("#modalTitle").textContent = "وجّه الباركود للمحاسب للاعتماد";
       $("#afterApprove").style.display = "none";
       if($("#carsBlock")) $("#carsBlock").style.display = "none";
       const qrWrap = document.querySelector(".qr-wrap");
@@ -186,7 +187,7 @@
       // Poll approval status
       pollApproved(r.visitId);
     }catch(err){
-      showNotice("ط­ط¯ط« ط®ط·ط£ ط؛ظٹط± ظ…طھظˆظ‚ط¹. ط£ط¹ط¯ ط§ظ„ظ…ط­ط§ظˆظ„ط©.", "bad");
+      showNotice("حدث خطأ غير متوقع. أعد المحاولة.", "bad");
     }
   });
 
@@ -201,7 +202,7 @@
         if(data && data.ok && data.approved){
           clearInterval(timer);
           // Update modal text after approval/redeem
-          $("#modalTitle").textContent = `ظ†ظ‚ط§ط·ظƒ ط§ظ„ط¢ظ† ${data.pointsNow}/${data.pointsLimit}`;
+          $("#modalTitle").textContent = `نقاطك الآن ${data.pointsNow}/${data.pointsLimit}`;
           const qrWrap2 = document.querySelector('.qr-wrap');
           if(qrWrap2) qrWrap2.style.display = 'none';
           renderCars(data.pointsNow, data.pointsLimit, data.pointsPerVisit);
@@ -220,7 +221,7 @@
           // keep waiting
           if(Date.now() - started > maxMs){
             clearInterval(timer);
-            $("#modalHint").textContent = "ط¥ط°ط§ ظ„ظ… ظٹطھظ… ط§ظ„ط§ط¹طھظ…ط§ط¯طŒ طھظˆط§طµظ„ ظ…ط¹ ط§ظ„ظ…ط­ط§ط³ط¨.";
+            $("#modalHint").textContent = "إذا لم يتم الاعتماد، تواصل مع المحاسب.";
           }
         }
       }catch(e){}
