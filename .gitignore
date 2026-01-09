@@ -2,3 +2,9 @@
 .env
 .cert/
 data.sqlite*
+
+# backups/scripts
+*.bak*
+__before_restore_*/
+fix-*.ps1
+
