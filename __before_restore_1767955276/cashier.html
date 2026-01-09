@@ -1,12 +1,12 @@
-﻿<!doctype html>
+<!doctype html>
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">`n<meta charset="UTF-8">
 
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
-  <title>VIP â€” ظ„ظˆط­ط© ط§ظ„ظ…ط­ط§ط³ط¨</title>
+  <title>VIP � ���� �������</title>
   <link rel="stylesheet" href="/css/styles.css?v=202601091251"/>
-  <!-- ط¨ط¯ظˆظ† ظ…ظƒطھط¨ط§طھ ط®ط§ط±ط¬ظٹط©: ط§ظ„ظ…ط³ط­ ط¹ط¨ط± BarcodeDetector ط¯ط§ط®ظ„ common.js -->
+  <!-- ���� ������ ������: ����� ��� BarcodeDetector ���� common.js -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
@@ -16,18 +16,18 @@
   <div class="card">
     <div class="topbar">
       <div class="lang">
-        <span class="pill">ظ…ط­ط§ط³ط¨</span>
+        <span class="pill">�����</span>
       </div>
       <div class="lang">
         <button class="pill" id="btnLang">EN</button>
-        <a class="pill" href="#" id="btnLogout">ط®ط±ظˆط¬</a>
+        <a class="pill" href="#" id="btnLogout">����</a>
       </div>
     </div>
 
     <div class="section">
       <div class="page-title" style="padding:0 0 10px">
-        <h2 id="t1">ظ‚ط§ط±ط¦ ط§ظ„ط¨ط§ط±ظƒظˆط¯</h2>
-        <p id="t2">ط§ظ…ط³ط­ QR ط£ظˆ ط§ط³طھط®ط¯ظ… ط§ظ„ط¥ط¯ط®ط§ظ„ ط§ظ„ظٹط¯ظˆظٹ (ط¬ظˆط§ظ„ + ظ„ظˆط­ط©).</p>
+        <h2 id="t1">���� ��������</h2>
+        <p id="t2">���� QR �� ������ ������� ������ (���� + ����).</p>
       </div>
 
       <div id="notice" class="notice" style="display:none"></div>
@@ -36,55 +36,55 @@
         <div class="kpi" style="padding:10px">
           <div id="reader" style="width:100%"></div>
           <div class="row2" style="margin-top:10px">
-            <button class="btn btn-primary" id="btnCam" type="button">طھط´ط؛ظٹظ„ ط§ظ„ظƒط§ظ…ظٹط±ط§</button>
-            <button class="btn btn-ghost" id="btnStopCam" type="button" disabled>ط¥ظٹظ‚ط§ظپ</button>
-            <button class="btn btn-ghost" id="btnScanImage" type="button">ط§ظ„طھظ‚ط§ط·/ظ…ط³ط­ طµظˆط±ط©</button>
+            <button class="btn btn-primary" id="btnCam" type="button">����� ��������</button>
+            <button class="btn btn-ghost" id="btnStopCam" type="button" disabled>�����</button>
+            <button class="btn btn-ghost" id="btnScanImage" type="button">������/��� ����</button>
             <input id="scanImageInput" type="file" accept="image/*" capture="environment" style="display:none" />
           </div>
-          <div class="small" style="margin-top:8px" id="t3">ط¥ط°ط§ ظ„ظ… طھط¹ظ…ظ„ ط§ظ„ظƒط§ظ…ظٹط±ط§طŒ ط§ظ…ظ†ط­ ط¥ط°ظ† ط§ظ„ظƒط§ظ…ظٹط±ط§ ط£ظˆ ط§ط³طھط®ط¯ظ… ط§ظ„ط¥ط¯ط®ط§ظ„ ط§ظ„ظٹط¯ظˆظٹ.</div>
+          <div class="small" style="margin-top:8px" id="t3">��� �� ���� �������ǡ ���� ��� �������� �� ������ ������� ������.</div>
         </div>
 
         <div class="kpi" style="padding:10px">
           <div class="field">
-            <label id="lPhone">ط±ظ‚ظ… ط§ظ„ط¬ظˆط§ظ„</label>
+            <label id="lPhone">��� ������</label>
             <input id="mPhone" inputmode="tel" placeholder="05xxxxxxxx"/>
           </div>
           <div class="field" style="margin-top:8px">
-            <label id="lPlate">ط£ط±ظ‚ط§ظ… ط§ظ„ظ„ظˆط­ط©</label>
+            <label id="lPlate">����� ������</label>
             <input id="mPlate" class="mono" placeholder="1234"/>
           </div>
-          <button class="btn btn-ghost" id="btnManual" style="margin-top:10px">ط¨ط­ط« ظٹط¯ظˆظٹ</button>
+          <button class="btn btn-ghost" id="btnManual" style="margin-top:10px">��� ����</button>
         </div>
       </div>
     </div>
 
     <div class="section" id="resultBox" style="display:none">
       <div class="page-title" style="padding:0 0 10px">
-        <h2 id="tRes">ظ†طھظٹط¬ط© ط§ظ„ط¨ط­ط«</h2>
+        <h2 id="tRes">����� �����</h2>
       </div>
 
       <div class="kpi">
-        <div class="label" id="lCust">ط§ظ„ط¹ظ…ظٹظ„</div>
-        <div class="value" id="custName" style="font-size:16px">â€”</div>
+        <div class="label" id="lCust">������</div>
+        <div class="value" id="custName" style="font-size:16px">�</div>
         <div class="small" id="custMeta"></div>
-        <div class="small" style="margin-top:8px">ط§ظ„طھظ‚ظٹظٹظ…: <span id="visitRatingStars" class="stars-inline">â€”</span></div>
+        <div class="small" style="margin-top:8px">�������: <span id="visitRatingStars" class="stars-inline">�</span></div>
       </div>
 
       <div class="row2" style="margin-top:10px">
         <div class="kpi">
-          <div class="label" id="lVisits">ط¹ط¯ط¯ ط§ظ„ط²ظٹط§ط±ط§طھ (ظ…ط¹طھظ…ط¯ط©)</div>
-          <div class="value" id="visitsCount">â€”</div>
+          <div class="label" id="lVisits">��� �������� (������)</div>
+          <div class="value" id="visitsCount">�</div>
         </div>
         <div class="kpi">
-          <div class="label" id="lPoints">ط§ظ„ظ†ظ‚ط§ط· ط§ظ„ط­ط§ظ„ظٹط©</div>
-          <div class="value" id="pointsNow">â€”</div>
+          <div class="label" id="lPoints">������ �������</div>
+          <div class="value" id="pointsNow">�</div>
           <div class="small" id="pointsMeta"></div>
         </div>
       </div>
 
       <div class="row2" style="margin-top:10px">
-        <button class="btn btn-primary" id="btnApprove">ط§ط¹طھظ…ط§ط¯ ط²ظٹط§ط±ط©</button>
-        <button class="btn btn-ghost" id="btnRedeem">ط§ط³طھط¨ط¯ط§ظ„ ط§ظ„ظ†ظ‚ط§ط·</button>
+        <button class="btn btn-primary" id="btnApprove">������ �����</button>
+        <button class="btn btn-ghost" id="btnRedeem">������� ������</button>
       </div>
     </div>
 
@@ -107,26 +107,26 @@ function showActionStatus(msg, type=""){
 
   const dict = {
     ar: {
-      btnManual:"ط¨ط­ط« ظٹط¯ظˆظٹ",
-      approve:"ط§ط¹طھظ…ط§ط¯ ط²ظٹط§ط±ط©",
-      redeem:"ط§ط³طھط¨ط¯ط§ظ„ ط§ظ„ظ†ظ‚ط§ط·",
-      logout:"ط®ط±ظˆط¬",
-      t1:"ظ‚ط§ط±ط¦ ط§ظ„ط¨ط§ط±ظƒظˆط¯",
-      t2:"ط§ظ…ط³ط­ QR ط£ظˆ ط§ط³طھط®ط¯ظ… ط§ظ„ط¥ط¯ط®ط§ظ„ ط§ظ„ظٹط¯ظˆظٹ (ط¬ظˆط§ظ„ + ظ„ظˆط­ط©).",
-      t3:"ط¥ط°ط§ ظ„ظ… طھط¹ظ…ظ„ ط§ظ„ظƒط§ظ…ظٹط±ط§طŒ ط§ط³طھط®ط¯ظ… ط§ظ„ط¥ط¯ط®ط§ظ„ ط§ظ„ظٹط¯ظˆظٹ.",
-      lPhone:"ط±ظ‚ظ… ط§ظ„ط¬ظˆط§ظ„",
-      lPlate:"ط£ط±ظ‚ط§ظ… ط§ظ„ظ„ظˆط­ط©",
-      tRes:"ظ†طھظٹط¬ط© ط§ظ„ط¨ط­ط«",
-      lCust:"ط§ظ„ط¹ظ…ظٹظ„",
-      lVisits:"ط¹ط¯ط¯ ط§ظ„ط²ظٹط§ط±ط§طھ (ظ…ط¹طھظ…ط¯ط©)",
-      lPoints:"ط§ظ„ظ†ظ‚ط§ط· ط§ظ„ط­ط§ظ„ظٹط©",
-      msgFound:"طھظ… ط¬ظ„ط¨ ط¨ظٹط§ظ†ط§طھ ط§ظ„ط²ظٹط§ط±ط©.",
-      msgBad:"QR ط؛ظٹط± طµط§ظ„ط­ ط£ظˆ ظ…ظ†طھظ‡ظٹ.",
-      msgNeed:"ط§ظƒطھط¨ ط±ظ‚ظ… ط§ظ„ط¬ظˆط§ظ„ ظˆط£ط±ظ‚ط§ظ… ط§ظ„ظ„ظˆط­ط©.",
-      msgNF:"ظ„ظ… ظٹطھظ… ط§ظ„ط¹ط«ظˆط± ط¹ظ„ظ‰ ط¨ظٹط§ظ†ط§طھ.",
-      msgApp:"طھظ… ط§ط¹طھظ…ط§ط¯ ط§ظ„ط²ظٹط§ط±ط©.",
-      msgRedeemOk:"طھظ… ط§ط³طھط¨ط¯ط§ظ„ ط§ظ„ظ†ظ‚ط§ط·.",
-      msgRedeemNo:(cur,need)=>`ظ„ط§ ظٹظ…ظƒظ† ط§ظ„ط§ط³طھط¨ط¯ط§ظ„. ظ†ظ‚ط§ط· ط§ظ„ط¹ظ…ظٹظ„ ${cur}/${need}`
+      btnManual:"��� ����",
+      approve:"������ �����",
+      redeem:"������� ������",
+      logout:"����",
+      t1:"���� ��������",
+      t2:"���� QR �� ������ ������� ������ (���� + ����).",
+      t3:"��� �� ���� �������ǡ ������ ������� ������.",
+      lPhone:"��� ������",
+      lPlate:"����� ������",
+      tRes:"����� �����",
+      lCust:"������",
+      lVisits:"��� �������� (������)",
+      lPoints:"������ �������",
+      msgFound:"�� ��� ������ �������.",
+      msgBad:"QR ��� ���� �� �����.",
+      msgNeed:"���� ��� ������ ������ ������.",
+      msgNF:"�� ��� ������ ��� ������.",
+      msgApp:"�� ������ �������.",
+      msgRedeemOk:"�� ������� ������.",
+      msgRedeemNo:(cur,need)=>`�� ���� ���������. ���� ������ ${cur}/${need}`
     },
     en: {
       btnManual:"Manual lookup",
@@ -233,8 +233,8 @@ function showActionStatus(msg, type=""){
       else{ showNotice(t().msgBad,'bad'); }
     }catch(err){
       const msg = (err && err.message === 'NO_SUPPORT')
-        ? ((lang==='ar')?'ظ‡ط°ط§ ط§ظ„ظ…طھطµظپط­ ظ„ط§ ظٹط¯ط¹ظ… ظ…ط³ط­ QR ظ…ظ† طµظˆط±ط©.':'Browser does not support scan-from-image.')
-        : ((lang==='ar')?'طھط¹ط°ط± ظ…ط³ط­ ط§ظ„طµظˆط±ط©.':'Failed to scan image.');
+        ? ((lang==='ar')?'��� ������� �� ���� ��� QR �� ����.':'Browser does not support scan-from-image.')
+        : ((lang==='ar')?'���� ��� ������.':'Failed to scan image.');
       showNotice(msg,'bad');
     } finally {
       e.target.value = '';
@@ -244,11 +244,11 @@ function showActionStatus(msg, type=""){
   $("#btnApprove").addEventListener("click", async ()=>{
     if(!lastVisit) return;
     const r = await api("/api/visit/approve","POST",{ visitId: lastVisit.id });
-    showNotice(t().msgApp + ` â€” ظ†ظ‚ط§ط·ظƒ ط§ظ„ط¢ظ† ${r.points.current_points}/50`, "good");
+    showNotice(t().msgApp + ` � ����� ���� ${r.points.current_points}/50`, "good");
     $("#pointsNow").textContent = r.points.current_points;
-    $("#pointsMeta").textContent = `Earned: ${r.points.earned_points} â€” Redeemed: ${r.points.redeemed_points}`;
+    $("#pointsMeta").textContent = `Earned: ${r.points.earned_points} � Redeemed: ${r.points.redeemed_points}`;
     await refreshRedeemButton();
-    // ط¨ط¹ط¯ ط§ظ„ط§ط¹طھظ…ط§ط¯ ظ†ط®ظپظٹ ط¨ظٹط§ظ†ط§طھ ط§ظ„ط¹ظ…ظٹظ„ ظˆطھط¸ظ‡ط± ط±ط³ط§ظ„ط© ظپظ‚ط·
+    // ��� �������� ���� ������ ������ ����� ����� ���
     $("#resultBox").style.display = "none";
     lastVisit = null;
   });
@@ -260,11 +260,11 @@ function showActionStatus(msg, type=""){
       showActionStatus(t().msgRedeemNo(r.current, r.need), "bad");
       return;
     }
-    showNotice(t().msgRedeemOk + ` â€” ظ†ظ‚ط§ط·ظƒ ط§ظ„ط¢ظ† ${r.points.current_points}/50`, "good");
+    showNotice(t().msgRedeemOk + ` � ����� ���� ${r.points.current_points}/50`, "good");
     $("#pointsNow").textContent = r.points.current_points;
-    $("#pointsMeta").textContent = `Earned: ${r.points.earned_points} â€” Redeemed: ${r.points.redeemed_points}`;
+    $("#pointsMeta").textContent = `Earned: ${r.points.earned_points} � Redeemed: ${r.points.redeemed_points}`;
     await refreshRedeemButton();
-    // ط¨ط¹ط¯ ط§ظ„ط§ط³طھط¨ط¯ط§ظ„ ظ†ط®ظپظٹ ط¨ظٹط§ظ†ط§طھ ط§ظ„ط¹ظ…ظٹظ„ ظˆطھط¸ظ‡ط± ط±ط³ط§ظ„ط© ظپظ‚ط·
+    // ��� ��������� ���� ������ ������ ����� ����� ���
     $("#resultBox").style.display = "none";
     lastVisit = null;
   });
@@ -283,15 +283,15 @@ function showActionStatus(msg, type=""){
     lastVisit = r.visit;
     $("#resultBox").style.display="block";
     $("#custName").textContent = r.visit.customer_name;
-    $("#custMeta").textContent = `Phone: ${r.visit.customer_phone} â€” Plate: ${r.visit.plate_letters_ar} ${r.visit.plate_numbers}`;
+    $("#custMeta").textContent = `Phone: ${r.visit.customer_phone} � Plate: ${r.visit.plate_letters_ar} ${r.visit.plate_numbers}`;
     // rating stars
     const rating = Number(r.visit.rating || 0);
-    const stars = Array.from({length:5}).map((_,i)=> i<rating ? "âک…" : "âک†").join("");
+    const stars = Array.from({length:5}).map((_,i)=> i<rating ? "?" : "?").join("");
     const rsEl = document.querySelector("#visitRatingStars");
     if(rsEl) rsEl.textContent = stars;
     $("#visitsCount").textContent = r.visitsCount;
     $("#pointsNow").textContent = r.points.current_points;
-    $("#pointsMeta").textContent = `Earned: ${r.points.earned_points} â€” Redeemed: ${r.points.redeemed_points}`;
+    $("#pointsMeta").textContent = `Earned: ${r.points.earned_points} � Redeemed: ${r.points.redeemed_points}`;
     await refreshRedeemButton();
   }
 
@@ -321,7 +321,7 @@ function showActionStatus(msg, type=""){
       if(isNotSecure){
         if(httpsUrl){
           const msg = (lang==="ar")
-            ? `ظ„ظ… ظٹطھظ… طھط´ط؛ظٹظ„ ط§ظ„ظƒط§ظ…ظٹط±ط§ ظ„ط£ظ† ط§ظ„طµظپط­ط© ظ„ظٹط³طھ ط¢ظ…ظ†ط© (HTTP). ط³ظٹطھظ… طھط­ظˆظٹظ„ظƒ طھظ„ظ‚ط§ط¦ظٹط§ظ‹ ظ„ظ„ظ†ط³ط®ط© ط§ظ„ط¢ظ…ظ†ط©. ط¥ط°ط§ ظ„ظ… ظٹط­ط¯ط« ط§ظ„طھط­ظˆظٹظ„ ط§ط¶ط؛ط·: <button class="pill" id="openHttpsBtn" type="button">ظپطھط­ ط¹ط¨ط± HTTPS</button>`
+            ? `�� ��� ����� �������� ��� ������ ���� ���� (HTTP). ���� ������ �������� ������ ������. ��� �� ���� ������� ����: <button class="pill" id="openHttpsBtn" type="button">��� ��� HTTPS</button>`
             : `Camera requires HTTPS. Redirecting now. If not redirected, click: <button class="pill" id="openHttpsBtn" type="button">Open HTTPS</button>`;
           showNoticeHtml(msg, "bad");
           setTimeout(()=>{
@@ -330,28 +330,28 @@ function showActionStatus(msg, type=""){
           }, 0);
         }else{
           showNotice((lang==="ar")
-            ? `ظ„ظ… ظٹطھظ… طھط´ط؛ظٹظ„ ط§ظ„ظƒط§ظ…ظٹط±ط§ ظ„ط£ظ† ط§ظ„طµظپط­ط© ظ„ظٹط³طھ ط¢ظ…ظ†ط©. ط§ظپطھط­ ط¹ط¨ط± https ط¹ظ„ظ‰ ط§ظ„ظ…ظ†ظپط° 3443 (ظ…ط«ط§ظ„: https://${location.hostname}:3443).`
+            ? `�� ��� ����� �������� ��� ������ ���� ����. ���� ��� https ��� ������ 3443 (����: https://${location.hostname}:3443).`
             : 'Camera requires HTTPS (port 3443).', "bad");
         }
         return;
       }
-      // ط¥ط°ط§ ظƒط§ظ† ط§ظ„ظ…طھطµظپط­ ظ„ط§ ظٹط¯ط¹ظ… ظ…ط³ط­ QR ط¨ط§ظ„ظƒط§ظ…ظٹط±ط§
+      // ��� ��� ������� �� ���� ��� QR ���������
       if(!(window.Html5Qrcode || ("BarcodeDetector" in window))){
         const m = (lang==="ar")
-          ? "ظ‡ط°ط§ ط§ظ„ظ…طھطµظپط­ ظ„ط§ ظٹط¯ط¹ظ… ظ…ط³ط­ QR ط¨ط§ظ„ظƒط§ظ…ظٹط±ط§. ط§ط³طھط®ط¯ظ… ط§ظ„ط¥ط¯ط®ط§ظ„ ط§ظ„ظٹط¯ظˆظٹ ط£ظˆ ط§ظپطھط­ ط§ظ„طµظپط­ط© ظپظٹ Chrome/Edge ط­ط¯ظٹط«."
+          ? "��� ������� �� ���� ��� QR ���������. ������ ������� ������ �� ���� ������ �� Chrome/Edge ����."
           : "This browser does not support QR scanning. Use manual input or open in a recent Chrome/Edge.";
         showNotice(m, "bad");
         return;
       }
-      // ط£ط®ط·ط§ط، طµظ„ط§ط­ظٹط§طھ/ط§ط³طھط®ط¯ط§ظ… ط§ظ„ظƒط§ظ…ظٹط±ط§
+      // ����� �������/������� ��������
       const n = (err && err.name) ? err.name : '';
       const msgAr = (n==='NotAllowedError' || n==='PermissionDeniedError')
-        ? 'طھظ… ط±ظپط¶ ط¥ط°ظ† ط§ظ„ظƒط§ظ…ظٹط±ط§. ظ…ظ† ط¥ط¹ط¯ط§ط¯ط§طھ ط§ظ„ظ…طھطµظپط­: Site settings > Camera > Allow ط«ظ… ط­ط¯ظ‘ط« ط§ظ„طµظپط­ط©.'
+        ? '�� ��� ��� ��������. �� ������� �������: Site settings > Camera > Allow �� ���� ������.'
         : (n==='NotFoundError')
-          ? 'ظ„ط§ طھظˆط¬ط¯ ظƒط§ظ…ظٹط±ط§ ظ…طھط§ط­ط© ط¹ظ„ظ‰ ظ‡ط°ط§ ط§ظ„ط¬ظ‡ط§ط².'
+          ? '�� ���� ������ ����� ��� ��� ������.'
           : (n==='NotReadableError')
-            ? 'ط§ظ„ظƒط§ظ…ظٹط±ط§ ظ…ط´ط؛ظˆظ„ط© ط¨طھط·ط¨ظٹظ‚ ط¢ط®ط±. ط§ط؛ظ„ظ‚ ط£ظٹ طھط·ط¨ظٹظ‚ ظٹط³طھط®ط¯ظ… ط§ظ„ظƒط§ظ…ظٹط±ط§ ط«ظ… ط¬ط±ظ‘ط¨.'
-            : 'طھط¹ط°ط± طھط´ط؛ظٹظ„ ط§ظ„ظƒط§ظ…ظٹط±ط§. ط¬ط±ظ‘ط¨ ظپطھط­ ط§ظ„طµظپط­ط© ظپظٹ Chrome/Edge ظˆط§ط³ظ…ط­ ط¨ط¥ط°ظ† ط§ظ„ظƒط§ظ…ظٹط±ط§.';
+            ? '�������� ������ ������ ���. ���� �� ����� ������ �������� �� ����.'
+            : '���� ����� ��������. ���� ��� ������ �� Chrome/Edge ����� ���� ��������.';
       const msgEn = (n==='NotAllowedError' || n==='PermissionDeniedError')
         ? 'Camera permission denied. Allow it in Site Settings then refresh.'
         : (n==='NotFoundError')
@@ -359,7 +359,7 @@ function showActionStatus(msg, type=""){
           : (n==='NotReadableError')
             ? 'Camera is in use by another app. Close it and retry.'
             : 'Failed to start camera. Try Chrome/Edge and allow permission.';
-      const html = ((lang==="ar") ? msgAr : msgEn) + ` â€” <button class="pill" id="useImageScanBtn" type="button">${(lang==="ar")?'ظ…ط³ط­ ظ…ظ† طµظˆط±ط©':'Scan from image'}</button>`;
+      const html = ((lang==="ar") ? msgAr : msgEn) + ` � <button class="pill" id="useImageScanBtn" type="button">${(lang==="ar")?'��� �� ����':'Scan from image'}</button>`;
       showNoticeHtml(html, "bad");
       setTimeout(()=>{ const b=document.getElementById('useImageScanBtn'); if(b) b.addEventListener('click', ()=>{ const inp=document.getElementById('scanImageInput'); if(inp) inp.click(); }); },0);
     });
